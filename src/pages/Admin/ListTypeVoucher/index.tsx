@@ -66,7 +66,11 @@ const ListTypeVoucher = () => {
     return (
         <div>
             <div className='container catepage'>
-                <h1 className='title-cate'>LOẠI VOUCHER</h1>
+                <div className='my-3'>
+                    <p className='text-[30px]' style={{ fontWeight: 900 }}>
+                        Loại mã khuyến mại{' '}
+                    </p>
+                </div>
                 <div className='flex justify-end ...'>
                     <div>
                         <button

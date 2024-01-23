@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useForm, useFormContext } from 'react-hook-form'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,7 +15,7 @@ const categories = [
         name: 'gkhlj'
     }
 ]
-const EditCategory = ({ id }: any) => {
+const EditCategory = ({ id, name }: any) => {
     const { register, handleSubmit, setValue, reset } = useForm()
 
     // Tìm danh mục tương ứng với id trong danh sách
@@ -45,6 +45,7 @@ const EditCategory = ({ id }: any) => {
                             </Label>
                             <Input
                                 id='name'
+                                defaultValue={name}
                                 {...register('name')}
                                 onChange={(e) => {
                                     console.log(e.target.value)

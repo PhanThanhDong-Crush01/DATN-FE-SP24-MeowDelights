@@ -22,8 +22,11 @@ const ListCategory = (props: Props) => {
     return (
         <div>
             <div className='container catepage'>
-                <h1 className='title-cate'>DANH MỤC</h1>
-
+                <div>
+                    <p className='text-[30px]' style={{ fontWeight: 900 }}>
+                        Danh mục sản phẩm{' '}
+                    </p>
+                </div>
                 <div className='flex justify-end ...'>
                     <div>
                         <Sheet>

@@ -20,8 +20,10 @@ const AddProduct = () => {
     return (
         <>
             <div className='container'>
-                <div className='title' style={{ fontSize: '25px', margin: '10px 0', fontWeight: '700' }}>
-                    <h2>Thêm mới sản phẩm</h2>
+                <div className='my-3'>
+                    <p className='text-[30px]' style={{ fontWeight: 900 }}>
+                        Thêm mới sản phẩm{' '}
+                    </p>
                 </div>
                 <div className='form'>
                     <Form

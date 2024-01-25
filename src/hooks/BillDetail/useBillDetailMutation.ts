@@ -1,42 +1,37 @@
-import { addProduct, deleteProduct, updateProduct } from '@/services/product'
-import { useToast } from '@/components/ui/use-toast'
-import { IProduct } from '@/interfaces/Product'
+import { IBillDetail } from '@/interface/IBillDetail'
+import { add, remove, update } from '@/services/billDetail'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
-type formControlDataType = {
-    name: string
-    price: number
-}
-// Định validate form sử dụng joi
+
 const formSchema = Joi.object({
     name: Joi.string().min(2).max(50),
     price: Joi.number()
 })
 
-type useProductMutationProps = {
+type useBillDetailMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'
-    defaultValues?: IProduct
+    defaultValues?: IBillDetail
     onSuccess?: () => void
 }
 
-export const useProductMutation = ({
+export const useBillDetailMutation = ({
     action,
     defaultValues = { name: '', price: 0 },
     onSuccess
-}: useProductMutationProps) => {
+}: useBillDetailMutationProps) => {
     const queryClient = useQueryClient()
 
     const { mutate, ...rest } = useMutation({
-        mutationFn: async (product: IProduct) => {
+        mutationFn: async (billDetail: IBillDetail) => {
             switch (action) {
                 case 'ADD':
-                    return await addProduct(product)
+                    return await add(billDetail)
                 case 'UPDATE':
-                    return await updateProduct(product)
+                    return await update(billDetail)
                 case 'DELETE':
-                    return await deleteProduct(product)
+                    return await remove(billDetail)
                 default:
                     return null
             }
@@ -52,12 +47,12 @@ export const useProductMutation = ({
         resolver: joiResolver(formSchema),
         defaultValues
     })
-    const onSubmit: SubmitHandler<formControlDataType> = (values) => {
+    const onSubmit: SubmitHandler<any> = (values) => {
         console.log(values)
         mutate(values)
     }
-    const onRemove = (product: IProduct) => {
-        mutate(product)
+    const onRemove = (billDetail: IBillDetail) => {
+        mutate(billDetail)
     }
     return {
         form,
@@ -66,3 +61,4 @@ export const useProductMutation = ({
         ...rest
     }
 }
+//mẫu product

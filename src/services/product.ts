@@ -1,23 +1,23 @@
-import { IProduct } from '@/common/type'
-import instance from '../core/api'
+import { IProduct } from '@/interface/IProduct'
+import instance from './core/api'
 
-export const getProducts = async () => {
+export const getAll = async () => {
     try {
         const response = await instance.get('/products')
         return response.data
     } catch (error) {
-        console.log(`['FETCH_PRODUCTS_ERROR']`, error)
+        console.log(`['GETALL_PRODUCT_ERROR']`, error)
     }
 }
-export const getProduct = async (id: number) => {
+export const getOne = async (id: string) => {
     try {
         const response = await instance.get(`/products/${id}`)
         return response.data
     } catch (error) {
-        console.log(`['FETCH_PRODUCT_ERROR']`, error)
+        console.log(`['GETONE_PRODUCT_ERROR']`, error)
     }
 }
-export const updateProduct = async (product: IProduct) => {
+export const update = async (product: IProduct) => {
     try {
         const response = await instance.patch(`/products/${product.id}`, product)
         return response.data
@@ -25,7 +25,7 @@ export const updateProduct = async (product: IProduct) => {
         console.log(`['UPDATE_PRODUCT_ERROR']`, error)
     }
 }
-export const addProduct = async (product: IProduct) => {
+export const add = async (product: IProduct) => {
     try {
         const response = await instance.post('/products/', product)
         return response.data
@@ -33,13 +33,9 @@ export const addProduct = async (product: IProduct) => {
         console.log(`['ADD_PRODUCT_ERROR']`, error)
     }
 }
-export const deleteProduct = async (product: IProduct) => {
+export const remove = async (product: IProduct) => {
     try {
-        // JSON-server {}
         await instance.delete(`/products/${product.id}`)
-
-        // const response = await instance.delete(`/products/${product.id}`)
-        // return response.data
     } catch (error) {
         console.log(`['DELETE_PRODUCT_ERROR']`, error)
     }

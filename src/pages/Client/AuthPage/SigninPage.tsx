@@ -1,5 +1,6 @@
 
-import { signin } from '@/core/auth'
+
+import { signin } from '@/services/auth'
 import { message } from 'antd'
 import React from 'react'
 import { useForm } from 'react-hook-form'

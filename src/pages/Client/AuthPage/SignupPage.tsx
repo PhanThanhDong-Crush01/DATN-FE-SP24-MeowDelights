@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { signup } from '@/core/auth'
 import { message } from 'antd'
+import { signup } from '@/services/auth'
 
 const SignupPage = () => {
     const navigate = useNavigate();

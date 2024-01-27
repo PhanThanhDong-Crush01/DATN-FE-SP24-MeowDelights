@@ -6,7 +6,7 @@ import '@/styles/Cate.css'
 import { useTypeVoucherQuery } from '@/hooks/TypeVoucher/useTypeVoucherQuery'
 import { useTypeVoucherMutation } from '@/hooks/TypeVoucher/useTypeVoucherMutation'
 import { toast } from '@/components/ui/use-toast'
-import AddTypeVc from './addTypeVc'
+import AddTypeVc from './AddTypeVc'
 
 interface DataType {
     key: string

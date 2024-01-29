@@ -19,7 +19,7 @@ export const getOne = async (id: string) => {
 }
 export const update = async (voucher: IVoucher) => {
     try {
-        const response = await instance.patch(`/voucher/${voucher.id}`, voucher)
+        const response = await instance.put(`/voucher/${voucher._id}`, voucher)
         return response.data
     } catch (error) {
         console.log(`['UPDATE_VOUCHER_ERROR']`, error)
@@ -27,7 +27,7 @@ export const update = async (voucher: IVoucher) => {
 }
 export const add = async (voucher: IVoucher) => {
     try {
-        const response = await instance.post('/voucher/', voucher)
+        const response = await instance.post('/voucher', voucher)
         return response.data
     } catch (error) {
         console.log(`['ADD_VOUCHER_ERROR']`, error)
@@ -36,7 +36,7 @@ export const add = async (voucher: IVoucher) => {
 
 export const remove = async (voucher: IVoucher) => {
     try {
-        await instance.delete(`/voucher/${voucher.id}`)
+        await instance.delete(`/voucher/${voucher._id}`)
     } catch (error) {
         console.log(`['DELETE_VOUCHER_ERROR']`, error)
     }

@@ -33,10 +33,11 @@ export const add = async (product: IProduct) => {
         console.log(`['ADD_PRODUCT_ERROR']`, error)
     }
 }
-export const remove = async (product: IProduct) => {
+export const storage = async (product: IProduct) => {
     try {
-        await instance.delete(`/products/${product._id}`)
+        const response = await instance.patch(`/products/${product._id}`)
+        return response.data
     } catch (error) {
-        console.log(`['DELETE_PRODUCT_ERROR']`, error)
+        console.log(`['STORAGE_PRODUCT_ERROR']`, error)
     }
 }

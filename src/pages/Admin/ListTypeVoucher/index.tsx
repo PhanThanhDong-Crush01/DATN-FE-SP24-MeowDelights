@@ -26,7 +26,7 @@ const ListTypeVoucher = () => {
             })
         }
     })
-    const { form, onSubmit } = useTypeVoucherMutation({
+    const { onSubmit } = useTypeVoucherMutation({
         action: 'UPDATE',
         onSuccess: () => {
             toast({

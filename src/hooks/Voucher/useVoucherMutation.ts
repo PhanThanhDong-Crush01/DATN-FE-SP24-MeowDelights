@@ -6,30 +6,32 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 const formSchema = Joi.object({
-    codevc: Joi.string(),
-    status: Joi.string().min(6),
-    decrease: Joi.number().min(0),
+    codeVc: Joi.string(),
+    status: Joi.boolean(),
+    decrease: Joi.string().min(0),
     expiry: Joi.string(), //hạn sử dụng
-    conditions: Joi.string() /// điều kiện
+    conditions: Joi.string(), /// điều kiện
+    idTypeVoucher: Joi.string()
 })
 
-type useProductMutationProps = {
+type useVoucherMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'
     defaultValues?: IVoucher
     onSuccess?: () => void
 }
 
-export const useProductMutation = ({
+export const useVoucherMutation = ({
     action,
     defaultValues = {
-        codevc: '',
-        status: '',
+        codeVc: '',
+        status: true,
         expiry: '',
         conditions: '',
-        decrease: 0
+        decrease: 0,
+        idTypeVoucher: ''
     },
     onSuccess
-}: useProductMutationProps) => {
+}: useVoucherMutationProps) => {
     const queryClient = useQueryClient()
 
     const { mutate, ...rest } = useMutation({

@@ -36,21 +36,21 @@ const Product = () => {
             })
         }
     })
-    // const dataProduct = data?.datas.map((item: any, index: any) => ({
-    //     ...item,
-    //     key: index + 1
-    // }))
-    // console.log(dataProduct)
+    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataProduct)
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
 
-    const confirmDelete = async (productId: string) => {
-        message.success('xoá thành công')
-    }
-    const cancelDelete = () => {
-        message.error('Product deletion cancelled')
-    }
+    // const confirmDelete = async (productId: string) => {
+    //     message.success('xoá thành công')
+    // }
+    // const cancelDelete = () => {
+    //     message.error('Product deletion cancelled')
+    // }
 
     const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
         confirm()
@@ -62,6 +62,7 @@ const Product = () => {
         clearFilters()
         setSearchText('')
     }
+    const getStatusLabel = (status: boolean) => (status ? 'Còn hàng' : 'Hết hàng')
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -182,8 +183,10 @@ const Product = () => {
             dataIndex: 'status',
             key: 'status',
             width: '15%',
+            render: (_, record) => getStatusLabel(record.status)
+            // <option value='record.status'></option
 
-            render: (status) => <p className='text-green-500'>{status}</p>
+            // render: (status) => <p className='text-green-500'>{status}</p>
         },
         {
             title: 'Hành động',
@@ -194,17 +197,17 @@ const Product = () => {
                 <Space size='middle'>
                     <Button
                         type='primary'
-                        onClick={() => {
-                            // const post = posts?.find((post: IPost) => post._id === record._id);
+                        // onClick={() => {
+                        //     const post = posts?.find((post: IPost) => post._id === record._id)
 
-                            // form.setFieldsValue({
-                            //   _id: post?._id,
-                            //   title: post?.title,
-                            //   images: post?.images,
-                            //   description: post?.description,
-                            // });
-                            showModal('edit')
-                        }}
+                        //     form.setFieldsValue({
+                        //         _id: post?._id,
+                        //         title: post?.title,
+                        //         images: post?.images,
+                        //         description: post?.description
+                        //     })
+                        //     showModal('edit')
+                        // }}
                         ghost
                     >
                         <EditOutlined style={{ display: 'inline-flex' }} />
@@ -214,8 +217,8 @@ const Product = () => {
                         placement='topRight'
                         title='Xóa bài viết?'
                         description='Bạn có chắc chắn xóa bài viết này không?'
-                        // eslint-disable-next-line no-restricted-globals
-                        onConfirm={() => confirm(record._id)}
+                        onConfirm={() => onRemove(record)}
+                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
@@ -250,7 +253,7 @@ const Product = () => {
                     ></Button>
                 </div>
             </div>
-            <Table columns={columns} dataSource={dataProduct || []} />
+            <Table columns={columns} dataSource={dataProduct} />
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { IProduct } from '@/interface/IProduct'
-import { add, remove, update } from '@/services/product'
+import { add, remove, storage, update } from '@/services/product'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -46,7 +46,7 @@ export const useProductMutation = ({
                 case 'UPDATE':
                     return await update(product)
                 case 'DELETE':
-                    return await remove(product)
+                    return await storage(product)
                 default:
                     return null
             }

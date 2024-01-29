@@ -6,7 +6,7 @@ import BillDetail from '@/pages/Admin/ListBill/BillDetail'
 import ListCategory from '@/pages/Admin/Category'
 import ListProducts from '@/pages/Admin/Products'
 import ListTypeVoucher from '@/pages/Admin/ListTypeVoucher'
-import ListVoucher from '@/pages/Admin/ListVoucher'
+
 import SigninPage from '@/pages/Client/AuthPage/SigninPage'
 import SignupPage from '@/pages/Client/AuthPage/SignupPage'
 // import SigninPage from '@/pages/Client/AuthPage/Signin'
@@ -19,11 +19,12 @@ import PaymentInformationPage from '@/pages/Client/PaymentInformationPage'
 import PaymentSuccessPage from '@/pages/Client/PaymentSuccessPage'
 import ProductDetailPage from '@/pages/Client/ProductDetailPage'
 import ShopPage from '@/pages/Client/ShopPage'
-
 import { Route, Routes } from 'react-router-dom'
 import AddCategory from '@/pages/Admin/Category/AddCategory'
 import EditCategory from '@/pages/Admin/Category/EditCategory'
 import AddProduct from '@/pages/Admin/Products/AddProduct'
+import Voucher from '@/pages/Admin/ListVoucher'
+import AddVoucher from '@/pages/Admin/ListVoucher/AddVoucher'
 
 const Routers = () => {
     return (
@@ -54,9 +55,9 @@ const Routers = () => {
                 {/* <Route path='/admin/categories/:id/edit' element={<EditCategory />}/> */}
                 <Route path='/admin/categories/edit/:id' element={<EditCategory />} />
                 <Route path='/admin/categories/add' element={<AddCategory />} />
-                <Route path='/admin/voucher' element={<ListVoucher />} />
+                <Route path='/admin/voucher' element={<Voucher />} />
                 {/* <Route path='/admin/voucher/:id/edit' element={<EditListVoucher />}/> */}
-                {/* <Route path='/admin/voucher/add' element={<AddListVoucher />}/> */}
+                <Route path='/admin/voucher/add' element={<AddVoucher />} />
                 <Route path='/admin/type_voucher' element={<ListTypeVoucher />} />
                 {/* <Route path='/admin/type_voucher/:id/edit' element={<EditListTypeVoucher />}/> */}
                 {/* <Route path='/admin/type_voucher/add' element={<AddListTypeVoucher />}/> */}

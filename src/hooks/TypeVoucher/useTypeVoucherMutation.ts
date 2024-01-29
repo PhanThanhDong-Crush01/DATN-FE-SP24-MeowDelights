@@ -1,13 +1,12 @@
 import { ITypeVoucher } from '@/interface/ITypeVoucher'
-import { add, remove, update } from '@/services/typeProduct'
+import { add, remove, update } from '@/services/typeVoucher'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 const formSchema = Joi.object({
-    name: Joi.string().min(2).max(50),
-    price: Joi.number()
+    name: Joi.string().required().min(6).max(50)
 })
 
 type useTypeVoucherMutationProps = {
@@ -18,7 +17,7 @@ type useTypeVoucherMutationProps = {
 
 export const useTypeVoucherMutation = ({
     action,
-    defaultValues = { name: '', price: 0 },
+    defaultValues = { name: '' },
     onSuccess
 }: useTypeVoucherMutationProps) => {
     const queryClient = useQueryClient()
@@ -39,7 +38,7 @@ export const useTypeVoucherMutation = ({
         onSuccess: () => {
             onSuccess && onSuccess()
             queryClient.invalidateQueries({
-                queryKey: ['PRODUCT']
+                queryKey: ['TYPEVOUCHER']
             })
         }
     })

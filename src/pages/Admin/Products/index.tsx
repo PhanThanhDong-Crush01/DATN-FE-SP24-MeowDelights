@@ -1,65 +1,56 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
 import { Button, Input, Popconfirm, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
-import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
-
+import { useProductQuery } from '@/hooks/Product/useProductQuery'
+import { useProductMutation } from '@/hooks/Product/useProductMutation'
+import { toast } from '@/components/ui/use-toast'
+import form from 'antd/es/form'
 type InputRef = GetRef<typeof Input>
-
 interface DataType {
     key: string
+    _id?: string
     name: string
-    date: string
-    category: string
+    price: number
     image: string
-    sold: number
-    status: string
+    import_date: string
+    expiry: string
+    status: boolean
+    description: string
+    idCategory: string
 }
 
 type DataIndex = keyof DataType
-
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        category: 'New York No. 1 Lake Park',
-        date: '12/2/2222',
-        sold: 727,
-        status: 'còn hàng',
-        image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg'
-    },
-    {
-        key: '2',
-        name: 'Joe Black',
-        date: '12/2/2222',
-        category: 'London No. 1 Lake Park',
-        sold: 727,
-        status: 'hết hàng',
-        image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg'
-    },
-    {
-        key: '3',
-        name: 'Jim Green',
-        date: '12/2/2222',
-        category: 'Sydney No. 1 Lake Park',
-        sold: 727,
-        status: 'hết hàng',
-        image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg'
-    }
-]
 const Product = () => {
+    const { data } = useProductQuery()
+    console.log(data)
+    const { onRemove } = useProductMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Xoá sản phẩm thành công!!',
+                description: 'Sẩn phẩm đã bị xóa'
+            })
+        }
+    })
+    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataProduct)
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
 
-    const confirmDelete = async (productId: string) => {
-        message.success('xoá thành công')
-    }
-    const cancelDelete = () => {
-        message.error('Product deletion cancelled')
-    }
+    // const confirmDelete = async (productId: string) => {
+    //     message.success('xoá thành công')
+    // }
+    // const cancelDelete = () => {
+    //     message.error('Product deletion cancelled')
+    // }
 
     const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
         confirm()
@@ -71,6 +62,7 @@ const Product = () => {
         clearFilters()
         setSearchText('')
     }
+    const getStatusLabel = (status: boolean) => (status ? 'Còn hàng' : 'Hết hàng')
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -128,19 +120,7 @@ const Product = () => {
             record[dataIndex]
                 .toString()
                 .toLowerCase()
-                .includes((value as string).toLowerCase()),
-
-        render: (text) =>
-            searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
-            ) : (
-                text
-            )
+                .includes((value as string).toLowerCase())
     })
 
     const columns: TableColumnsType<DataType> = [
@@ -149,13 +129,14 @@ const Product = () => {
             dataIndex: 'key',
             key: 'key',
             width: '2%'
+            // render: (_id) => <p className='text-green-500'>{data.id}</p>
         },
         {
             title: 'Ảnh',
             dataIndex: 'image',
             key: 'image',
-            width: '5%',
-            render: (image) => <img src={image} alt='Product' width={70} />
+            width: '10%'
+            // render: (_image) => <img src={data.image} alt='Product' width={70} />
         },
         {
             title: 'Tên',
@@ -165,39 +146,47 @@ const Product = () => {
             ...getColumnSearchProps('name')
         },
         {
-            title: 'Danh Mục',
-            dataIndex: 'category',
-            key: 'category',
-            width: '15%',
-            ...getColumnSearchProps('category')
+            title: 'Gía',
+            dataIndex: 'price',
+            key: 'price',
+            width: '5%',
+            ...getColumnSearchProps('price')
         },
         {
+            title: 'Danh Mục',
+            dataIndex: 'idCategory',
+            key: 'idCategory',
+            width: '5%',
+            ...getColumnSearchProps('idCategory')
+        },
+
+        {
             title: 'Ngày',
-            dataIndex: 'date',
-            key: 'date',
-            width: '10%',
-            ...getColumnSearchProps('date'),
-            sorter: (a, b) => a.date.length - b.date.length,
+            dataIndex: 'import_date',
+            key: 'import_date',
+            width: '15%',
+            ...getColumnSearchProps('import_date'),
+            sorter: (a, b) => a.import_date.length - b.import_date.length,
             sortDirections: ['descend', 'ascend']
         },
         {
-            title: 'Đã bán',
-            dataIndex: 'sold',
-            key: 'sold',
-            width: '10%',
-            ...getColumnSearchProps('sold'),
-            sorter: (a, b) => a.sold - b.sold,
+            title: 'Hạn sử dụng',
+            dataIndex: 'expiry',
+            key: 'expiry',
+            width: '15%',
+            ...getColumnSearchProps('expiry'),
+            sorter: (a, b) => a.expiry.length - b.expiry.length,
             sortDirections: ['descend', 'ascend']
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            width: '10%',
-            ...getColumnSearchProps('status'),
-            sorter: (a, b) => a.status.length - b.status.length,
-            sortDirections: ['descend', 'ascend'],
-            render: (status) => <p className='text-green-500'>{status}</p>
+            width: '15%',
+            render: (_, record) => getStatusLabel(record.status)
+            // <option value='record.status'></option
+
+            // render: (status) => <p className='text-green-500'>{status}</p>
         },
         {
             title: 'Hành động',
@@ -206,17 +195,30 @@ const Product = () => {
             width: '15%',
             render: (_, record) => (
                 <Space size='middle'>
-                    <Link to={'/admin/products/add'}>
-                        <Button type='primary' ghost>
-                            <EditOutlined style={{ display: 'inline-flex' }} />
-                        </Button>
-                    </Link>
+                    <Button
+                        type='primary'
+                        // onClick={() => {
+                        //     const post = posts?.find((post: IPost) => post._id === record._id)
+
+                        //     form.setFieldsValue({
+                        //         _id: post?._id,
+                        //         title: post?.title,
+                        //         images: post?.images,
+                        //         description: post?.description
+                        //     })
+                        //     showModal('edit')
+                        // }}
+                        ghost
+                    >
+                        <EditOutlined style={{ display: 'inline-flex' }} />
+                    </Button>
 
                     <Popconfirm
                         placement='topRight'
                         title='Xóa bài viết?'
                         description='Bạn có chắc chắn xóa bài viết này không?'
-                        onConfirm={() => confirm(record.key)}
+                        onConfirm={() => onRemove(record)}
+                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
@@ -229,97 +231,29 @@ const Product = () => {
             )
         }
     ]
-
     const cancel = () => {
         message.error('Đã hủy!')
     }
-
     return (
         <div>
-            <div className='flex justify-between items-center mx-[10px] my-3'>
+            <div className='flex justify-between items-center mx-[50px]'>
                 <div>
-                    <p className='text-[30px]' style={{ fontWeight: 900 }}>
-                        Danh sách sản phẩm{' '}
-                    </p>
+                    <p className='text-[20px]'>Sản Phẩm </p>
                 </div>
                 <div className='flex justify-end mb-2'>
-                    <Link to={'/admin/products/add'}>
-                        <Button
-                            type='primary'
-                            icon={<PlusCircleOutlined />}
-                            size={'large'}
-                            className='bg-[#1677ff]'
-                        ></Button>
-                    </Link>
+                    <Button
+                        type='primary'
+                        icon={<PlusCircleOutlined />}
+                        size={'large'}
+                        className='bg-[#1677ff]'
+                        onClick={() => {
+                            form.resetFields()
+                            showModal('add')
+                        }}
+                    ></Button>
                 </div>
             </div>
-            <Table columns={columns} dataSource={data} />
-            {/* <ModalForm
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                form={form}
-                modalMode={modalMode}
-                classNames="!w-[1100px]"
-            >
-                <Form
-                    form={form}
-                    // {...layout}
-                    name="nest-messages"
-                    onFinish={onFinish}
-                    validateMessages={validateMessages}
-                    layout="vertical"
-                    className="flex gap-3 w-full"
-                >
-                    {modalMode === 'edit' && (
-                        <Form.Item name="_id" style={{ display: 'none' }}>
-                            <Input />
-                        </Form.Item>
-                    )}
-                    <div className=" w-full ">
-                        <Form.Item name="name" label="Tên" rules={[{ required: true }, { whitespace: true, message: '${label} is required!' }]}>
-                            <Input.TextArea rows={2} placeholder="Name " />
-                        </Form.Item>
-                        <Form.Item name="price" label="Giá" rules={[{ required: true, type: 'number', min: 0 }]}>
-                            <InputNumber size="large" placeholder="Price" style={{ width: '100%' }} />
-                        </Form.Item>
-
-                        <Form.Item name="images" label="Ảnh pet" rules={[{ required: true }]}>
-                            <Dragger multiple listType="picture" customRequest={customRequest} >
-                                <Button icon={<UploadOutlined />}>Thêm Ảnh</Button>
-                            </Dragger>
-                        </Form.Item>
-                    </div>
-
-                    <div className="w-full">
-                        <Form.Item label="Trạng thái" rules={[{ required: true }]}>
-                            <Select size="large" placeholder="---- Status ----">
-                                <Option key={"1"} value={"true"}>
-                                    Còn hàng
-                                </Option>
-                                <Option key={"2"} value={"fale"}>
-                                    Hết hàng
-                                </Option>
-                            </Select>
-                        </Form.Item>
-
-
-                        <Form.Item name="sold" label="Đã bán" rules={[{ required: true, type: 'number', min: 0 }]}>
-                            <InputNumber size="large" placeholder="sold" style={{ width: '100%' }} />
-                        </Form.Item>
-
-
-                        <Form.Item
-                            name="description"
-                            label="Thông Tin Sản Phẩm"
-                            rules={[{ required: true }, { whitespace: true, message: '${label} is required!' }]}
-                        >
-                            <Input.TextArea rows={4} placeholder="Description" />
-                        </Form.Item>
-
-
-                    </div>
-                </Form>
-            </ModalForm> */}
+            <Table columns={columns} dataSource={dataProduct} />
         </div>
     )
 }

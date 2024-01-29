@@ -19,3 +19,4 @@ export const signin = (user:any)=>{
 export const signup = (user:any)=>{
     return instance.post('/auth/signup',user);
 }
+

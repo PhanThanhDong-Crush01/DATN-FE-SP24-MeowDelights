@@ -64,7 +64,6 @@ const Product = () => {
             })
         }
     })
-
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
@@ -270,14 +269,16 @@ const Product = () => {
                     <p className='text-[20px]'>Sản Phẩm </p>
                 </div>
                 <div className='flex justify-end mb-2'>
-                    <Link to={'/admin/products/add'}>
-                        <Button
-                            type='primary'
-                            icon={<PlusCircleOutlined />}
-                            size={'large'}
-                            className='bg-[#1677ff]'
-                        ></Button>
-                    </Link>
+                    <Button
+                        type='primary'
+                        icon={<PlusCircleOutlined />}
+                        size={'large'}
+                        className='bg-[#1677ff]'
+                        onClick={() => {
+                            form.resetFields()
+                            showModal('add')
+                        }}
+                    ></Button>
                 </div>
             </div>
             <Table columns={columns} dataSource={dataProductTrue} />

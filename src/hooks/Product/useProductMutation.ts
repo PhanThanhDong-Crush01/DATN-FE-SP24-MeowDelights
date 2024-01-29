@@ -1,13 +1,19 @@
 import { IProduct } from '@/interface/IProduct'
-import { add, remove, update } from '@/services/product'
+import { add, remove, storage, update } from '@/services/product'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 const formSchema = Joi.object({
-    name: Joi.string().min(2).max(50),
-    price: Joi.number()
+    image: Joi.string().required(),
+    name: Joi.string().required(),
+    price: Joi.number().required(),
+    idCategory: Joi.string().required(),
+    import_date: Joi.string().required(), //// ngày nhận hàng
+    expiry: Joi.string().required(), ///hạn sử dụng của sản phẩm
+    status: Joi.boolean().required(),
+    description: Joi.string().required()
 })
 
 type useProductMutationProps = {
@@ -18,7 +24,16 @@ type useProductMutationProps = {
 
 export const useProductMutation = ({
     action,
-    defaultValues = { name: '', price: 0 },
+    defaultValues = {
+        name: '',
+        price: 0,
+        image: '',
+        import_date: '',
+        expiry: '',
+        status: true,
+        description: '',
+        idCategory: ''
+    },
     onSuccess
 }: useProductMutationProps) => {
     const queryClient = useQueryClient()
@@ -31,7 +46,7 @@ export const useProductMutation = ({
                 case 'UPDATE':
                     return await update(product)
                 case 'DELETE':
-                    return await remove(product)
+                    return await storage(product)
                 default:
                     return null
             }

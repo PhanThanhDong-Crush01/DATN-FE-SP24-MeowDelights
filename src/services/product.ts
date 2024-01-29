@@ -19,7 +19,7 @@ export const getOne = async (id: string) => {
 }
 export const update = async (product: IProduct) => {
     try {
-        const response = await instance.patch(`/products/${product.id}`, product)
+        const response = await instance.patch(`/products/${product._id}`, product)
         return response.data
     } catch (error) {
         console.log(`['UPDATE_PRODUCT_ERROR']`, error)
@@ -33,10 +33,11 @@ export const add = async (product: IProduct) => {
         console.log(`['ADD_PRODUCT_ERROR']`, error)
     }
 }
-export const remove = async (product: IProduct) => {
+export const storage = async (product: IProduct) => {
     try {
-        await instance.delete(`/products/${product.id}`)
+        const response = await instance.patch(`/products/${product._id}`)
+        return response.data
     } catch (error) {
-        console.log(`['DELETE_PRODUCT_ERROR']`, error)
+        console.log(`['STORAGE_PRODUCT_ERROR']`, error)
     }
 }

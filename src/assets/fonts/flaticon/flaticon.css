@@ -1,0 +1,98 @@
+@font-face {
+    font-family: "flaticon";
+    src: url("flaticonc152.ttf?76200ebbab3ff1d7289fd710c8071eaf") format("truetype"),
+url("flaticonc152.woff?76200ebbab3ff1d7289fd710c8071eaf") format("woff"),
+url("flaticonc152.woff2?76200ebbab3ff1d7289fd710c8071eaf") format("woff2"),
+url("flaticonc152.eot?76200ebbab3ff1d7289fd710c8071eaf#iefix") format("embedded-opentype"),
+url("flaticonc152.svg?76200ebbab3ff1d7289fd710c8071eaf#flaticon") format("svg");
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-vet:before {
+    content: "\f101";
+}
+.flaticon-bone:before {
+    content: "\f102";
+}
+.flaticon-pet-bowl:before {
+    content: "\f103";
+}
+.flaticon-pet-boarding:before {
+    content: "\f104";
+}
+.flaticon-beauty-saloon:before {
+    content: "\f105";
+}
+.flaticon-pet-shampoo:before {
+    content: "\f106";
+}
+.flaticon-pet-food:before {
+    content: "\f107";
+}
+.flaticon-award:before {
+    content: "\f108";
+}
+.flaticon-dog:before {
+    content: "\f109";
+}
+.flaticon-pet-food-1:before {
+    content: "\f10a";
+}
+.flaticon-vaccine:before {
+    content: "\f10b";
+}
+.flaticon-collar:before {
+    content: "\f10c";
+}
+.flaticon-pet-toy:before {
+    content: "\f10d";
+}
+.flaticon-pet-carrier:before {
+    content: "\f10e";
+}
+.flaticon-pet-insurance:before {
+    content: "\f10f";
+}
+.flaticon-pet:before {
+    content: "\f110";
+}
+.flaticon-nurse:before {
+    content: "\f111";
+}
+.flaticon-trophy:before {
+    content: "\f112";
+}
+.flaticon-pills:before {
+    content: "\f113";
+}
+.flaticon-mobile:before {
+    content: "\f114";
+}
+.flaticon-dog-1:before {
+    content: "\f115";
+}
+.flaticon-truck:before {
+    content: "\f116";
+}
+.flaticon-spay:before {
+    content: "\f117";
+}
+.flaticon-email:before {
+    content: "\f118";
+}
+.flaticon-pin:before {
+    content: "\f119";
+}
+.flaticon-call:before {
+    content: "\f11a";
+}

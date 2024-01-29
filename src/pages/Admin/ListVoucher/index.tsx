@@ -139,7 +139,7 @@ const Vorcher = () => {
                 text
             )
     })
-
+    // bảng table
     const columns: TableColumnsType<DataType> = [
         {
             title: '#',
@@ -252,6 +252,7 @@ const Vorcher = () => {
         required: '${label} chưa nhập!'
     }
 
+    // form thêm voucher
     const [form] = Form.useForm()
     const onFinish = async (values: any) => {
         if (modalMode === 'add') {
@@ -281,43 +282,43 @@ const Vorcher = () => {
         setIsModalOpen(false)
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uploadFiles = async (file: any) => {
-        if (file) {
-            const CLOUD_NAME = 'clouur-your-name'
-            const PRESET_NAME = 'clouur-your-name'
-            const FOLDER_NAME = 'clouur-your-name'
-            const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`
+    // const uploadFiles = async (file: any) => {
+    //     if (file) {
+    //         const CLOUD_NAME = 'clouur-your-name'
+    //         const PRESET_NAME = 'clouur-your-name'
+    //         const FOLDER_NAME = 'clouur-your-name'
+    //         const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`
 
-            const formData = new FormData()
-            formData.append('upload_preset', PRESET_NAME)
-            formData.append('folder', FOLDER_NAME)
-            formData.append('file', file)
+    //         const formData = new FormData()
+    //         formData.append('upload_preset', PRESET_NAME)
+    //         formData.append('folder', FOLDER_NAME)
+    //         formData.append('file', file)
 
-            const response = await axios.post(api, formData)
+    //         const response = await axios.post(api, formData)
 
-            return response
-        }
-    }
+    //         return response
+    //     }
+    // }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const customRequest = async ({ file, onSuccess, onError }: any) => {
-        try {
-            // Gọi hàm tải lên ảnh của bạn và chờ kết quả
-            const response = await uploadFiles(file)
-            // Kiểm tra kết quả và xử lý tùy theo trạng thái tải lên
-            if (response?.status === 200) {
-                message.success(`${file.name} uploaded successfully`)
-                onSuccess(response, file)
-            } else {
-                message.error(`${file.name} upload failed.`)
-                onError(response)
-            }
-        } catch (error) {
-            // Xử lý lỗi nếu có
-            message.error('An error occurred while uploading the image.')
-            onError(error)
-        }
-    }
+    // const customRequest = async ({ file, onSuccess, onError }: any) => {
+    //     try {
+    //         // Gọi hàm tải lên ảnh của bạn và chờ kết quả
+    //         const response = await uploadFiles(file)
+    //         // Kiểm tra kết quả và xử lý tùy theo trạng thái tải lên
+    //         if (response?.status === 200) {
+    //             message.success(`${file.name} uploaded successfully`)
+    //             onSuccess(response, file)
+    //         } else {
+    //             message.error(`${file.name} upload failed.`)
+    //             onError(response)
+    //         }
+    //     } catch (error) {
+    //         // Xử lý lỗi nếu có
+    //         message.error('An error occurred while uploading the image.')
+    //         onError(error)
+    //     }
+    // }
     return (
         <div>
             <div className='flex justify-between items-center mx-[50px]'>
@@ -338,6 +339,7 @@ const Vorcher = () => {
                 </div>
             </div>
             <Table columns={columns} dataSource={data} />
+            {/* form */}
             <ModalForm
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}

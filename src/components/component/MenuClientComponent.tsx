@@ -233,9 +233,9 @@ const MenuClientComponent = () => {
                                         </ul>
                                     </li>
                                     <li className='cart-trigger header-controls-item d-none d-sm-block'>
-                                        <a className='sigma_header-control-cart' title='Your Cart' href='cart.html'>
+                                        <Link to={'/cart'} className='sigma_header-control-cart'>
                                             <i className='far fa-shopping-basket' />
-                                        </a>
+                                        </Link>
                                         <ul className='sigma_cart-dropdown'>
                                             <li>
                                                 <div className='sigma_cart-product-wrapper'>

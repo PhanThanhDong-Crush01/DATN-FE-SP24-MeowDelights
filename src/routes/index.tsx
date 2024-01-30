@@ -30,7 +30,6 @@ import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
 import OrderPage from '@/pages/Client/AuthPage/OrderPage'
 import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
 
-
 const Routers = () => {
     return (
         <Routes>

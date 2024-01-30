@@ -3,6 +3,7 @@ import instance from './core/api'
 
 export const getAll = async () => {
     try {
+        console.log(1)
         const response = await instance.get('/products')
         return response.data
     } catch (error) {

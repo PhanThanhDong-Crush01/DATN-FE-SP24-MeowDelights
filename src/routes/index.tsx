@@ -4,9 +4,7 @@ import Dashboard from '@/pages/Admin/Dashboard'
 import ListBill from '@/pages/Admin/ListBill'
 import BillDetail from '@/pages/Admin/ListBill/BillDetail'
 import ListCategory from '@/pages/Admin/Category'
-import ListProducts from '@/pages/Admin/Products'
 import ListTypeVoucher from '@/pages/Admin/ListTypeVoucher'
-
 import SigninPage from '@/pages/Client/AuthPage/SigninPage'
 import SignupPage from '@/pages/Client/AuthPage/SignupPage'
 // import SigninPage from '@/pages/Client/AuthPage/Signin'
@@ -25,6 +23,7 @@ import EditCategory from '@/pages/Admin/Category/EditCategory'
 import AddProduct from '@/pages/Admin/Products/AddProduct'
 import Voucher from '@/pages/Admin/ListVoucher'
 import AddVoucher from '@/pages/Admin/ListVoucher/AddVoucher'
+import Product from '@/pages/Admin/Products'
 
 const Routers = () => {
     return (
@@ -48,7 +47,7 @@ const Routers = () => {
             <Route path='admin' element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path='/admin/dashboard' element={<Dashboard />} />
-                <Route path='/admin/products' element={<ListProducts />} />
+                <Route path='/admin/products' element={<Product />} />
                 {/* <Route path='/admin/products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='/admin/products/add' element={<AddProduct />} />
                 <Route path='/admin/categories' element={<ListCategory />} />

@@ -21,7 +21,6 @@ interface DataType {
     description: string
     idCategory: string
 }
-
 type DataIndex = keyof DataType
 const Product = () => {
     const { data } = useProductQuery()
@@ -53,13 +52,6 @@ const Product = () => {
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
-
-    // const confirmDelete = async (productId: string) => {
-    //     message.success('xoá thành công')
-    // }
-    // const cancelDelete = () => {
-    //     message.error('Product deletion cancelled')
-    // }
 
     const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
         confirm()
@@ -210,6 +202,7 @@ const Product = () => {
                         //     })
                         //     showModal('edit')
                         // }}
+
                         ghost
                     >
                         <EditOutlined style={{ display: 'inline-flex' }} />
@@ -220,7 +213,6 @@ const Product = () => {
                         title='Lưu trữ sản phẩm?'
                         description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
                         onConfirm={() => onStorage(record)}
-                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
@@ -248,10 +240,10 @@ const Product = () => {
                         icon={<PlusCircleOutlined />}
                         size={'large'}
                         className='bg-[#1677ff]'
-                        onClick={() => {
-                            form.resetFields()
-                            showModal('add')
-                        }}
+                        // onClick={() => {
+                        //     form.resetFields()
+                        //     showModal('add')
+                        // }}
                     ></Button>
                 </div>
             </div>

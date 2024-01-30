@@ -11,9 +11,9 @@ const FooterTemplate = () => {
                                 </span>
                             </div>
                             <div className='sigma_info-description'>
-                                <p>Our Address</p>
+                                <p>Địa chỉ cửa hàng</p>
                                 <p className='secondary-color'>
-                                    <b>Drive Chicago, IL 60607</b>
+                                    <b>TT.Đạo Đức - Bình Xuyên - Vĩnh Phúc</b>
                                 </p>
                             </div>
                         </div>
@@ -24,9 +24,9 @@ const FooterTemplate = () => {
                                 </span>
                             </div>
                             <div className='sigma_info-description'>
-                                <p>Call Us</p>
+                                <p>Gọi cho chúng tôi</p>
                                 <p className='secondary-color'>
-                                    <b>360-779-2228</b>
+                                    <b>0559041043</b>
                                 </p>
                             </div>
                         </div>
@@ -37,9 +37,9 @@ const FooterTemplate = () => {
                                 </span>
                             </div>
                             <div className='sigma_info-description'>
-                                <p>Our Mail</p>
+                                <p>Mail của chúng tôi</p>
                                 <p className='secondary-color'>
-                                    <b>yourname@mail.com</b>
+                                    <b>meowdelights@website.com</b>
                                 </p>
                             </div>
                         </div>
@@ -56,7 +56,7 @@ const FooterTemplate = () => {
                                     <div className='row'>
                                         <div className='col-sm-9'>
                                             <p className='mb-0'>
-                                                Our professional team provide exceptional grooming service.
+                                                Đội ngũ chuyên nghiệp của chúng tôi cung cấp phụ kiện và đồ ăn cho mèo.
                                             </p>
                                         </div>
                                     </div>
@@ -91,58 +91,59 @@ const FooterTemplate = () => {
                             </div>
                             <div className='col-lg-3 col-sm-3'>
                                 <div className='sigma_footer-widget'>
-                                    <h5 className='widget-title'>Services</h5>
+                                    <h5 className='widget-title'>Dịch vụ</h5>
                                     <ul className='sigma_footer-links'>
                                         <li>
-                                            <a href='#'>Conditions</a>
+                                            <a href='#'>Điều kiện</a>
                                         </li>
                                         <li>
-                                            <a href='#'>Terms of Use</a>
+                                            <a href='#'>Điều khoản sử dụng</a>
                                         </li>
                                         <li>
-                                            <a href='#'>Our Services</a>
+                                            <a href='#'>Dịch vụ của chúng tôi</a>
                                         </li>
                                         <li>
-                                            <a href='#'>New Guests Lists</a>
+                                            <a href='#'>Danh sách khách mới</a>
                                         </li>
                                         <li>
-                                            <a href='#'>The Team List</a>
+                                            <a href='#'>Danh sách đội</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div className='col-lg-2 col-sm-3'>
                                 <div className='sigma_footer-widget'>
-                                    <h5 className='widget-title'>Useful Links</h5>
+                                    <h5 className='widget-title'>Liên kết</h5>
                                     <ul className='sigma_footer-links'>
                                         <li>
-                                            <a href='#'>Conditions</a>
+                                            <a href='#'>Điều kiện</a>
                                         </li>
                                         <li>
-                                            <a href='#'>Terms of Use</a>
+                                            <a href='#'>Điều khoản sử dụng</a>
                                         </li>
                                         <li>
-                                            <a href='#'>Our Services</a>
+                                            <a href='#'>Dịch vụ của chúng tôi</a>
                                         </li>
                                         <li>
-                                            <a href='#'>New Guests Lists</a>
+                                            <a href='#'>Danh sách khách mới</a>
                                         </li>
                                         <li>
-                                            <a href='#'>The Team List</a>
+                                            <a href='#'>Danh sách đội</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div className='col-lg-3 col-sm-6'>
                                 <div className='sigma_footer-widget'>
-                                    <h5 className='widget-title'>Subscribe</h5>
+                                    <h5 className='widget-title'>Liên hệ</h5>
                                     <form method='post'>
                                         <input type='email' name='email' placeholder='Email' />
                                         <button type='button' className='mt-3 btn btn-block'>
-                                            Subscribe
+                                            Đặt mua
                                         </button>
                                         <p className='mb-0 mt-3'>
-                                            Get The Latest Updates via email. Any time you may unsubscribe
+                                            Nhận các bản cập nhật mới nhất qua email. Bạn có thể hủy đăng ký bất cứ lúc
+                                            nào
                                         </p>
                                     </form>
                                 </div>
@@ -154,22 +155,22 @@ const FooterTemplate = () => {
                     <div className='sigma_footer-bottom d-block d-sm-flex align-items-center justify-content-between'>
                         <div className='sigma_footer-copyright mt-0 mb-3 mb-sm-0'>
                             <p className='mb-0'>
-                                © PetPawz
-                                <a href='#'>2024</a>| All Rights Reserved
+                                © MeowDelights
+                                <a href='#'>2024</a>| Đăng ký bản quyền
                             </p>
                         </div>
                         <ul className='sigma_footer-links'>
                             <li>
-                                <a href='#'>Privacy</a>
+                                <a href='#'>Sự riêng tư</a>
                             </li>
                             <li>
-                                <a href='#'>Terms</a>
+                                <a href='#'>Điều kiện</a>
                             </li>
                             <li>
-                                <a href='#'>Sitemap</a>
+                                <a href='#'>Sơ đồ trang web</a>
                             </li>
                             <li>
-                                <a href='#'>Help</a>
+                                <a href='#'>Giúp đỡ</a>
                             </li>
                         </ul>
                     </div>

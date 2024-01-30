@@ -40,4 +40,3 @@ export const remove = async (typeVoucher: ITypeVoucher) => {
         console.log(`['DELETE_TYPEVOUCHER_ERROR']`, error)
     }
 }
-

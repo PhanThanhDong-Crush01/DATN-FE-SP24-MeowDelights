@@ -51,7 +51,7 @@ const FooterTemplate = () => {
                             <div className='col-lg-4'>
                                 <div className='sigma_footer-widget'>
                                     <div className='sigma_footer-logo mb-4'>
-                                        <img src='src/assets/img/logo.png' alt='logo' />
+                                        <img src='/src/assets/img/logo.png' alt='logo' />
                                     </div>
                                     <div className='row'>
                                         <div className='col-sm-9'>

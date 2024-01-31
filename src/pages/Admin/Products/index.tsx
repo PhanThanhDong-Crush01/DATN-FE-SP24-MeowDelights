@@ -8,12 +8,12 @@ import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
 import form from 'antd/es/form'
+import { IProduct } from '@/interface/IProduct'
 type InputRef = GetRef<typeof Input>
 interface DataType {
     key: string
     _id?: string
     name: string
-    price: number
     image: string
     import_date: string
     expiry: string
@@ -26,8 +26,13 @@ type DataIndex = keyof DataType
 const Product = () => {
     const { data } = useProductQuery()
     console.log(data)
-    const { onRemove } = useProductMutation({
-        action: 'DELETE',
+    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataProduct)
+    const { onStorage } = useProductMutation({
+        action: 'STORAGE',
         onSuccess: () => {
             toast({
                 variant: 'success',
@@ -36,11 +41,15 @@ const Product = () => {
             })
         }
     })
-    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
-        ...item,
-        key: index + 1
-    }))
-    console.log(dataProduct)
+    const dataProductTrue = dataProduct.filter((item: any) => {
+        return item.status === true
+    })
+
+    const handleStorage = (record: IProduct) => async () => {
+        record.status = false
+        console.log('🚀 ~ handleStorage ~ record:', record)
+        console.log()
+    }
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
@@ -146,13 +155,6 @@ const Product = () => {
             ...getColumnSearchProps('name')
         },
         {
-            title: 'Gía',
-            dataIndex: 'price',
-            key: 'price',
-            width: '5%',
-            ...getColumnSearchProps('price')
-        },
-        {
             title: 'Danh Mục',
             dataIndex: 'idCategory',
             key: 'idCategory',
@@ -215,9 +217,9 @@ const Product = () => {
 
                     <Popconfirm
                         placement='topRight'
-                        title='Xóa bài viết?'
-                        description='Bạn có chắc chắn xóa bài viết này không?'
-                        onConfirm={() => onRemove(record)}
+                        title='Lưu trữ sản phẩm?'
+                        description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
+                        onConfirm={() => onStorage(record)}
                         // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
@@ -253,7 +255,7 @@ const Product = () => {
                     ></Button>
                 </div>
             </div>
-            <Table columns={columns} dataSource={dataProduct} />
+            <Table columns={columns} dataSource={dataProductTrue} />
         </div>
     )
 }

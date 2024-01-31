@@ -35,7 +35,7 @@ export const add = async (product: IProduct) => {
 }
 export const storage = async (product: IProduct) => {
     try {
-        const response = await instance.patch(`/products/${product._id}`)
+        const response = await instance.patch(`/products/storage/${product._id}`, product.status)
         return response.data
     } catch (error) {
         console.log(`['STORAGE_PRODUCT_ERROR']`, error)

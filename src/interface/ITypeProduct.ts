@@ -1,6 +1,10 @@
 export interface ITypeProduct {
-    id?: number
-    name: string
+    color: string
+    size: string
+    quantily: number // định lượng
+    image: string
+    weight: number
     price: number
+    idPro: object
 }
 //mẫu

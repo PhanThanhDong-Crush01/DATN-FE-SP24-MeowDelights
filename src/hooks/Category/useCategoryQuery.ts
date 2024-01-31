@@ -1,4 +1,4 @@
-import { getAll, getOne } from '@/services/product'
+import { getAll, getOne } from '@/services/category'
 import { useQuery } from 'react-query'
 
 export const useCategoryQuery = (categoryId?: string) => {

@@ -13,19 +13,31 @@ import {
     SheetTitle,
     SheetTrigger
 } from '@/components/ui/sheet'
+import { useCategoryMutation } from '@/hooks/Category/useCategoryMutation'
+import { toast } from '@/components/ui/use-toast'
 
 const AddCategory = () => {
+    const { onSubmit } = useCategoryMutation({
+        action: 'ADD',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật thành công!!',
+                description: 'Cập nhật danh mục sản phẩm thành công!'
+            })
+        }
+    })
     const { register, handleSubmit, setValue } = useForm()
 
-    const onSubmit = (data: any) => {
+    const onHandleSubmit = (data: any) => {
         // Xử lý dữ liệu khi form được submit
-        console.log(data)
+        onSubmit(data)
     }
 
     return (
         <div>
             <SheetContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onHandleSubmit)}>
                     <SheetHeader>
                         <SheetTitle>THÊM LOẠI DANH MỤC</SheetTitle>
                         {/* <SheetDescription>

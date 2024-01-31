@@ -4,55 +4,50 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { useCategoryMutation } from '@/hooks/Category/useCategoryMutation'
+import { toast } from '@/components/ui/use-toast'
+import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 
-const categories = [
-    {
-        id: 'jjkglhkgjgkhjh1',
-        name: 'hehe'
-    },
-    {
-        id: 'jjkglhkgjgkhjh2',
-        name: 'gkhlj'
-    }
-]
-const EditCategory = ({ id, name }: any) => {
-    const { register, handleSubmit, setValue, reset } = useForm()
-
-    // Tìm danh mục tương ứng với id trong danh sách
-    const category = categories.find((category) => category.id === id)
+const EditCategory = ({ id }: any) => {
+    const { data } = useCategoryQuery(id)
+    const category = data?.data
+    const { form, onSubmit } = useCategoryMutation({
+        action: 'UPDATE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật thành công!!',
+                description: 'Cập nhật danh mục sản phẩm thành công!'
+            })
+        }
+    })
+    const { register, handleSubmit, setValue } = useForm()
 
     useEffect(() => {
-        // Reset form và đặt giá trị từ danh mục vào input khi danh mục thay đổi
-        reset(category)
-    }, [reset, category])
+        if (category) {
+            setValue('name', category.name)
+        }
+    }, [category, setValue])
 
-    const onSubmit = (data: any) => {
-        // Xử lý dữ liệu khi form được submit
-        console.log(data)
+    const onHandleSubmit = (data: any) => {
+        const updatedCategory = { ...category, name: data.name }
+        console.log('🚀 ~ onHandleSubmit ~ updatedCategory:', updatedCategory)
+        onSubmit(updatedCategory)
     }
 
     return (
         <div>
             <SheetContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <SheetHeader>
-                        <SheetTitle>SỬA LOẠI DANH MỤC</SheetTitle>
-                    </SheetHeader>
+                <SheetHeader>
+                    <SheetTitle>SỬA LOẠI DANH MỤC</SheetTitle>
+                </SheetHeader>
+                <form onSubmit={handleSubmit(onHandleSubmit)}>
                     <div className='grid gap-4 py-4'>
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor='name' className='text-right'>
                                 Tên
                             </Label>
-                            <Input
-                                id='name'
-                                defaultValue={name}
-                                {...register('name')}
-                                onChange={(e) => {
-                                    console.log(e.target.value)
-                                    setValue('name', e.target.value)
-                                }}
-                                className='col-span-3'
-                            />
+                            <Input id='name' {...register('name')} className='col-span-3' />
                         </div>
                     </div>
                     <SheetFooter>

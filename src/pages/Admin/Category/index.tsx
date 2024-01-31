@@ -7,26 +7,35 @@ import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 import AddCategory from './AddCategory'
 import { IoMdAdd } from 'react-icons/io'
 import EditCategory from './EditCategory'
+import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
+import { useCategoryMutation } from '@/hooks/Category/useCategoryMutation'
+import { toast } from '@/components/ui/use-toast'
 
 interface DataType {
     key: string
-    id: string
+    _id: string
     name: string
 }
 
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        id: '3uygbediuch'
-    },
-    {
-        key: '2',
-        name: 'John Brown 89',
-        id: 'dsfergt'
-    }
-]
 const ListCategory = () => {
+    const { data }: any = useCategoryQuery()
+    console.log('ListCategory', data)
+    const { onRemove } = useCategoryMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Xoá danh mục sản phẩm thành công!!',
+                description: 'Danh mục sản phẩm đã bị xóa'
+            })
+        }
+    })
+
+    const dataWithKeys = data?.data.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+
     const columns: TableColumnsType<DataType> = [
         {
             title: '#',
@@ -53,14 +62,14 @@ const ListCategory = () => {
                                 <EditOutlined style={{ display: 'inline-flex' }} />
                             </Button>
                         </SheetTrigger>
-                        <EditCategory id={record.id} name={record.name} />
+                        <EditCategory id={record._id} />
                     </Sheet>
 
                     <Popconfirm
                         placement='topRight'
                         title='Xóa bài viết?'
                         description='Bạn có chắc chắn xóa bài viết này không?'
-                        onConfirm={() => confirm(record.key)}
+                        onConfirm={() => onRemove(record)}
                         okText='Đồng ý'
                         cancelText='Không'
                     >
@@ -95,7 +104,7 @@ const ListCategory = () => {
                     </Sheet>
                 </div>
             </div>
-            <Table columns={columns} dataSource={data} />
+            <Table columns={columns} dataSource={dataWithKeys} />
         </div>
     )
 }

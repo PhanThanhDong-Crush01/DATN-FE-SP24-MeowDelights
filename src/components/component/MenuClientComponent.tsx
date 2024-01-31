@@ -114,7 +114,7 @@ const MenuClientComponent = () => {
                 </div>
                 <div className='sigma_logo-wrapper'>
                     <a className='sigma_logo' href='index.html'>
-                        <img src='src/assets/img/logo.png' alt='logo' />
+                        <img src='/src/assets/img/logo.png' alt='logo' />
                     </a>
                 </div>
                 <ul className='navbar-nav'>
@@ -176,7 +176,7 @@ const MenuClientComponent = () => {
                         <div className='navbar'>
                             <div className='sigma_logo-wrapper'>
                                 <a className='sigma_logo' href='index.html'>
-                                    <img src='src/assets/img/logo.png' alt='logo' />
+                                    <img src='/src/assets/img/logo.png' alt='logo' />
                                 </a>
                             </div>
                             <ul className='navbar-nav' style={{ textAlign: 'left' }}>
@@ -240,7 +240,7 @@ const MenuClientComponent = () => {
                                             <li>
                                                 <div className='sigma_cart-product-wrapper'>
                                                     <div className='d-flex'>
-                                                        <img src='src/assets/img/shop/cart/c-1.png' alt='prod1' />
+                                                        <img src='/src/assets/img/shop/cart/c-1.png' alt='prod1' />
                                                         <div className='sigma_cart-product-div'>
                                                             <h6>
                                                                 {' '}
@@ -258,7 +258,7 @@ const MenuClientComponent = () => {
                                             <li>
                                                 <div className='sigma_cart-product-wrapper'>
                                                     <div className='d-flex'>
-                                                        <img src='src/assets/img/shop/cart/c-2.png' alt='prod1' />
+                                                        <img src='/src/assets/img/shop/cart/c-2.png' alt='prod1' />
                                                         <div className='sigma_cart-product-body'>
                                                             <h6>
                                                                 {' '}

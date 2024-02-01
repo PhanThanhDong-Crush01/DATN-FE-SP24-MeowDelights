@@ -2,8 +2,14 @@ import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
 import '@/styles/PaymentInformation.css'
 import { useForm } from 'react-hook-form'
+import { useLocation } from 'react-router-dom'
 
-const PaymentInformationPage = () => {
+const PaymentInformationPage = ({ state }: any) => {
+    const location = useLocation()
+    const searchParams = new URLSearchParams(location.search)
+    const encodedThongTinDonHang: any = searchParams.get('thongtindonhang')
+    const thongTinDonHang = JSON.parse(decodeURIComponent(encodedThongTinDonHang))
+    console.log('🚀 ~ PaymentInformationPage ~ thongTinDonHang:', thongTinDonHang)
     const {
         register,
         handleSubmit,

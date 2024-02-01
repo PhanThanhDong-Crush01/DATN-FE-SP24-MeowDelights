@@ -17,38 +17,23 @@ const SigninPage = () => {
             password: data.password
         }
         try {
-            const response = await signin(values)
-            if (response?.data?.user) {
-                // Lưu thông tin người dùng vào Local Storage
-                localStorage.setItem('user', JSON.stringify(response?.data?.user))
-                localStorage.setItem('userID', response?.data?.user?._id)
-                if (response?.data?.user?.role === 'admin') {
-                    message.success('Đăng nhập thành công admin')
-                    navigate('/admin')
-                }
-                if (response?.data?.user?.role === 'nhanvien') {
-                    message.success('Đăng nhập thành công nhân viên')
-                    navigate('/admin')
-                }
-                if (response?.data?.user?.role === 'member') {
-                    message.success('Đăng nhập thành công !')
-
-                    // if (Auth !== null) {
-                    //     const storedUser: any = JSON.parse(Auth)
-                    //     console.log('🚀 ~ UpdateProfile ~ storedUser:', storedUser)
-                    //     console.log('User ID:', storedUser._id)
-                    //     navigate(`/updateProfile/${storedUser._id}`)
-                    // } else {
-                    //     console.log('User data not found in localStorage')
-                    // }
-                    navigate(`/updateProfile/${response?.data?.user?._id}`)
-                    // navigate(`/`)
-                }
+            const reponse = await signin(values)
+            console.log('api SIgnin', reponse)
+            if (reponse?.data?.user?.role === 'admin') {
+                message.success('Đăng nhập thành công admin')
+                navigate('/admin')
+            }
+            if (reponse?.data?.user?.role === 'nhanvien') {
+                message.success('Đăng nhập thành công nhân viên')
+                navigate('/admin')
+            }
+            if (reponse?.data?.user?.role === 'member') {
+                message.success('Đăng nhập thành công !')
+                navigate('/')
             }
         } catch (error: any) {
             console.log(error)
             message.warning(error?.response?.data?.message)
-            // navigate('/signup')
         }
 
         // Thực hiện xử lý đăng ký tài khoản tại đây

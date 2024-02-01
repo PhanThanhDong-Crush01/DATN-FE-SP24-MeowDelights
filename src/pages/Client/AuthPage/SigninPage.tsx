@@ -1,5 +1,3 @@
-
-
 import { signin } from '@/services/auth'
 import { message } from 'antd'
 import React from 'react'
@@ -8,38 +6,32 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const SigninPage = () => {
     const navigate = useNavigate()
-    const {
-        register,
-        handleSubmit
-      
-    } = useForm()
+    const { register, handleSubmit } = useForm()
 
-    const onSubmit = async(data:any) => {
+    const onSubmit = async (data: any) => {
         console.log(data)
         const values = {
-            email:data.email,
-            password:data.password
+            email: data.email,
+            password: data.password
         }
         try {
-            const reponse = await signin(values);
-            console.log("api SIgnin",reponse);
-            if(reponse?.data?.user?.role ==="admin"){
-                message.success('Đăng nhập thành công admin');
-navigate('/admin');
-            }
-            if(reponse?.data?.user?.role ==="nhanvien"){
-                message.success('Đăng nhập thành công nhân viên');
+            const reponse = await signin(values)
+            console.log('api SIgnin', reponse)
+            if (reponse?.data?.user?.role === 'admin') {
+                message.success('Đăng nhập thành công admin')
                 navigate('/admin')
             }
-            if(reponse?.data?.user?.role ==="member"){
-                message.success('Đăng nhập thành công !');
+            if (reponse?.data?.user?.role === 'nhanvien') {
+                message.success('Đăng nhập thành công nhân viên')
+                navigate('/admin')
+            }
+            if (reponse?.data?.user?.role === 'member') {
+                message.success('Đăng nhập thành công !')
                 navigate('/')
             }
-            
-        } catch (error:any) {
-            console.log(error);
-            message.warning(error?.response?.data?.message);
-            
+        } catch (error: any) {
+            console.log(error)
+            message.warning(error?.response?.data?.message)
         }
         // Thực hiện xử lý đăng ký tài khoản tại đây
     }
@@ -58,7 +50,7 @@ navigate('/admin');
                 </div>
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-                    <form className='space-y-6' action='#' method='POST' onSubmit={handleSubmit(onSubmit)}> 
+                    <form className='space-y-6' action='#' method='POST' onSubmit={handleSubmit(onSubmit)}>
                         <div>
                             <label htmlFor='email' className='block text-sm font-medium leading-6 text-gray-900'>
                                 Email address
@@ -67,19 +59,16 @@ navigate('/admin');
                                 <input
                                     id='email'
                                     type='email'
-                                
-                                {...register('email')}
-                                    
+                                    {...register('email')}
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />
                             </div>
                         </div>
 
                         <div>
-                           
                             <div className='mt-2'>
                                 <input
-                                   {...register('password')}
+                                    {...register('password')}
                                     type='password'
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                                 />

@@ -125,7 +125,7 @@ const Product = () => {
             </div>
         ),
         filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
-        onFilter: (value, record) =>
+        onFilter: (value, record: any) =>
             record[dataIndex]
                 .toString()
                 .toLowerCase()
@@ -247,10 +247,6 @@ const Product = () => {
                         icon={<PlusCircleOutlined />}
                         size={'large'}
                         className='bg-[#1677ff]'
-                        onClick={() => {
-                            form.resetFields()
-                            showModal('add')
-                        }}
                     ></Button>
                 </div>
             </div>

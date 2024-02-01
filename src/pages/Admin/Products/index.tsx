@@ -131,7 +131,6 @@ const Product = () => {
                 .toLowerCase()
                 .includes((value as string).toLowerCase())
     })
-
     const columns: TableColumnsType<DataType> = [
         {
             title: '#',
@@ -144,8 +143,8 @@ const Product = () => {
             title: 'Ảnh',
             dataIndex: 'image',
             key: 'image',
-            width: '10%'
-            // render: (_image) => <img src={data.image} alt='Product' width={70} />
+            width: '10%',
+            render: (_image) => <img src={data.image} alt='Product' width={70} />
         },
         {
             title: 'Tên',

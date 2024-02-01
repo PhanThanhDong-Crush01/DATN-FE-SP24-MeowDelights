@@ -6,8 +6,10 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 const formSchema = Joi.object({
-    name: Joi.string().min(2).max(50),
-    price: Joi.number()
+    iduser: Joi.string(),
+    idpro: Joi.string().required(),
+    idprotype: Joi.string().required(),
+    quantity: Joi.number().required().min(0)
 })
 
 type useCartMutationProps = {
@@ -18,7 +20,12 @@ type useCartMutationProps = {
 
 export const useCartMutation = ({
     action,
-    defaultValues = { name: '', price: 0 },
+    defaultValues = {
+        iduser: '',
+        idpro: '',
+        idprotype: '',
+        quantity: 0
+    },
     onSuccess
 }: useCartMutationProps) => {
     const queryClient = useQueryClient()
@@ -39,7 +46,7 @@ export const useCartMutation = ({
         onSuccess: () => {
             onSuccess && onSuccess()
             queryClient.invalidateQueries({
-                queryKey: ['PRODUCT']
+                queryKey: ['CART']
             })
         }
     })
@@ -48,7 +55,6 @@ export const useCartMutation = ({
         defaultValues
     })
     const onSubmit: SubmitHandler<any> = (values) => {
-        console.log(values)
         mutate(values)
     }
     const onRemove = (cart: ICart) => {

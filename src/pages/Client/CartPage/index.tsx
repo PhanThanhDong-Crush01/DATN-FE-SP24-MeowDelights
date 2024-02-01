@@ -1,10 +1,105 @@
 import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
+import { toast } from '@/components/ui/use-toast'
+import { useCartMutation } from '@/hooks/Cart/useCartMutation'
+import { useCartQuery } from '@/hooks/Cart/useCartQuery'
+import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
+import { formatPriceBootstrap } from '@/lib/utils'
 import '@/styles/Cart.css'
-import { FaTruckMoving } from 'react-icons/fa6'
-import { Link } from 'react-router-dom'
+import { Button, Card, Popconfirm, Space } from 'antd'
+import { useEffect, useState } from 'react'
+import { Link, Navigate } from 'react-router-dom'
+import PaymentInformationPage from '../PaymentInformationPage'
 
 const CartPage = () => {
+    const { dataCart } = useCartQuery()
+
+    const { onRemove } = useCartMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Xoá sản phẩm thành công!!',
+                description: 'Sản phẩm bạn không thích trong giỏ hàng đã bị xóa'
+            })
+        }
+    })
+    const { onSubmit } = useCartMutation({
+        action: 'UPDATE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật số lượng thành công!!',
+                description: 'Cập nhật số lượng của sản phẩm thành công!'
+            })
+        }
+    })
+
+    const onChangeQuantity_Cart = (cartItem: any, value: any) => {
+        const newQuantity = Number(value.target.value)
+        if (newQuantity > 0) {
+            // Update quantity
+            cartItem.quantity = newQuantity
+            onSubmit(cartItem)
+        } else if (newQuantity <= 0) {
+            const confirm = window.confirm('Bạn có chắc muốn xoá sản phẩm này không')
+            if (confirm === true) {
+                // Remove product
+                onRemove(cartItem)
+            } else {
+                cartItem.quantity = +1
+                onSubmit(cartItem)
+            }
+        }
+    }
+
+    const [idVoucher, setIdVoucher] = useState('')
+    const HandleChane = (value: any) => {
+        const idVC = value.target.value
+        setIdVoucher(idVC.toLowerCase())
+    }
+    const { data } = useVoucherQuery(idVoucher)
+    const xetIdVoucher = () => {
+        if (data && idVoucher !== '') {
+            return true
+        } else if (data == undefined && idVoucher == '') {
+            return false
+        }
+    }
+    const XetDieuKienDungVoucher = () => {
+        if (data && dataCart?.totalAmount >= data?.datas.conditions) {
+            return true
+        } else if (!data) {
+            return false
+        }
+    }
+
+    let phiVanChuyen = 25000
+    const [voucherGiamGia, setVoucherGiamGia] = useState(0)
+    const tttt = dataCart?.totalAmount + phiVanChuyen
+    const [tongTienCanThanhToan, setTongTienCanThanhToan] = useState<number>(tttt)
+    useEffect(() => {
+        const upTongTienCanThanhToan = tongTienCanThanhToan - voucherGiamGia
+        setTongTienCanThanhToan(upTongTienCanThanhToan)
+    }, [voucherGiamGia, dataCart])
+    const apDungVoucher = () => {
+        if (xetIdVoucher() && XetDieuKienDungVoucher()) {
+            setVoucherGiamGia(data!.datas.decrease)
+            alert('Áp  dụng thành công')
+        } else {
+            alert('Mã voucher hoặc điều kiệu áp dụng không hợp lệ !!!')
+        }
+    }
+    const thongtindonhang: any = {
+        order: dataCart?.data,
+        phiVanChuyen: phiVanChuyen,
+        voucher: {
+            idVc: data?.datas?._id || '',
+            soTienGiam: voucherGiamGia || 0
+        },
+        tongTien: tongTienCanThanhToan
+    }
+
     return (
         <>
             <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-8'>
@@ -58,153 +153,294 @@ const CartPage = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td className='remove'>
-                                        <button type='button' className='sigma_close remove-from-cart'>
-                                            <span></span>
-                                            <span></span>
-                                        </button>
-                                    </td>
-                                    <td data-title='Product'>
-                                        <div className='sigma_cart-product-wrapper'>
-                                            <img src='src/assets/img/shop/cart/c-1.png' alt='prod1' />
-                                            <div className='sigma_cart-product-body'>
-                                                <h6>
-                                                    {' '}
-                                                    <a href='#'>Rubber Bone</a>{' '}
-                                                </h6>
-                                                <p>2 Pieces</p>
+                                {dataCart?.data.map((cartItem: any) => (
+                                    <tr key={cartItem._id}>
+                                        <td className='remove'>
+                                            <Popconfirm
+                                                placement='topRight'
+                                                title='Xóa sản phẩm này?'
+                                                description='Bạn có chắc chắn xóa sản phẩm này khỏi giỏ hàng không?'
+                                                onConfirm={() => onRemove(cartItem)}
+                                                okText='Đồng ý'
+                                                cancelText='Không'
+                                            >
+                                                <button type='button' className='sigma_close remove-from-cart'>
+                                                    <span></span>
+                                                    <span></span>
+                                                </button>
+                                            </Popconfirm>
+                                        </td>
+                                        <td data-title='Product' style={{ width: '40%' }}>
+                                            <div className='sigma_cart-product-wrapper'>
+                                                <img src={cartItem?.typeProduct?.image} alt='prod1' />
+                                                <div className='sigma_cart-product-body'>
+                                                    <h6 style={{ width: '100%' }}>
+                                                        <Link to={'/products/' + cartItem}>
+                                                            {cartItem?.product?.name}
+                                                        </Link>
+                                                    </h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td data-title='Classify'>
-                                        <div className='sigma_cart-classify-wrapper'>
-                                            <div className='sigma_cart-classify-body'>
-                                                <h6>
-                                                    {' '}
-                                                    <a href='#'>Rubber Bone</a>{' '}
-                                                </h6>
+                                        </td>
+                                        <td data-title='Classify'>
+                                            <div className='sigma_cart-classify-wrapper'>
+                                                <div className='sigma_cart-classify-body'>
+                                                    <h6 style={{ color: '#FFCC01', fontWeight: 800 }}>
+                                                        {cartItem?.typeProduct?.color} - {cartItem?.typeProduct?.size}
+                                                    </h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td data-title='Price'>
-                                        {' '}
-                                        <strong>12.99$</strong>{' '}
-                                    </td>
-                                    <td className='quantity' data-title='Quantity'>
-                                        <input type='number' className='qty form-control' value='1' />
-                                    </td>
-                                    <td data-title='Total'>
-                                        {' '}
-                                        <strong>12.99$</strong>{' '}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className='remove'>
-                                        <button type='button' className='sigma_close remove-from-cart'>
-                                            <span></span>
-                                            <span></span>
-                                        </button>
-                                    </td>
-                                    <td data-title='Product'>
-                                        <div className='sigma_cart-product-wrapper'>
-                                            <img src='src/assets/img/shop/cart/c-2.png' alt='prod1' />
-                                            <div className='sigma_cart-product-body'>
-                                                <h6>
-                                                    {' '}
-                                                    <a href='#'>Organic Food</a>{' '}
-                                                </h6>
-                                                <p>1 Piece</p>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td data-title='Classify'>
-                                        <div className='sigma_cart-classify-wrapper'>
-                                            <div className='sigma_cart-classify-body'>
-                                                <h6>
-                                                    {' '}
-                                                    <a href='#'>Rubber Bone</a>{' '}
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td data-title='Price'>
-                                        {' '}
-                                        <strong>9.99$</strong>{' '}
-                                    </td>
-                                    <td className='quantity' data-title='Quantity'>
-                                        <input type='number' className='qty form-control' value='1' />
-                                    </td>
-                                    <td data-title='Total'>
-                                        {' '}
-                                        <strong>9.99$</strong>{' '}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className='remove'>
-                                        <button type='button' className='sigma_close remove-from-cart'>
-                                            <span></span>
-                                            <span></span>
-                                        </button>
-                                    </td>
-                                    <td data-title='Product'>
-                                        <div className='sigma_cart-product-wrapper'>
-                                            <img src='src/assets/img/shop/cart/c-3.png' alt='prod1' />
-                                            <div className='sigma_cart-product-body'>
-                                                <h6>
-                                                    {' '}
-                                                    <a href='#'>Mouse bell</a>{' '}
-                                                </h6>
-                                                <p>3 Pieces</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td data-title='Classify'>
-                                        <div className='sigma_cart-classify-wrapper'>
-                                            <div className='sigma_cart-classify-body'>
-                                                <h6>
-                                                    {' '}
-                                                    <a href='#'>Rubber Bone</a>{' '}
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td data-title='Price'>
-                                        {' '}
-                                        <strong>13.99$</strong>{' '}
-                                    </td>
-                                    <td className='quantity' data-title='Quantity'>
-                                        <input type='number' className='qty form-control' value='1' />
-                                    </td>
-                                    <td data-title='Total'>
-                                        {' '}
-                                        <strong>13.99$</strong>{' '}
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td data-title='Price'>
+                                            <strong
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(cartItem?.typeProduct?.price)
+                                                }}
+                                            ></strong>
+                                        </td>
+                                        <td className='quantity' data-title='Quantity' style={{ width: '10%' }}>
+                                            <input
+                                                type='number'
+                                                className='qty form-control'
+                                                defaultValue={cartItem?.quantity}
+                                                onChange={(event) => onChangeQuantity_Cart(cartItem, event)}
+                                            />
+                                        </td>
+                                        <td data-title='Total' style={{ color: 'red' }}>
+                                            <strong
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(cartItem?.money)
+                                                }}
+                                            ></strong>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
+                    </div>
+                </div>
 
-                        <div className='row'>
-                            <div className='col-lg-5'>
-                                <div className='form-group mb-0'>
-                                    <div className='input-group mb-0'>
-                                        <input
-                                            type='text'
-                                            className='form-control'
-                                            placeholder='Nhập mã giảm giá'
-                                            aria-label='Coupon Code'
-                                        />
-                                        <div className='input-group-append'>
-                                            <button className='sigma_btn-custom shadow-none  btn' type='button'>
-                                                Áp dụng
-                                            </button>
-                                        </div>
-                                    </div>
+                <div
+                    className='chiu'
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '0 6%',
+                        paddingLeft: '7%'
+                    }}
+                >
+                    <div className='row' style={{ width: '50%' }}>
+                        <div className='form-group mb-0'>
+                            <div className='input-group mb-0'>
+                                <input
+                                    type='text'
+                                    className='form-control'
+                                    placeholder='Nhập mã giảm giá'
+                                    aria-label='Coupon Code'
+                                    onChange={HandleChane}
+                                />
+                                <div className='input-group-append'>
+                                    <button
+                                        className='sigma_btn-custom shadow-none  btn'
+                                        type='button'
+                                        style={{ backgroundColor: '#FFCC01' }}
+                                        onClick={apDungVoucher}
+                                    >
+                                        Áp dụng
+                                    </button>
                                 </div>
                             </div>
+                            {xetIdVoucher() ? (
+                                XetDieuKienDungVoucher() ? (
+                                    <Card
+                                        headStyle={{ color: 'white  ', backgroundColor: 'red', marginTop: '20px' }}
+                                        bodyStyle={{ padding: '5px 20px' }}
+                                        title={data?.datas.name}
+                                        bordered={false}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
+                                            Số tiền bạn được giảm: &nbsp;
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(data?.datas.decrease)
+                                                }}
+                                            ></span>
+                                        </h2>
+                                        <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
+                                            Số lần sử dụng voucher: &nbsp;
+                                            <span style={{ color: 'red' }}>1/5</span>
+                                        </h2>
+                                        HSD: &nbsp;
+                                        <span style={{ color: 'gray', fontSize: '15px', marginTop: '50px' }}>
+                                            {data?.datas.expiry}
+                                        </span>
+                                    </Card>
+                                ) : (
+                                    <Card
+                                        headStyle={{
+                                            color: 'white  ',
+                                            backgroundColor: 'red',
+                                            marginTop: '20px',
+                                            wordWrap: 'break-word'
+                                        }}
+                                        title={
+                                            'Bạn cần mua thêm ' +
+                                            (data?.datas.conditions - dataCart?.totalAmount) +
+                                            ' để sử dụng voucher này'
+                                        }
+                                        bordered={false}
+                                        style={{
+                                            width: '100%',
+                                            height: '50px'
+                                        }}
+                                    ></Card>
+                                )
+                            ) : (
+                                ''
+                            )}
                         </div>
                     </div>
+                    <table className='sigma_responsive-table' style={{ width: '35%' }}>
+                        <thead>
+                            <tr>
+                                <th className='remove-item'></th>
+                                <th></th>
+                                <th>Tiền </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td className='remove'></td>
+                                <td data-title='Product'>
+                                    <div className='sigma_cart-product-wrapper'>
+                                        <div className='sigma_cart-product-body'>
+                                            <h6>
+                                                <a href='#'>Tổng tiền giỏ hàng</a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-title='Classify'>
+                                    <div className='sigma_cart-classify-wrapper'>
+                                        <div className='sigma_cart-classify-body'>
+                                            <h6>
+                                                <a
+                                                    href='#'
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: formatPriceBootstrap(dataCart?.totalAmount)
+                                                    }}
+                                                ></a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className='remove'></td>
+                                <td data-title='Product'>
+                                    <div className='sigma_cart-product-wrapper'>
+                                        <div className='sigma_cart-product-body'>
+                                            <h6>
+                                                <a href='#'>Phí vận chuyển</a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-title='Classify'>
+                                    <div className='sigma_cart-classify-wrapper'>
+                                        <div className='sigma_cart-classify-body'>
+                                            <h6>
+                                                <a
+                                                    href='#'
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: formatPriceBootstrap(phiVanChuyen)
+                                                    }}
+                                                ></a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className='remove'></td>
+                                <td data-title='Product'>
+                                    <div className='sigma_cart-product-wrapper'>
+                                        <div className='sigma_cart-product-body'>
+                                            <h6>
+                                                <a href='#'>Voucher giảm giá</a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-title='Classify'>
+                                    <div className='sigma_cart-classify-wrapper'>
+                                        <div className='sigma_cart-classify-body'>
+                                            <h6>
+                                                <a
+                                                    href='#'
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: formatPriceBootstrap(voucherGiamGia)
+                                                    }}
+                                                ></a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className='remove'></td>
+                                <td data-title='Product'>
+                                    <div className='sigma_cart-product-wrapper'>
+                                        <div className='sigma_cart-product-body'>
+                                            <h6>
+                                                <a href='#'>TỔNG TIỀN ĐƠN HÀNG</a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-title='Classify'>
+                                    <div className='sigma_cart-classify-wrapper'>
+                                        <div className='sigma_cart-classify-body'>
+                                            <h6>
+                                                <a
+                                                    style={{ fontWeight: 900, fontSize: '30px', color: 'red' }}
+                                                    href='#'
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: formatPriceBootstrap(Number(tongTienCanThanhToan))
+                                                    }}
+                                                ></a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colSpan={3} style={{ width: '100%' }}>
+                                    <Link
+                                        to={`/payment_information?thongtindonhang=${encodeURIComponent(
+                                            JSON.stringify(thongtindonhang)
+                                        )}`}
+                                    >
+                                        <button
+                                            type='button'
+                                            style={{
+                                                width: '300%',
+                                                height: '50px',
+                                                backgroundColor: '#00D8E8',
+                                                margin: '0 100%'
+                                            }}
+                                        >
+                                            Thanh toán
+                                        </button>
+                                    </Link>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <FooterTemplate />
             </div>

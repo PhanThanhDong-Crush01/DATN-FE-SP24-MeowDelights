@@ -6,9 +6,10 @@ import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
 import '@/styles/Cart.css'
-import { Card, Popconfirm } from 'antd'
+import { Button, Card, Popconfirm, Space } from 'antd'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import PaymentInformationPage from '../PaymentInformationPage'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()

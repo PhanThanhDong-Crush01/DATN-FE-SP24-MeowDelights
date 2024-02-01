@@ -26,9 +26,8 @@ export const update = async (cart: ICart) => {
     }
 }
 export const add = async (cart: ICart) => {
-    console.log('🚀 ~ add ~ cart:', cart)
     try {
-        const response = await instance.post('/cart/', cart)
+        const response = await instance.post('/cart/', +cart)
         return response.data
     } catch (error) {
         console.log(`['ADD_CART_ERROR']`, error)

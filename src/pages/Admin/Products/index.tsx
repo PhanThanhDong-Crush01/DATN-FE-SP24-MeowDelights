@@ -148,7 +148,7 @@ const Product = () => {
             // render: (_id) => <p className='text-green-500'>{data.id}</p>
         },
         {
-            title: 'Ảnh',
+            title: 'Sản Phẩm',
             dataIndex: 'image',
             key: 'image',
             width: '15%',

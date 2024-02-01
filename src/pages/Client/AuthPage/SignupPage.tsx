@@ -5,23 +5,20 @@ import { message } from 'antd'
 import { signup } from '@/services/auth'
 
 const SignupPage = () => {
-    const navigate = useNavigate();
-    const {
-        register,
-        handleSubmit,
-    } = useForm()
+    const navigate = useNavigate()
+    const { register, handleSubmit } = useForm()
 
-    const onSubmit = async (data:any) => {
+    const onSubmit = async (data: any) => {
         console.log(data)
         // Thực hiện xử lý đăng ký tài khoản tại đây
         try {
-            const reponse = await signup(data);
-            console.log("api signup",reponse);
-            message.success(reponse?.data?.message);
-            navigate('/signin');
-        } catch (error:any) {
-            console.log(error);
-            message.warning(error?.response?.data?.message);
+            const reponse = await signup(data)
+            console.log('api signup', reponse)
+            message.success(reponse?.data?.message)
+            navigate('/signin')
+        } catch (error: any) {
+            console.log(error)
+            message.warning(error?.response?.data?.message)
         }
     }
 
@@ -56,7 +53,6 @@ const SignupPage = () => {
                                 className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
                                 type='text'
                             />
-                           
                         </div>
 
                         <div className='mb-4'>
@@ -67,12 +63,10 @@ const SignupPage = () => {
                                 Email
                             </label>
                             <input
-                              
                                 {...register('email')}
                                 className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
                                 type='email'
                             />
-                        
                         </div>
                         <div className='mb-4'>
                             <label
@@ -87,7 +81,6 @@ const SignupPage = () => {
                                 className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
                                 type='password'
                             />
-                       
                         </div>
 
                         <div className='mb-4'>
@@ -97,12 +90,11 @@ const SignupPage = () => {
                             >
                                 Xác nhận mật khẩu
                             </label>
-                            <input  
+                            <input
                                 {...register('confirmPassword')}
                                 className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
                                 type='password'
                             />
-                           
                         </div>
 
                         <div className='mt-6'>

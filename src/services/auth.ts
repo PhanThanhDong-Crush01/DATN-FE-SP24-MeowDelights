@@ -1,3 +1,6 @@
+// import { IAuth } from '@/interface/IAuth'
+// import instance from './core/api'
+
 import { IAuth } from '@/interface/IAuth'
 import instance from './core/api'
 export const getAll = async () => {
@@ -25,8 +28,13 @@ export const signin = async (user: any) => {
         console.log(`['Signin_ERROR']`, error)
     }
 }
-export const signup = (user: any) => {
-    return instance.post('/auth/signup', user)
+export const signup = async (user: any) => {
+    try {
+        const response = await instance.post('/auth/signup', user)
+        return response.data
+    } catch (error) {
+        console.log(`['GETONE_CART_ERROR']`, error)
+    }
 }
 
 export const updateUserProfile = async (user: IAuth) => {

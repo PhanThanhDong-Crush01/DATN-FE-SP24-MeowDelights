@@ -213,10 +213,9 @@ const ProductDetailPage = () => {
                                         {/* <h1>{data?.maxPrice}</h1> */}
                                         {/* <h1>số lượng: {data?.totalQuantity}</h1> */}
                                         {selectedPrice !== null && (
-                                            <span className='pr-96  '>
-                                                6700
+                                            <span>
+                                                Giá:
                                                 <span
-                                                    className='px-2'
                                                     dangerouslySetInnerHTML={{
                                                         __html: formatPriceBootstrap(Number(selectedPrice))
                                                     }}
@@ -313,7 +312,36 @@ const ProductDetailPage = () => {
                                             <p>
                                                 <strong className='flex items-baseline mb-6 pb-6 mt-3 border-b border-slate-200'>
                                                     <div className='space-x-2 flex text-sm gap-3 '>
-                                                        <span className='pt-1 text-base font-sans'>Số lượng</span>
+                                                        <span className='pt-1 text-base font-sans pr-7'>Kích cỡ</span>
+                                                        {uniqueSizes.map((size: any) => (
+                                                            <label key={size}>
+                                                                <input
+                                                                    {...register('size')}
+                                                                    className='sr-only peer'
+                                                                    name='size'
+                                                                    type='radio'
+                                                                    value={size}
+                                                                    onChange={() => handleSizeChange(size)}
+                                                                />
+                                                                <div
+                                                                    className='rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        padding: '10px',
+                                                                        border: '1px solid #EEEEEE'
+                                                                    }}
+                                                                >
+                                                                    {size}
+                                                                </div>
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <strong className='flex items-baseline mb-6 pb-6 mt-3 border-b border-slate-200'>
+                                                    <div className='space-x-2 flex text-sm gap-3 '>
+                                                        <span className='pt-1 text-base font-sans pr-7'>SỐ lượng</span>
                                                         <input
                                                             {...register('quantity')}
                                                             className='sr-only peer'
@@ -366,10 +394,10 @@ const ProductDetailPage = () => {
                                     {/* <!-- Post Meta Start --> */}
                                     <div className='sigma_post-single-meta'></div>
                                     {/* <!-- Post Meta End --> */}
-                                    {/* <p
+                                    <p
                                         className='sigma_productnp-excerpt'
                                         dangerouslySetInnerHTML={{ __html: data?.data?.description }}
-                                    ></p> */}
+                                    ></p>
                                 </div>
                             </div>
                         </div>

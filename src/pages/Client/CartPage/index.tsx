@@ -6,10 +6,99 @@ import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
 import '@/styles/Cart.css'
-import { FaTruckMoving } from 'react-icons/fa6'
+import { Card, Popconfirm } from 'antd'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const CartPage = () => {
+    const { dataCart } = useCartQuery()
+
+    const { onRemove } = useCartMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Xoá sản phẩm thành công!!',
+                description: 'Sản phẩm bạn không thích trong giỏ hàng đã bị xóa'
+            })
+        }
+    })
+    const { onSubmit } = useCartMutation({
+        action: 'UPDATE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật số lượng thành công!!',
+                description: 'Cập nhật số lượng của sản phẩm thành công!'
+            })
+        }
+    })
+
+    const onChangeQuantity_Cart = (cartItem: any, value: any) => {
+        const newQuantity = Number(value.target.value)
+        if (newQuantity > 0) {
+            // Update quantity
+            cartItem.quantity = newQuantity
+            onSubmit(cartItem)
+        } else if (newQuantity <= 0) {
+            const confirm = window.confirm('Bạn có chắc muốn xoá sản phẩm này không')
+            if (confirm === true) {
+                // Remove product
+                onRemove(cartItem)
+            } else {
+                cartItem.quantity = +1
+                onSubmit(cartItem)
+            }
+        }
+    }
+
+    const [idVoucher, setIdVoucher] = useState('')
+    const HandleChane = (value: any) => {
+        const idVC = value.target.value
+        setIdVoucher(idVC.toLowerCase())
+    }
+    const { data } = useVoucherQuery(idVoucher)
+    const xetIdVoucher = () => {
+        if (data && idVoucher !== '') {
+            return true
+        } else if (data == undefined && idVoucher == '') {
+            return false
+        }
+    }
+    const XetDieuKienDungVoucher = () => {
+        if (data && dataCart?.totalAmount >= data?.datas.conditions) {
+            return true
+        } else if (!data) {
+            return false
+        }
+    }
+
+    let phiVanChuyen = 25000
+    const [voucherGiamGia, setVoucherGiamGia] = useState(0)
+    const [tongTienCanThanhToan, setTongTienCanThanhToan] = useState<number>(dataCart?.totalAmount + phiVanChuyen)
+
+    useEffect(() => {
+        const upTongTienCanThanhToan = dataCart?.totalAmount + phiVanChuyen - voucherGiamGia
+        setTongTienCanThanhToan(upTongTienCanThanhToan)
+    }, [dataCart, voucherGiamGia])
+    const apDungVoucher = () => {
+        if (xetIdVoucher() && XetDieuKienDungVoucher()) {
+            setVoucherGiamGia(data!.datas.decrease)
+            alert('Áp  dụng thành công')
+        } else {
+            alert('Mã voucher hoặc điều kiệu áp dụng không hợp lệ !!!')
+        }
+    }
+    const thongtindonhang: any = {
+        order: dataCart?.data,
+        phiVanChuyen: phiVanChuyen,
+        voucher: {
+            idVc: data?.datas?._id || '',
+            soTienGiam: voucherGiamGia || 0
+        },
+        tongTien: tongTienCanThanhToan
+    }
+
     return (
         <>
             <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-8'>

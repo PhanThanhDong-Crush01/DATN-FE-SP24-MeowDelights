@@ -41,4 +41,3 @@ export const remove = async (voucher: IVoucher) => {
         console.log(`['DELETE_VOUCHER_ERROR']`, error)
     }
 }
-

@@ -9,6 +9,7 @@ import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
 import form from 'antd/es/form'
 import { IProduct } from '@/interface/IProduct'
+import instance from '@/services/core/api'
 type InputRef = GetRef<typeof Input>
 interface DataType {
     key: string
@@ -21,16 +22,30 @@ interface DataType {
     description: string
     idCategory: string
 }
-
 type DataIndex = keyof DataType
 const Product = () => {
-    const { data } = useProductQuery()
-    console.log(data)
-    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
-        ...item,
-        key: index + 1
-    }))
-    console.log(dataProduct)
+    const [dataProduct, setDataProduct] = useState<IProduct[]>([])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await instance.get('/products')
+                const data = response.data?.datas || []
+                const dataProduct = data.map((item: any, index: any) => ({
+                    ...item,
+                    key: index + 1
+                }))
+                setDataProduct(dataProduct)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
+    const dataProductTrue = dataProduct.filter((item: any) => {
+        return item.status === true
+    })
+
     const { onStorage } = useProductMutation({
         action: 'STORAGE',
         onSuccess: () => {
@@ -41,25 +56,10 @@ const Product = () => {
             })
         }
     })
-    const dataProductTrue = dataProduct.filter((item: any) => {
-        return item.status === true
-    })
 
-    const handleStorage = (record: IProduct) => async () => {
-        record.status = false
-        console.log('🚀 ~ handleStorage ~ record:', record)
-        console.log()
-    }
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
-
-    // const confirmDelete = async (productId: string) => {
-    //     message.success('xoá thành công')
-    // }
-    // const cancelDelete = () => {
-    //     message.error('Product deletion cancelled')
-    // }
 
     const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
         confirm()
@@ -125,14 +125,13 @@ const Product = () => {
             </div>
         ),
         filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
-        onFilter: (value, record) =>
+        onFilter: (value, record: any) =>
             record[dataIndex]
                 .toString()
                 .toLowerCase()
                 .includes((value as string).toLowerCase())
     })
-
-    const columns: TableColumnsType<DataType> = [
+    const columns: TableColumnsType<any> = [
         {
             title: '#',
             dataIndex: 'key',
@@ -144,8 +143,8 @@ const Product = () => {
             title: 'Ảnh',
             dataIndex: 'image',
             key: 'image',
-            width: '10%'
-            // render: (_image) => <img src={data.image} alt='Product' width={70} />
+            width: '10%',
+            render: (_, record) => <img src={record.image} alt='Product' width={70} />
         },
         {
             title: 'Tên',
@@ -220,7 +219,6 @@ const Product = () => {
                         title='Lưu trữ sản phẩm?'
                         description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
                         onConfirm={() => onStorage(record)}
-                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
@@ -243,16 +241,14 @@ const Product = () => {
                     <p className='text-[20px]'>Sản Phẩm </p>
                 </div>
                 <div className='flex justify-end mb-2'>
-                    <Button
-                        type='primary'
-                        icon={<PlusCircleOutlined />}
-                        size={'large'}
-                        className='bg-[#1677ff]'
-                        onClick={() => {
-                            form.resetFields()
-                            showModal('add')
-                        }}
-                    ></Button>
+                    <Link to={'/admin/products/add'}>
+                        <Button
+                            type='primary'
+                            icon={<PlusCircleOutlined />}
+                            size={'large'}
+                            className='bg-[#1677ff]'
+                        ></Button>
+                    </Link>
                 </div>
             </div>
             <Table columns={columns} dataSource={dataProductTrue} />

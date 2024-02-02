@@ -3,7 +3,9 @@ import instance from './core/api'
 
 export const getAll = async () => {
     try {
+        console.log(1)
         const response = await instance.get('/products')
+        console.log('🚀 ~ getAll ~ response:', response)
         return response.data
     } catch (error) {
         console.log(`['GETALL_PRODUCT_ERROR']`, error)
@@ -11,7 +13,9 @@ export const getAll = async () => {
 }
 export const getOne = async (id: string) => {
     try {
+        console.log(5)
         const response = await instance.get(`/products/${id}`)
+        console.log('🚀 ~ getOne ~ response:', response)
         return response.data
     } catch (error) {
         console.log(`['GETONE_PRODUCT_ERROR']`, error)

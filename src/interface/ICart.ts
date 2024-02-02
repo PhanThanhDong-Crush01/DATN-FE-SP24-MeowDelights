@@ -1,6 +1,8 @@
 export interface ICart {
-    id?: number
-    name: string
-    price: number
+    _id?: string
+    iduser: string
+    idpro: string
+    idprotype: string
+    quantity: number
 }
 //mẫu

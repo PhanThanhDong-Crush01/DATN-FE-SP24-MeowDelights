@@ -1,111 +1,24 @@
+import { useCartMutation } from '@/hooks/Cart/useCartMutation'
+import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { Link } from 'react-router-dom'
+import { toast } from '../ui/use-toast'
 
 const MenuClientComponent = () => {
+    const { dataCart } = useCartQuery()
+
+    const { onRemove } = useCartMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Xoá sản phẩm thành công!!',
+                description: 'Sản phẩm bạn không thích trong giỏ hàng đã bị xóa'
+            })
+        }
+    })
+
     return (
         <>
-            <aside className='sigma_aside sigma_aside-desktop'>
-                <div className='sidebar'>
-                    <div className='widget widget-sigma-recent-posts style-3'>
-                        <h5 className='widget-title'>Recent Post</h5>
-                        <div className='sigma_recent-post'>
-                            <div className='sigma_post-categories'>
-                                <a href='#'>Category</a>
-                            </div>
-                            <div className='recent-post-descr'>
-                                <h6>
-                                    <a href='blog-details.html'>Every Next Level Of Your Life Will Demand Something</a>
-                                </h6>
-                                <div className='author-info d-flex align-items-center'>
-                                    <span>TA</span>
-                                    <div>
-                                        <a href='#' className='author-name'>
-                                            Tim Abell
-                                        </a>
-                                        <a href='blog-details.html' className='date'>
-                                            June 4, 2024
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='sigma_recent-post'>
-                            <div className='sigma_post-categories'>
-                                <a href='#'>Category</a>
-                            </div>
-                            <div className='recent-post-descr'>
-                                <h6>
-                                    <a href='blog-details.html'>We are the champions, we do not give up, we try</a>
-                                </h6>
-                                <div className='author-info d-flex align-items-center'>
-                                    <span>TA</span>
-                                    <div>
-                                        <a href='#' className='author-name'>
-                                            Tim Abell
-                                        </a>
-                                        <a href='blog-details.html' className='date'>
-                                            June 4, 2024
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='widget widget-follow'>
-                        <h5 className='widget-title'>Follow Us</h5>
-                        <div className='social-buttons'>
-                            <a href='#' className='btn-block sigma_btn'>
-                                <div className='follow-icon d-flex align-items-center'>
-                                    <i className='fab fa-instagram' />
-                                    <p className='mb-0'>
-                                        Instagram
-                                        <span>225.5k Followers</span>
-                                    </p>
-                                </div>
-                                <i className='fal fa-chevron-right' />
-                            </a>
-                            <a href='#' className='btn-block sigma_btn'>
-                                <div className='follow-icon d-flex align-items-center'>
-                                    <i className='fab fa-twitter' />
-                                    <p className='mb-0'>
-                                        Twitter
-                                        <span>225.5k Followers</span>
-                                    </p>
-                                </div>
-                                <i className='fal fa-chevron-right' />
-                            </a>
-                            <a href='#' className='btn-block sigma_btn'>
-                                <div className='follow-icon d-flex align-items-center'>
-                                    <i className='fab fa-facebook-f' />
-                                    <p className='mb-0'>
-                                        Facebook
-                                        <span>225.5k Followers</span>
-                                    </p>
-                                </div>
-                                <i className='fal fa-chevron-right' />
-                            </a>
-                            <a href='#' className='btn-block sigma_btn'>
-                                <div className='follow-icon d-flex align-items-center'>
-                                    <i className='fab fa-youtube' />
-                                    <p className='mb-0'>
-                                        Youtube
-                                        <span>225.5k Followers</span>
-                                    </p>
-                                </div>
-                                <i className='fal fa-chevron-right' />
-                            </a>
-                        </div>
-                    </div>
-                    <div className='widget widget-newsletter'>
-                        <h5 className='widget-title'>Join Petletter</h5>
-                        <form method='post'>
-                            <input type='email' name='email' placeholder='Enter your email' />
-                            <button type='button' className='btn-block mt-4'>
-                                Subscribe
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </aside>
             <div className='sigma_aside-overlay aside-trigger-right'></div>
             <aside className='sigma_aside'>
                 <div className='sigma_close aside-trigger'>
@@ -237,60 +150,39 @@ const MenuClientComponent = () => {
                                             <i className='far fa-shopping-basket' />
                                         </Link>
                                         <ul className='sigma_cart-dropdown'>
-                                            <li>
-                                                <div className='sigma_cart-product-wrapper'>
-                                                    <div className='d-flex'>
-                                                        <img src='/src/assets/img/shop/cart/c-1.png' alt='prod1' />
-                                                        <div className='sigma_cart-product-div'>
-                                                            <h6>
-                                                                {' '}
-                                                                <a href='#'>Rubber Bone</a>{' '}
-                                                            </h6>
-                                                            <p>2 Pieces</p>
+                                            {dataCart?.data.map((cart: any) => (
+                                                <li key={cart?.product?.name + cart?._id}>
+                                                    <div className='sigma_cart-product-wrapper'>
+                                                        <div className='d-flex'>
+                                                            <img src={cart?.typeProduct?.image} alt='cart' />
+                                                            <div className='sigma_cart-product-div'>
+                                                                <h6>
+                                                                    <a href={`/products/${cart?.product?._id}`}>
+                                                                        {cart?.product?.name.length > 30
+                                                                            ? `${cart?.product?.name.substring(
+                                                                                  0,
+                                                                                  30
+                                                                              )}...`
+                                                                            : cart?.product?.name}
+                                                                    </a>
+                                                                </h6>
+                                                                <p>
+                                                                    {cart?.quantity} x {cart?.typeProduct?.color} -{' '}
+                                                                    {cart?.typeProduct?.size}
+                                                                </p>
+                                                            </div>
                                                         </div>
+                                                        <button
+                                                            type='button'
+                                                            className='sigma_close remove-from-cart'
+                                                            onClick={() => onRemove(cart)}
+                                                        >
+                                                            <span></span>
+                                                            <span></span>
+                                                        </button>
                                                     </div>
-                                                    <button type='button' className='sigma_close remove-from-cart'>
-                                                        <span></span>
-                                                        <span></span>
-                                                    </button>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className='sigma_cart-product-wrapper'>
-                                                    <div className='d-flex'>
-                                                        <img src='/src/assets/img/shop/cart/c-2.png' alt='prod1' />
-                                                        <div className='sigma_cart-product-body'>
-                                                            <h6>
-                                                                {' '}
-                                                                <a href='#'>Organic Food</a>{' '}
-                                                            </h6>
-                                                            <p>2 Pieces</p>
-                                                        </div>
-                                                    </div>
-                                                    <button type='button' className='sigma_close remove-from-cart'>
-                                                        <span></span>
-                                                        <span></span>
-                                                    </button>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className='sigma_cart-product-wrapper'>
-                                                    <div className='d-flex'>
-                                                        <img src='src/assets/img/shop/cart/c-3.png' alt='prod1' />
-                                                        <div className='sigma_cart-product-body'>
-                                                            <h6>
-                                                                {' '}
-                                                                <a href='#'>Mouse bell</a>{' '}
-                                                            </h6>
-                                                            <p>2 Pieces</p>
-                                                        </div>
-                                                    </div>
-                                                    <button type='button' className='sigma_close remove-from-cart'>
-                                                        <span></span>
-                                                        <span></span>
-                                                    </button>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </li>
                                     <li className='d-none d-sm-block'>

@@ -6,10 +6,9 @@ import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
 import '@/styles/Cart.css'
-import { Button, Card, Popconfirm, Space } from 'antd'
+import { Card, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import PaymentInformationPage from '../PaymentInformationPage'
+import { Link } from 'react-router-dom'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
@@ -76,12 +75,12 @@ const CartPage = () => {
 
     let phiVanChuyen = 25000
     const [voucherGiamGia, setVoucherGiamGia] = useState(0)
-    const tttt = dataCart?.totalAmount + phiVanChuyen
-    const [tongTienCanThanhToan, setTongTienCanThanhToan] = useState<number>(tttt)
+    const [tongTienCanThanhToan, setTongTienCanThanhToan] = useState<number>(dataCart?.totalAmount + phiVanChuyen)
+
     useEffect(() => {
-        const upTongTienCanThanhToan = tongTienCanThanhToan - voucherGiamGia
+        const upTongTienCanThanhToan = dataCart?.totalAmount + phiVanChuyen - voucherGiamGia
         setTongTienCanThanhToan(upTongTienCanThanhToan)
-    }, [voucherGiamGia, dataCart])
+    }, [dataCart, voucherGiamGia])
     const apDungVoucher = () => {
         if (xetIdVoucher() && XetDieuKienDungVoucher()) {
             setVoucherGiamGia(data!.datas.decrease)

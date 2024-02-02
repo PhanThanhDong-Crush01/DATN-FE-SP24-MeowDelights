@@ -1,5 +1,7 @@
 import { Button, Form } from 'antd'
 import FormProduct from './FormProduct'
+import { useProductMutation } from '@/hooks/Product/useProductMutation'
+import { toast } from '@/components/ui/use-toast'
 
 const formItemLayout = {
     labelCol: {
@@ -13,8 +15,34 @@ const formItemLayout = {
 }
 
 const AddProduct = () => {
+    const { onSubmit } = useProductMutation({
+        action: 'ADD',
+        onSuccess() {
+            toast({
+                variant: 'success',
+                title: 'Thêm sản phẩm thành công!!',
+                description: 'Quay lại trang quản lý sản phẩm để kiểm tra sản phẩm vừa thêm!'
+            })
+        }
+    })
+
     const onFinish = (values: any) => {
-        console.log('Form values:', values)
+        const typeProductString = localStorage.getItem('typeProduct')
+        const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
+
+        const addNew = {
+            product: {
+                name: values.name,
+                image: values.image,
+                import_date: values.import_date,
+                expiry: `${values.manufacture_date} - ${values.expiry_date}`,
+                status: true,
+                description: values.description,
+                idCategory: values.idCategory
+            },
+            typeProduct: typeProduct
+        }
+        onSubmit(addNew)
     }
 
     return (
@@ -32,9 +60,6 @@ const AddProduct = () => {
                         <div
                             className='div'
                             style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
                                 padding: '0 5%'
                             }}
                         >
@@ -44,8 +69,22 @@ const AddProduct = () => {
                             <div className='form_right'></div>
                         </div>
 
-                        <Form.Item wrapperCol={{ offset: 6, span: 16 }} style={{ margin: '0 auto' }}>
-                            <Button type='primary' htmlType='submit'>
+                        <Form.Item
+                            wrapperCol={{ offset: 6, span: 16 }}
+                            style={{ margin: '30px', textAlign: 'center', marginLeft: '-200px' }}
+                        >
+                            <Button
+                                type='primary'
+                                htmlType='submit'
+                                className='btn'
+                                style={{
+                                    width: '30%',
+                                    height: '70px',
+                                    border: '1px solid blue',
+                                    color: 'red',
+                                    backgroundColor: '#1C2434'
+                                }}
+                            >
                                 Thêm
                             </Button>
                         </Form.Item>

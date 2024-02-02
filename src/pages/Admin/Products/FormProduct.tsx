@@ -3,10 +3,12 @@ import { Button, DatePicker, Form, Input, Select, Upload, Drawer } from 'antd'
 import { useEffect, useState } from 'react'
 import { SlClose } from 'react-icons/sl'
 import '@/styles/FormProduct.css'
-import axios from 'axios'
 import { IoMdAdd } from 'react-icons/io'
 import { Modal, Space } from 'antd'
 import FromAddColorOfSize from './FormAddColorOfSize'
+import { getRandomNumber } from '@/lib/utils'
+import FormAddInfoTypeProduct from './FormAddInfoTypeProduct'
+import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 
 const { RangePicker } = DatePicker
 const normFile = (e: any) => {
@@ -18,102 +20,120 @@ const normFile = (e: any) => {
 
 interface Color {
     id: number
-    name: string
+    color: string
 }
 
 interface Size {
     id: number
-    name: string
+    size: string
 }
 
+const colorsData: Color[] = [
+    { id: 1, color: 'trắng' },
+    { id: 2, color: 'đen' },
+    { id: 3, color: 'xanh' }
+    // Thêm các màu khác nếu cần
+]
+
+const sizesData: Size[] = [
+    { id: 1, size: 'S' },
+    { id: 2, size: 'M' },
+    { id: 3, size: 'L' }
+    // Thêm các kích thước khác nếu cần
+]
+
 const FormProduct = () => {
+    const { data } = useCategoryQuery()
+    const [categories, setCate] = useState()
+    useEffect(() => {
+        setCate(
+            data?.data.map((cate: any) => {
+                return {
+                    value: cate?._id,
+                    label: cate?.name
+                }
+            })
+        )
+    }, [data])
     const [open, setOpen] = useState(false)
-    const [childrenDrawer, setChildrenDrawer] = useState(false)
-
-    const showDrawer = () => {
-        setOpen(true)
-    }
-
-    const onClose = () => {
-        setOpen(false)
-    }
-
-    const showChildrenDrawer = () => {
-        setChildrenDrawer(true)
-    }
-
-    const onChildrenDrawerClose = () => {
-        setChildrenDrawer(false)
-    }
-
-    const [colors, setColors] = useState<Color[]>([])
-    const [sizes, setSizes] = useState<Size[]>([])
+    const [colors, setColors] = useState<Color[]>(colorsData)
+    const [sizes, setSizes] = useState<Size[]>(sizesData)
     const [combinedData, setCombinedData] = useState<(Color & Size)[]>([])
 
-    useEffect(() => {
-        axios.get('http://localhost:3000/product_size').then(({ data }) => setSizes(data))
-        axios.get('http://localhost:3000/product_color').then(({ data }) => setColors(data))
-    }, [])
+    const updateDataColorOfSize = (dtb: string, data: any) => {
+        if (dtb === 'Màu') {
+            setColors((colors) => [...colors, { id: data.id, color: data.name }])
+        } else {
+            setSizes((sizes) => [...sizes, { id: data.id, size: data.name }])
+        }
+    }
+
+    const deleteItemColor = (id: number) => {
+        setColors((prevColors) => prevColors.filter((item) => item.id !== id))
+    }
+
+    const deleteItemSize = (id: number) => {
+        setSizes((prevSizes) => prevSizes.filter((item) => item.id !== id))
+    }
 
     useEffect(() => {
-        // Combine colors and sizes
         const combined = colors.flatMap((color) =>
             sizes.map((size) => ({
-                ...color,
-                ...size
+                id: getRandomNumber(), // Sử dụng hàm tạo ID tự sinh
+                color: color.color,
+                size: size.size
             }))
         )
 
         setCombinedData(combined)
     }, [colors, sizes])
 
-    console.log(combinedData)
-
-    const updateDataColorOfSize = (dtb: string, data: Color | Size) => {
-        // data: {"id": 4, "name": "red"}
-        if (dtb === 'Màu') {
-            setColors((colors) => [...colors, { id: data.id, color: data.name } as any])
-        } else {
-            setSizes((sizes) => [...sizes, { id: data.id, size: data.name } as any])
-        }
+    const showDrawer = () => {
+        setOpen(true)
     }
 
-    const deleteItemColor = (id: any) => {
-        axios
-            .delete(`http://localhost:3000/product_color/${id}`)
-            .then(() => setColors((prevColors) => prevColors.filter((item: any) => item.id !== id)))
-            .catch((error) => console.error('Error deleting color:', error))
+    const onClose = () => {
+        const typeProductString = localStorage.getItem('typeProduct')
+        const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
+        console.log('🚀 ~ FormProduct ~ typeProduct:', typeProduct)
+        setOpen(false)
     }
 
-    const deleteItemSize = (id: any) => {
-        axios
-            .delete(`http://localhost:3000/product_size/${id}`)
-            .then(() => setSizes((prevSizes) => prevSizes.filter((item: any) => item.id !== id)))
-            .catch((error) => console.error('Error deleting size:', error))
-    }
     const info = (name: string) => {
         Modal.info({
             content: <FromAddColorOfSize name={name} updateDataColorOfSize={updateDataColorOfSize} />
-            // onOk() {}
         })
     }
     return (
-        <div>
+        <div style={{ width: '100%' }}>
             <Form.Item
                 label='Tên sản phẩm'
                 name='name'
                 rules={[{ required: true, message: 'Vui lòng nhập Tên sản phẩm!' }]}
             >
-                <Input />
+                <Input style={{ height: '40px', width: '100%' }} />
             </Form.Item>
 
-            <Form.Item label='Ảnh sản phẩm' valuePropName='fileList' getValueFromEvent={normFile}>
+            {/* <Form.Item label='Ảnh sản phẩm' valuePropName='fileList' getValueFromEvent={normFile}>
                 <Upload action='/upload.do' listType='picture-card'>
                     <button style={{ border: 0, background: 'none' }} type='button'>
                         <PlusOutlined />
                         <div style={{ marginTop: 8 }}>Tải lên file</div>
                     </button>
                 </Upload>
+            </Form.Item> */}
+
+            <Form.Item
+                label='Ảnh '
+                name='image'
+                rules={[
+                    {
+                        required: true,
+                        message: `Vui lòng nhập ảnh của sản phẩm!`
+                    }
+                ]}
+            >
+                <Input style={{ height: '40px', width: '100%' }} placeholder='Nhập link ảnh ở đây' />
             </Form.Item>
 
             <Form.Item
@@ -121,55 +141,35 @@ const FormProduct = () => {
                 name='import_date'
                 rules={[{ required: true, message: 'Vui lòng thêm ngày nhập hàng!' }]}
             >
-                <DatePicker />
+                <input type='date' style={{ height: '40px', width: '50%' }} />
             </Form.Item>
 
             <Form.Item
-                label='Hạn sử dụng'
-                name='expiry'
-                rules={[{ required: true, message: 'Vui lòng thêm hạn sử dụng!' }]}
+                label='Ngày sản xuất'
+                name='manufacture_date'
+                rules={[{ required: true, message: 'Vui lòng thêm ngày sản xuất!' }]}
             >
-                <RangePicker />
+                <input type='date' style={{ height: '40px', width: '50%' }} />
             </Form.Item>
 
             <Form.Item
-                label='Trạng thái'
-                name='status'
-                rules={[{ required: true, message: 'Vui lòng chọn trạng thái sản phẩm!' }]}
+                label='Ngày hết hạn'
+                name='expiry_date'
+                rules={[{ required: true, message: 'Vui lòng thêm ngày hết hạn!' }]}
             >
-                <Select
-                    placeholder='Chọn trạng thái sản phẩm'
-                    optionFilterProp='children'
-                    options={[
-                        {
-                            value: 'Viet_Nam',
-                            label: 'Sản phẩm Việt Nam'
-                        },
-                        {
-                            value: 'Nuoc_Ngoai',
-                            label: 'Sản phẩm nước ngoài'
-                        }
-                    ]}
-                />
+                <input type='date' style={{ height: '40px', width: '50%' }} />
             </Form.Item>
+
             <Form.Item
                 label='Danh mục'
-                name='IdCategory'
+                name='idCategory'
                 rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm!' }]}
             >
                 <Select
-                    placeholder='Chọn trạng danh mục'
+                    style={{ height: '40px', width: '100%', background: 'white' }}
+                    placeholder='Chọn danh mục'
                     optionFilterProp='children'
-                    options={[
-                        {
-                            value: '1',
-                            label: 'Đồ ăn cho mèo'
-                        },
-                        {
-                            value: '2',
-                            label: 'Phụ kiện đồ chơi'
-                        }
-                    ]}
+                    options={categories}
                 />
             </Form.Item>
             <Form.Item
@@ -177,19 +177,20 @@ const FormProduct = () => {
                 name='description'
                 rules={[{ required: true, message: 'Vui lòng nhập mô tả của sản phẩm!' }]}
             >
-                <Input.TextArea />
+                <Input.TextArea style={{ height: '160px', background: 'white' }} />
             </Form.Item>
+
             <div className='them_phan_loai' style={{ textAlign: 'center' }}>
                 <Button type='primary' onClick={showDrawer} style={{ color: 'red' }}>
                     Thêm phân loại sản phẩm
                 </Button>
-                <Drawer title='Màu - Kích cỡ' width={520} closable={false} onClose={onClose} open={open}>
+                <Drawer title='Màu - Kích cỡ' width={'auto'} closable={false} onClose={onClose} open={open}>
                     <h3 style={{ fontSize: '20px', fontWeight: '500' }}>Màu</h3>
                     <hr />
                     <div className='colors'>
                         {colors.map((item: any) => (
                             <div
-                                key={item.id}
+                                key={item.id + item.color}
                                 className='color'
                                 style={{
                                     fontSize: '15px',
@@ -226,7 +227,7 @@ const FormProduct = () => {
                     <div className='sizes'>
                         {sizes.map((item: any) => (
                             <div
-                                key={item.id}
+                                key={item.id + item.size}
                                 className='size'
                                 style={{
                                     fontSize: '15px',
@@ -258,18 +259,21 @@ const FormProduct = () => {
                             </div>
                         </Space>
                     </div>
-                    <Button type='primary' onClick={showChildrenDrawer} style={{ color: 'blue', marginTop: '30px' }}>
+                    <div style={{ marginTop: '50px' }}>
+                        <FormAddInfoTypeProduct data={combinedData} onClose={onClose} />
+                    </div>
+                    {/* <Button type='primary' onClick={showChildrenDrawer} style={{ color: 'blue', marginTop: '30px' }}>
                         Thêm Ảnh - Giá
                     </Button>
                     <Drawer
                         title='Ảnh - Khối lượng - Giá - Số lượng'
-                        width={320}
+                        width={'auto'}
                         closable={false}
                         onClose={onChildrenDrawerClose}
                         open={childrenDrawer}
                     >
-                        This is two-level drawer
-                    </Drawer>
+                        <FormAddInfoTypeProduct data={combinedData} closeDrawer={closeDrawer} />
+                    </Drawer> */}
                 </Drawer>
             </div>
         </div>

@@ -1,7 +1,8 @@
 import '@/styles/PaymentSuccess.css'
 import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
-import { useForm } from 'react-hook-form'
+import { Result } from 'antd'
+import { Link } from 'react-router-dom'
 
 const PaymentSuccessPage = () => {
     return (
@@ -43,61 +44,28 @@ const PaymentSuccessPage = () => {
                     <img src='src/assets/img/subheader-tr.png' className='tr' alt='subheader' />
                 </div>
 
-                {/* <div className='section section-padding'>
-                    <div className='container'>
-                        <div className='row'>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_info style-24'>
-                                    <div className='sigma_info-title'>
-                                        <span className='sigma_info-icon bg-primary-1 text-white'>
-                                            <i className='flaticon-pin'></i>
-                                        </span>
-                                    </div>
-                                    <div className='sigma_info-description'>
-                                        <h5>Địa chỉ của chúng tôi</h5>
-                                        <p>TT.Đạo Đức - Bình Xuyên - Vĩnh Phúc.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_info style-24'>
-                                    <div className='sigma_info-title'>
-                                        <span className='sigma_info-icon bg-primary-1 text-white'>
-                                            <i className='flaticon-call'></i>
-                                        </span>
-                                    </div>
-                                    <div className='sigma_info-description'>
-                                        <h5>Số điện thoại của chúng tôi</h5>
-                                        <p>Điện thoại: 0559041043</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_info style-24'>
-                                    <div className='sigma_info-title'>
-                                        <span className='sigma_info-icon bg-primary-1 text-white'>
-                                            <i className='flaticon-email'></i>
-                                        </span>
-                                    </div>
-                                    <div className='sigma_info-description'>
-                                        <h5>Email của chúng tôi</h5>
-                                        <p>Email: meowdelights@website.com</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-
                 <div className='section pt-0'>
                     <div className='container'>
                         <div className='section-title centered' style={{ width: '100%', marginTop: '5%' }}>
-                            <span className='subtitle'>ĐẶT HÀNG THÀNH CÔNG</span>
+                            <span
+                                className='subtitle flex'
+                                style={{ justifyContent: 'space-between', alignItems: 'center' }}
+                            >
+                                ĐẶT HÀNG THÀNH CÔNG <Result status='success' style={{ marginTop: '15px' }} />
+                            </span>
                             <h3 className='title' style={{ width: '100%' }}>
                                 Cảm ơn bạn đã tin tưởng chúng tôi
                                 <br />
                                 <span style={{ fontSize: '40px' }}>Chúc bạn một ngày vui vui vẻ!</span>
                             </h3>
+                        </div>
+                        <div style={{ margin: '0 auto', textAlign: 'center' }}>
+                            <Link to={'/bill_order'}>
+                                <button className='btn'>Danh sách đơn hàng</button>
+                            </Link>
+                            <Link to={'/bill_order/'} style={{ marginLeft: '20px' }}>
+                                <button className='btn'>Xem đơn hàng</button>
+                            </Link>
                         </div>
                     </div>
                 </div>

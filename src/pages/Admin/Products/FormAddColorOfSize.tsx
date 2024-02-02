@@ -1,24 +1,24 @@
 import { Modal, Form, Input, Button } from 'antd'
-import axios from 'axios'
 
-const FromAddColorOfSize = ({ name, updateDataColorOfSize }: any) => {
+interface Props {
+    name: string
+    updateDataColorOfSize: (dtb: string, data: any) => void
+}
+
+const FromAddColorOfSize = ({ name, updateDataColorOfSize }: Props) => {
     const dtb = name
+
+    const onFinish = (values: any) => {
+        dtb === 'Màu' ? addItemColor(values) : addItemSize(values)
+        Modal.destroyAll()
+    }
+
     const addItemColor = (color: any) => {
-        axios.post(`http://localhost:3000/product_color`, color).then(({ data }) => {
-            updateDataColorOfSize(dtb, data)
-        })
+        updateDataColorOfSize(dtb, color)
     }
 
     const addItemSize = (size: any) => {
-        axios.post(`http://localhost:3000/product_size`, size).then(({ data }) => {
-            updateDataColorOfSize(dtb, data)
-        })
-    }
-    const onFinish = (values: any) => {
-        console.log('name:', values)
-        dtb === 'Màu' ? addItemColor(values) : addItemSize(values)
-
-        Modal.destroyAll()
+        updateDataColorOfSize(dtb, size)
     }
 
     return (
@@ -29,7 +29,7 @@ const FromAddColorOfSize = ({ name, updateDataColorOfSize }: any) => {
             footer={null}
         >
             <Form onFinish={onFinish}>
-                <Form.Item label={`${name}`} name='name' rules={[{ required: true, message: 'không để trống!' }]}>
+                <Form.Item label={`${name}`} name='name' rules={[{ required: true, message: 'Không để trống!' }]}>
                     <Input />
                 </Form.Item>
 

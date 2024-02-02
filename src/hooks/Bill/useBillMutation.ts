@@ -1,14 +1,7 @@
 import { IBill } from '@/interface/IBill'
 import { add, remove, update } from '@/services/bill'
-import { joiResolver } from '@hookform/resolvers/joi'
-import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
-
-const formSchema = Joi.object({
-    name: Joi.string().min(2).max(50),
-    price: Joi.number()
-})
 
 type useBillMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'
@@ -44,11 +37,9 @@ export const useBillMutation = ({
         }
     })
     const form = useForm({
-        resolver: joiResolver(formSchema),
         defaultValues
     })
     const onSubmit: SubmitHandler<any> = (values) => {
-        console.log(values)
         mutate(values)
     }
     const onRemove = (bill: IBill) => {

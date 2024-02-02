@@ -23,6 +23,8 @@ import EditCategory from '@/pages/Admin/Category/EditCategory'
 import AddProduct from '@/pages/Admin/Products/AddProduct'
 import Voucher from '@/pages/Admin/ListVoucher'
 import AddVoucher from '@/pages/Admin/ListVoucher/AddVoucher'
+import PaymentMoMo from '@/pages/Client/PaymentSuccessPage/PaymentMoMo'
+import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 
 const Routers = () => {
@@ -34,16 +36,16 @@ const Routers = () => {
                 <Route path='products/:id' element={<ProductDetailPage />} />
                 <Route path='cart' element={<CartPage />} />
                 <Route path='payment_information' element={<PaymentInformationPage />} />
+                <Route path='payment_method_momo' element={<PaymentMoMo />} />
                 <Route path='payment_success' element={<PaymentSuccessPage />} />
                 <Route path='contact' element={<ContactPage />} />
                 <Route path='introduce' element={<IntroducePage />} />
 
-                {/* auth */}
-                {/* <Route path='signin' element={<SigninPage />} />
-                <Route path='signup' element={<SignupPage />} /> */}
+                <Route path='bill_order' element={<List_Bill_Order />} />
             </Route>
             <Route path='signin' element={<SigninPage />} />
             <Route path='signup' element={<SignupPage />} />
+
             <Route path='admin' element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path='/admin/dashboard' element={<Dashboard />} />

@@ -26,11 +26,9 @@ interface DataType {
     totalQuantity: number
     minPrice: number
 }
-
 type DataIndex = keyof DataType
 const Product = () => {
     const [dataProduct, setDataProduct] = useState<IProduct[]>([])
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -250,7 +248,6 @@ const Product = () => {
                         title='Lưu trữ sản phẩm?'
                         description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
                         onConfirm={() => onStorage(record)}
-                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'

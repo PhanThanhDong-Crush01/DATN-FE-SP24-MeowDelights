@@ -1,14 +1,49 @@
+import { toast } from '@/components/ui/use-toast'
 import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { IProduct } from '@/interface/IProduct'
+import { Button } from 'antd'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const ListProduct = () => {
     const { data } = useProductQuery()
-    console.log(data)
-    // const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
-    //     ...item,
-    //     key: index + 1
-    // }))
+    const [products, setProducts] = useState<IProduct[] | null>(null)
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(9)
+    const [searchTerm, setSearchTerm] = useState<string>('')
+
+    useEffect(() => {
+        if (data) {
+            const filteredProducts = data?.datas.filter((product: IProduct) =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            if (filteredProducts.length === 0) {
+                setProducts(data?.datas)
+                toast({
+                    variant: 'destructive',
+                    title: 'Tìm kiếm sản phẩm thất bại!!',
+                    description: 'Sảm phẩm không tồn tại'
+                })
+            } else {
+                setProducts(filteredProducts)
+            }
+        }
+    }, [data, searchTerm])
+
+    const totalPages = Math.ceil((products?.length || 0) / pageSize)
+
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+    }
+
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
+    }
+
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    const currentPageData = products?.slice(startIndex, endIndex) || []
     return (
         <>
             <div className='section section-padding'>
@@ -17,7 +52,7 @@ const ListProduct = () => {
                         <div className='col-lg-8'>
                             <div className='row'>
                                 {/*  */}
-                                {data?.datas.map((product: IProduct) => (
+                                {currentPageData.map((product: IProduct) => (
                                     <div key={product._id} className='col-lg-4 col-md-6'>
                                         <div className='sigma_product style-8'>
                                             <div className='sigma_product-thumb'>
@@ -79,7 +114,7 @@ const ListProduct = () => {
                             </div>
 
                             {/* <!-- Pagination --> */}
-                            <ul className='pagination'>
+                            {/* <ul className='pagination'>
                                 <li className='page-item'>
                                     <a className='page-link' href='#'>
                                         1
@@ -95,14 +130,36 @@ const ListProduct = () => {
                                         3
                                     </a>
                                 </li>
-                            </ul>
+                            </ul> */}
+                            <div className='flex items-center justify-center px-2' style={{ textAlign: 'center' }}>
+                                <div className='flex items-center space-x-6 lg:space-x-8'>
+                                    <div className='flex w-[200px] items-center justify-center text-sm font-medium'>
+                                        Page {currentPage} of {totalPages}
+                                    </div>
+                                    <div className='flex items-center space-x-2'>
+                                        <Button onClick={handlePrevPage}>
+                                            <ChevronLeftIcon />
+                                        </Button>
+                                        <Button onClick={handleNextPage}>
+                                            <ChevronRightIcon />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div className='col-lg-4'>
                             <div className='sidebar'>
                                 {/* <!-- Search Widget --> */}
                                 <div className='widget widget-search'>
                                     <div className='input-group'>
-                                        <input type='text' name='search' placeholder='Tìm kiếm' />
+                                        <input
+                                            type='text'
+                                            name='search'
+                                            placeholder='Tìm kiếm'
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+
                                         <div className='input-group-append'>
                                             <button type='button'>
                                                 <i className='fal fa-search mr-0'></i>

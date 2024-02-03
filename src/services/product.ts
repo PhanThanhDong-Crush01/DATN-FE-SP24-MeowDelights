@@ -9,14 +9,6 @@ export const getAll = async () => {
         console.log(`['GETALL_PRODUCT_ERROR']`, error)
     }
 }
-export const getOne = async (id: string) => {
-    try {
-        const response = await instance.get(`/products/${id}`)
-        return response.data
-    } catch (error) {
-        console.log(`['GETONE_PRODUCT_ERROR']`, error)
-    }
-}
 export const update = async (product: IProduct) => {
     try {
         const response = await instance.patch(`/products/${product._id}`, product)
@@ -39,5 +31,34 @@ export const storage = async (product: IProduct) => {
         return response.data
     } catch (error) {
         console.log(`['STORAGE_PRODUCT_ERROR']`, error)
+    }
+}
+export const getOne = async (id: string) => {
+    try {
+        const response = await instance.get(`/products/${id}`)
+        return response.data
+    } catch (error) {
+        console.log(`['GETONE_PRODUCT_ERROR']`, error)
+    }
+}
+export const getPhanTrangProducts = async (_sort?: string) => {
+    try {
+        const response = await instance.get(`/products${_sort ? `?_order=${_sort}` : ''}`)
+        console.log('🚀 ~ getPhanTrangProducts ~ response:', response)
+        return response.data
+    } catch (error) {
+        //xu ly loi neu can
+        console.error('FETCH_PRODUCTS_ERROR', error)
+        throw error
+    }
+}
+// Trong SortProPrice
+export const SortProPrice = async (_sort: string) => {
+    try {
+        return await getPhanTrangProducts(_sort)
+    } catch (error) {
+        // Xử lý lỗi ở đây nếu cần
+        console.error('FETCH_PRODUCTS_ERROR', error)
+        throw error
     }
 }

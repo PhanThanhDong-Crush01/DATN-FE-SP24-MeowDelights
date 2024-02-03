@@ -4,8 +4,9 @@ import { toast } from '@/components/ui/use-toast'
 import { useBillMutation } from '@/hooks/Bill/useBillMutation'
 import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import moment from 'moment' // Import Moment.js
+// import moment from 'moment' // Import Moment.js
 import 'moment/locale/vi'
+import moment from 'moment'
 
 const ID_USER = '65b9451b0bbb2b6e014e5588'
 

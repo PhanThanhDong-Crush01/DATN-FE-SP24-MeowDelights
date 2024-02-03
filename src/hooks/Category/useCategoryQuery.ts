@@ -6,7 +6,7 @@ export const useCategoryQuery = (categoryId?: string) => {
         queryKey: categoryId ? ['CATEGORY', categoryId] : ['CATEGORY'],
         queryFn: () => (categoryId ? getOne(categoryId) : getAll())
     })
-
+    console.log(data)
     return { data, ...rest }
 }
 //mẫu product

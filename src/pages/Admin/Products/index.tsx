@@ -8,9 +8,6 @@ import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
 import form from 'antd/es/form'
-import { IProduct } from '@/interface/IProduct'
-import instance from '@/services/core/api'
-import { formatPriceBootstrap } from '@/lib/utils'
 type InputRef = GetRef<typeof Input>
 interface DataType {
     key: string
@@ -28,34 +25,10 @@ interface DataType {
 }
 type DataIndex = keyof DataType
 const Product = () => {
-    const [dataProduct, setDataProduct] = useState<IProduct[]>([])
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get('/products')
-                const data = response.data?.datas || []
-
-                // Sort products by createdAt (newest to oldest)
-                data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-                const formattedData = data.map((item: any, index: any) => ({
-                    ...item,
-                    key: index + 1
-                }))
-                setDataProduct(formattedData)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
-
-        fetchData()
-    }, [])
-    const dataProductTrue = dataProduct.filter((item: any) => {
-        return item.status === true
-    })
-
-    const { onStorage } = useProductMutation({
-        action: 'STORAGE',
+    const { data } = useProductQuery()
+    console.log(data)
+    const { onRemove } = useProductMutation({
+        action: 'DELETE',
         onSuccess: () => {
             toast({
                 variant: 'success',
@@ -64,7 +37,11 @@ const Product = () => {
             })
         }
     })
-
+    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataProduct)
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
@@ -169,16 +146,13 @@ const Product = () => {
             key: 'categoryName',
             width: '10%'
         },
-
-        // {
-        //     title: 'Ngày',
-        //     dataIndex: 'import_date',
-        //     key: 'import_date',
-        //     width: '15%',
-        //     ...getColumnSearchProps('import_date'),
-        //     sorter: (a, b) => a.import_date.length - b.import_date.length,
-        //     sortDirections: ['descend', 'ascend']
-        // },
+        {
+            title: 'Gía',
+            dataIndex: 'price',
+            key: 'price',
+            width: '5%',
+            ...getColumnSearchProps('price')
+        },
         {
             title: 'Số lượng',
             dataIndex: 'totalQuantity',
@@ -245,9 +219,10 @@ const Product = () => {
 
                     <Popconfirm
                         placement='topRight'
-                        title='Lưu trữ sản phẩm?'
-                        description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
-                        onConfirm={() => onStorage(record)}
+                        title='Xóa bài viết?'
+                        description='Bạn có chắc chắn xóa bài viết này không?'
+                        onConfirm={() => onRemove(record)}
+                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'

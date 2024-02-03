@@ -1,3 +1,4 @@
+import { toast } from '@/components/ui/use-toast'
 import { Button, Form, Input, InputNumber } from 'antd'
 import React from 'react'
 
@@ -50,6 +51,10 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
         })
         console.log('🚀 ~ Object.keys ~ typeProduct:', typeProduct)
         localStorage.setItem('typeProduct', JSON.stringify(typeProduct))
+        toast({
+            variant: 'success',
+            title: 'Thêm thông tin phân loại phẩm thành công!!'
+        })
         onClose(true)
     }
 

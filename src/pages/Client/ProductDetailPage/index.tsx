@@ -4,13 +4,28 @@ import { toast } from '@/components/ui/use-toast'
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
+import instance from '@/services/core/api'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
 const ProductDetailPage = () => {
+    const [data, setProductData] = useState<any>()
     const { id } = useParams()
-    const { data } = useProductQuery(id)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data } = await instance.get(`/products/${id}`)
+                setProductData(data)
+                console.log('🚀 ~ fetchData ~ data:', data)
+            } catch (error) {
+                console.error('Error fetching product data:', error)
+            }
+        }
+
+        fetchData()
+    }, [id])
     const { register, handleSubmit } = useForm()
 
     const productId = data?.data?._id

@@ -11,7 +11,6 @@ export const getAll = async () => {
         console.log(`['GETALL_PRODUCT_ERROR']`, error)
     }
 }
-
 export const update = async (product: IProduct) => {
     try {
         const response = await instance.patch(`/products/${product._id}`, product)

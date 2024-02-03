@@ -1,30 +1,90 @@
 import FooterTemplate from '@/components/component/Footer'
-import FooterClientComponent from '@/components/component/FooterClientComponent'
-import HeaderClientComponent from '@/components/component/HeaderClientComponent'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
+import { toast } from '@/components/ui/use-toast'
+import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useProductQuery } from '@/hooks/Product/useProductQuery'
-import { ITypeProduct } from '@/interface/ITypeProduct'
+import { formatPriceBootstrap } from '@/lib/utils'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
 const ProductDetailPage = () => {
     const { id } = useParams()
     const { data } = useProductQuery(id)
-    console.log(data)
     const { register, handleSubmit } = useForm()
-    // const onSubmitForm = (data: any) => {
-    //     console.log(data)
-    // }
+
     const productId = data?.data?._id
 
-    const onSubmit = (formData: { product: any }) => {
-        // Include the product ID in the form data
-        formData.product = productId
+    const uniqueColorsWithImage = data?.typeProduct.reduce((unique: any, item: any) => {
+        if (!unique.some((color: any) => color.color === item.color)) {
+            unique.push({
+                color: item.color,
+                image: item.image // Thêm link ảnh vào đây
+            })
+        }
+        return unique
+    }, [])
+    const uniqueSizes = [...new Set(data?.typeProduct.map((itemSize: any) => itemSize.size))]
 
-        // Now formData object contains the selected values for product, size, and color, as well as the product ID
-        console.log(formData)
+    const [selectedColor, setSelectedColor] = useState('')
+    const [selectedSize, setSelectedSize] = useState('')
+    const [selectedPrice, setSelectedPrice] = useState<number | null>(0)
+    const [TypeProductID, setTypeProductID] = useState<string | null>(null)
+    const [imageChinh, setImageChinh] = useState<any>('')
+    useEffect(() => {
+        setImageChinh(data?.data?.image)
+        setSelectedPrice(data?.minPrice)
+    }, [data])
+    const handleColorChange = (color: string, image: string) => {
+        setSelectedColor(color)
+        setImageChinh(image)
+        updatePrice(color, selectedSize)
+    }
 
-        // Perform your submit logic here
+    const handleSizeChange = (size: string) => {
+        setSelectedSize(size)
+        updatePrice(selectedColor, size)
+    }
+
+    const updatePrice = (color: string, size: string) => {
+        const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
+
+        if (selectedTypeProduct) {
+            setSelectedPrice(selectedTypeProduct.price)
+            setTypeProductID(selectedTypeProduct._id)
+        } else {
+            setSelectedPrice(null)
+        }
+    }
+
+    const { onSubmit } = useCartMutation({
+        action: 'ADD',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: 'Thêm sản phẩm vào giỏ hàng thành công!!',
+                description: 'Hãy kiểm tra giỏ hàng và đi đến trang thanh toán để mang đồ về cho boss nào!'
+            })
+        }
+    })
+
+    const onHandleSubmit = (data: any) => {
+        const cart = {
+            iduser: '65b9451b0bbb2b6e014e5588',
+            idpro: productId,
+            idprotype: TypeProductID,
+            quantity: data.quantity
+        }
+        if (selectedColor == '' || selectedSize == '') {
+            toast({
+                variant: 'destructive',
+                title: 'Mời bạn chọn màu và kích cỡ!!',
+                description: 'Bạn phải chọn 1 màu và 1 size để thêm vào giỏ hàng !'
+            })
+        } else {
+            onSubmit(cart)
+        }
+        console.log(data)
     }
     return (
         <>
@@ -78,16 +138,17 @@ const ProductDetailPage = () => {
                             <div className='col-lg-5 col-md-6'>
                                 <div className='sigma_product-single-thumb mb-lg-30'>
                                     <div className='slider'>
-                                        {/* <img src={data.image} alt='product' /> */}
-                                        <img src='/src/assets/img/shop/detail/lg-2.png' alt='product' />
-                                        {/* <img src='/src/assets/img/shop/detail/lg-3.png' alt='product' />
-                                        <img src='/src/assets/img/shop/detail/lg-4.png' alt='product' /> */}
+                                        <img src={imageChinh} alt='product' />
                                     </div>
                                     <div className='slider-nav flex flex-row w-28'>
-                                        <img src='/src/assets/img/shop/detail/sm-1.png' alt='product' />
-                                        <img src='/src/assets/img/shop/detail/sm-2.png' alt='product' />
-                                        <img src='/src/assets/img/shop/detail/sm-3.png' alt='product' />
-                                        <img src='/src/assets/img/shop/detail/sm-4.png' alt='product' />
+                                        {uniqueColorsWithImage &&
+                                            uniqueColorsWithImage.map((item: any) => (
+                                                <img
+                                                    src={item.image}
+                                                    alt='product'
+                                                    onClick={() => setImageChinh(item.image)}
+                                                />
+                                            ))}
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +157,18 @@ const ProductDetailPage = () => {
                                 <div className='sigma_product-single-content'>
                                     <div className='sigma_product-price'>
                                         <span>{data?.data?.name}</span>
-                                        <span>{data?.data?.price}</span>
+                                        {/* <h1>{data?.maxPrice}</h1> */}
+                                        {/* <h1>số lượng: {data?.totalQuantity}</h1> */}
+                                        {selectedPrice !== null && (
+                                            <span>
+                                                Giá:
+                                                <span
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: formatPriceBootstrap(Number(selectedPrice))
+                                                    }}
+                                                ></span>
+                                            </span>
+                                        )}
                                     </div>
                                     <div className='sigma_rating-wrapper'>
                                         <div className='sigma_rating'>
@@ -111,8 +183,7 @@ const ProductDetailPage = () => {
 
                                     <hr />
 
-                                    <p className='sigma_productnp-excerpt'>{data?.data?.description}</p>
-                                    <form action='' onSubmit={handleSubmit(onSubmit)}>
+                                    <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
                                         <div className='sigma_product-meta'>
                                             <p>
                                                 <strong>
@@ -124,100 +195,77 @@ const ProductDetailPage = () => {
                                             <p>
                                                 <strong className='flex items-baseline mb-3 pb-3 mt-3 pt-3 border-slate-200'>
                                                     <div className='space-x-2 flex text-sm'>
-                                                        <span className='pt-1 text-base font-sans pr-7'>Kích cỡ</span>
-                                                        <label>
-                                                            <input
-                                                                {...register('size')}
-                                                                className='sr-only peer'
-                                                                name='size'
-                                                                type='radio'
-                                                                value='xs'
-                                                                defaultChecked
-                                                            />
-
-                                                            <div className='w-9 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                XS
-                                                            </div>
-                                                        </label>
-                                                        <label>
-                                                            <input
-                                                                {...register('size')}
-                                                                className='sr-only peer'
-                                                                name='size'
-                                                                type='radio'
-                                                                value='s'
-                                                            />
-                                                            <div className='w-9 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                S
-                                                            </div>
-                                                        </label>
-                                                        <label>
-                                                            <input
-                                                                {...register('size')}
-                                                                className='sr-only peer'
-                                                                name='size'
-                                                                type='radio'
-                                                                value='m'
-                                                            />
-                                                            <div className='w-9 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                M
-                                                            </div>
-                                                        </label>
-                                                        <label>
-                                                            <input
-                                                                {...register('size')}
-                                                                className='sr-only peer'
-                                                                name='size'
-                                                                type='radio'
-                                                                value='l'
-                                                            />
-                                                            <div className='w-9 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                L
-                                                            </div>
-                                                        </label>
+                                                        <span className='pt-1 text-base font-sans pr-7'>Màu sắc</span>
+                                                        {uniqueColorsWithImage &&
+                                                            uniqueColorsWithImage.map((itemColor: any) => (
+                                                                <label key={itemColor.color}>
+                                                                    <input
+                                                                        {...register('color')}
+                                                                        className='sr-only peer'
+                                                                        name='color'
+                                                                        type='radio'
+                                                                        value={itemColor.color}
+                                                                        onChange={() =>
+                                                                            handleColorChange(
+                                                                                itemColor.color,
+                                                                                itemColor.image
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <div
+                                                                        className='rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            padding: '10px',
+                                                                            border: '1px solid #EEEEEE'
+                                                                        }}
+                                                                    >
+                                                                        {itemColor.color}
+                                                                    </div>
+                                                                </label>
+                                                            ))}
                                                     </div>
                                                 </strong>
                                             </p>
                                             <p>
                                                 <strong className='flex items-baseline mb-6 pb-6 mt-3 border-b border-slate-200'>
                                                     <div className='space-x-2 flex text-sm gap-3 '>
-                                                        <span className='pt-1 text-base font-sans pr-7'>Màu sắc</span>
-                                                        <label>
-                                                            <input
-                                                                {...register('color')}
-                                                                className='sr-only peer'
-                                                                name='color'
-                                                                type='radio'
-                                                                value='Trắng'
-                                                            />
-                                                            <div className='w-16 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                Trắng
-                                                            </div>
-                                                        </label>
-                                                        <label>
-                                                            <input
-                                                                {...register('color')}
-                                                                className='sr-only peer'
-                                                                name='color'
-                                                                type='radio'
-                                                                value='Đen'
-                                                            />
-                                                            <div className='w-16 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                Đen
-                                                            </div>
-                                                        </label>
-                                                        <label>
-                                                            <input
-                                                                {...register('color')}
-                                                                className='sr-only peer'
-                                                                name='color'
-                                                                type='radio'
-                                                                value='Đỏ'
-                                                            />
-                                                            <div className='w-16 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'>
-                                                                Đỏ
-                                                            </div>
-                                                        </label>
+                                                        <span className='pt-1 text-base font-sans pr-7'>Kích cỡ</span>
+                                                        {uniqueSizes.map((size: any) => (
+                                                            <label key={size}>
+                                                                <input
+                                                                    {...register('size')}
+                                                                    className='sr-only peer'
+                                                                    name='size'
+                                                                    type='radio'
+                                                                    value={size}
+                                                                    onChange={() => handleSizeChange(size)}
+                                                                />
+                                                                <div
+                                                                    className='rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-yellow-600 peer-checked:text-white'
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        padding: '10px',
+                                                                        border: '1px solid #EEEEEE'
+                                                                    }}
+                                                                >
+                                                                    {size}
+                                                                </div>
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <strong className='flex items-baseline mb-6 pb-6 mt-3 border-b border-slate-200'>
+                                                    <div className='space-x-2 flex text-sm gap-3 '>
+                                                        <span className='pt-1 text-base font-sans pr-7'>SỐ lượng</span>
+                                                        <input
+                                                            {...register('quantity')}
+                                                            className='sr-only peer'
+                                                            name='quantity'
+                                                            type='number'
+                                                        />
                                                     </div>
                                                 </strong>
                                             </p>
@@ -228,7 +276,7 @@ const ProductDetailPage = () => {
                                         <div className='sigma_product-atc-form'>
                                             <div className='sigma_product-buttons'>
                                                 <button type='submit' className='ms-0 sigma_btn'>
-                                                    Mua ngay <i className='far fa-shopping-basket'></i>{' '}
+                                                    Thêm giỏi hàng <i className='far fa-shopping-basket'></i>{' '}
                                                 </button>
                                                 <a
                                                     href='product-details.html'
@@ -280,6 +328,10 @@ const ProductDetailPage = () => {
                                         </div>
                                     </div>
                                     {/* <!-- Post Meta End --> */}
+                                    <p
+                                        className='sigma_productnp-excerpt'
+                                        dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                                    ></p>
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@
       "id": 3
     },
     {
-      "name": "sfvdgbrn",
+      "color": "sfvdgbrn",
       "id": 4
     }
   ],
@@ -28,5 +28,22 @@
       "id": "6"
     }
   ],
-  "users": []
+  "type_product": [
+    {
+      "color": "",
+      "size": "",
+      "price": 0,
+      "quantity": 0,
+      "weight": "",
+      "image": ""
+    },
+    {
+      "color": "",
+      "size": "",
+      "price": 0,
+      "quantity": 0,
+      "weight": "",
+      "image": ""
+    }
+  ]
 }

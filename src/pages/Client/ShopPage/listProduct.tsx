@@ -52,7 +52,7 @@ const ListProduct = () => {
                         <div className='col-lg-8'>
                             <div className='row'>
                                 {/*  */}
-                                {currentPageData.map((product: IProduct) => (
+                                {currentPageData.map((product: any) => (
                                     <div key={product._id} className='col-lg-4 col-md-6'>
                                         <div className='sigma_product style-8'>
                                             <div className='sigma_product-thumb'>

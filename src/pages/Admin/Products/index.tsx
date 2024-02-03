@@ -10,6 +10,7 @@ import { toast } from '@/components/ui/use-toast'
 import form from 'antd/es/form'
 import { IProduct } from '@/interface/IProduct'
 import instance from '@/services/core/api'
+import { formatPriceBootstrap } from '@/lib/utils'
 type InputRef = GetRef<typeof Input>
 interface DataType {
     key: string
@@ -21,20 +22,29 @@ interface DataType {
     status: boolean
     description: string
     idCategory: string
+    categoryName: string
+    totalQuantity: number
+    minPrice: number
 }
+
 type DataIndex = keyof DataType
 const Product = () => {
     const [dataProduct, setDataProduct] = useState<IProduct[]>([])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await instance.get('/products')
                 const data = response.data?.datas || []
-                const dataProduct = data.map((item: any, index: any) => ({
+
+                // Sort products by createdAt (newest to oldest)
+                data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+                const formattedData = data.map((item: any, index: any) => ({
                     ...item,
                     key: index + 1
                 }))
-                setDataProduct(dataProduct)
+                setDataProduct(formattedData)
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
@@ -56,6 +66,7 @@ const Product = () => {
             })
         }
     })
+
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
@@ -135,72 +146,85 @@ const Product = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
-            width: '2%'
+            width: '1%'
             // render: (_id) => <p className='text-green-500'>{data.id}</p>
         },
         {
             title: 'Ảnh',
             dataIndex: 'image',
             key: 'image',
-            width: '10%',
-            render: (_, record) => <img src={record.image} alt='Product' width={70} />
-        },
-        {
-            title: 'Tên',
-            dataIndex: 'name',
-            key: 'name',
-            width: '20%',
-            ...getColumnSearchProps('name')
-        },
-        {
-            title: 'Danh Mục',
-            dataIndex: 'idCategory',
-            key: 'idCategory',
-            width: '5%',
-            ...getColumnSearchProps('idCategory')
-        },
-
-        {
-            title: 'Danh Mục',
-            dataIndex: 'idCategory',
-            key: 'idCategory',
-            width: '5%',
-            ...getColumnSearchProps('idCategory')
-        },
-
-        {
-            title: 'Ngày',
-            dataIndex: 'import_date',
-            key: 'import_date',
             width: '15%',
-            ...getColumnSearchProps('import_date'),
-            sorter: (a, b) => a.import_date.length - b.import_date.length,
-            sortDirections: ['descend', 'ascend']
+            ...getColumnSearchProps('name'),
+            render: (_, record) => (
+                <div>
+                    <Link to={'/products/' + record._id}>
+                        {' '}
+                        <h1 style={{ fontSize: '18px' }}>{record.name}</h1>{' '}
+                    </Link>
+                    <img src={record.image} alt='Product' width={70} />
+                </div>
+            )
+        },
+        {
+            title: 'Danh Mục',
+            dataIndex: 'categoryName',
+            key: 'categoryName',
+            width: '10%'
+        },
+
+        // {
+        //     title: 'Ngày',
+        //     dataIndex: 'import_date',
+        //     key: 'import_date',
+        //     width: '15%',
+        //     ...getColumnSearchProps('import_date'),
+        //     sorter: (a, b) => a.import_date.length - b.import_date.length,
+        //     sortDirections: ['descend', 'ascend']
+        // },
+        {
+            title: 'Số lượng',
+            dataIndex: 'totalQuantity',
+            key: 'totalQuantity',
+            width: '5%'
+        },
+        {
+            title: 'Giá',
+            dataIndex: 'minPrice',
+            key: 'minPrice',
+            width: '5%',
+            ...getColumnSearchProps('minPrice'),
+            sorter: (a, b) => a.minPrice.length - b.minPrice.length,
+            sortDirections: ['descend', 'ascend'],
+            render: (_, record) => (
+                <div className='flex' style={{ fontWeight: 700 }}>
+                    <p
+                        dangerouslySetInnerHTML={{
+                            __html: formatPriceBootstrap(record.minPrice)
+                        }}
+                    ></p>
+                    <span style={{ margin: '0 10px' }}>-</span>
+                    <p
+                        dangerouslySetInnerHTML={{
+                            __html: formatPriceBootstrap(record.maxPrice)
+                        }}
+                    ></p>
+                </div>
+            )
         },
         {
             title: 'Hạn sử dụng',
             dataIndex: 'expiry',
             key: 'expiry',
-            width: '15%',
+            width: '12%',
             ...getColumnSearchProps('expiry'),
             sorter: (a, b) => a.expiry.length - b.expiry.length,
             sortDirections: ['descend', 'ascend']
         },
         {
-            title: 'Trạng thái',
-            dataIndex: 'status',
-            key: 'status',
-            width: '15%',
-            render: (_, record) => getStatusLabel(record.status)
-            // <option value='record.status'></option
-
-            // render: (status) => <p className='text-green-500'>{status}</p>
-        },
-        {
             title: 'Hành động',
             dataIndex: '',
             key: 'x',
-            width: '15%',
+            width: '5%',
             render: (_, record) => (
                 <Space size='middle'>
                     <Button
@@ -226,6 +250,7 @@ const Product = () => {
                         title='Lưu trữ sản phẩm?'
                         description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
                         onConfirm={() => onStorage(record)}
+                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
@@ -248,16 +273,14 @@ const Product = () => {
                     <p className='text-[20px]'>Sản Phẩm </p>
                 </div>
                 <div className='flex justify-end mb-2'>
-                    <Button
-                        type='primary'
-                        icon={<PlusCircleOutlined />}
-                        size={'large'}
-                        className='bg-[#1677ff]'
-                        onClick={() => {
-                            form.resetFields()
-                            showModal('add')
-                        }}
-                    ></Button>
+                    <Link to={'/admin/products/add'}>
+                        <Button
+                            type='primary'
+                            icon={<PlusCircleOutlined />}
+                            size={'large'}
+                            className='bg-[#1677ff]'
+                        ></Button>
+                    </Link>
                 </div>
             </div>
             <Table columns={columns} dataSource={dataProductTrue} />

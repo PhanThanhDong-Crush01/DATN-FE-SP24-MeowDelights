@@ -43,6 +43,7 @@ export const useCategoryMutation = ({ action, defaultValues = { name: '' }, onSu
         defaultValues
     })
     const onSubmit: SubmitHandler<any> = (values) => {
+        console.log(values)
         mutate(values)
     }
     const onRemove = (category: ICategory) => {

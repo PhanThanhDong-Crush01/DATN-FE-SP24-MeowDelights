@@ -11,6 +11,7 @@ import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 const EditCategory = ({ id }: any) => {
     const { data } = useCategoryQuery(id)
     const category = data?.data
+    console.log(category)
     const { form, onSubmit } = useCategoryMutation({
         action: 'UPDATE',
         onSuccess: () => {

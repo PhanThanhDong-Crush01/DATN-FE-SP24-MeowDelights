@@ -28,32 +28,13 @@ interface DataType {
 }
 type DataIndex = keyof DataType
 const Product = () => {
-    const [dataProduct, setDataProduct] = useState<IProduct[]>([])
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get('/products')
-                const data = response.data?.datas || []
-
-                // Sort products by createdAt (newest to oldest)
-                data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-                const formattedData = data.map((item: any, index: any) => ({
-                    ...item,
-                    key: index + 1
-                }))
-                setDataProduct(formattedData)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
-
-        fetchData()
-    }, [])
-    const dataProductTrue = dataProduct.filter((item: any) => {
-        return item.status === true
-    })
-
+    const { data } = useProductQuery()
+    console.log(data)
+    const dataProduct = data?.datas.docs.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataProduct)
     const { onStorage } = useProductMutation({
         action: 'STORAGE',
         onSuccess: () => {
@@ -64,7 +45,15 @@ const Product = () => {
             })
         }
     })
+    const dataProductTrue = dataProduct.filter((item: any) => {
+        return item.status === true
+    })
 
+    const handleStorage = (record: IProduct) => async () => {
+        record.status = false
+        console.log('🚀 ~ handleStorage ~ record:', record)
+        console.log()
+    }
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)

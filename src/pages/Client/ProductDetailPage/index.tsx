@@ -8,6 +8,7 @@ import instance from '@/services/core/api'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
+import ProductReviews from './ProductReviews'
 
 const ProductDetailPage = () => {
     const [data, setProductData] = useState<any>()
@@ -43,6 +44,7 @@ const ProductDetailPage = () => {
 
     const [selectedColor, setSelectedColor] = useState('')
     const [selectedSize, setSelectedSize] = useState('')
+    const [selectedQuantity, setSelectedQuantity] = useState<number | null>(0)
     const [selectedPrice, setSelectedPrice] = useState<number | null>(0)
     const [TypeProductID, setTypeProductID] = useState<string | null>(null)
     const [imageChinh, setImageChinh] = useState<any>('')
@@ -54,11 +56,13 @@ const ProductDetailPage = () => {
         setSelectedColor(color)
         setImageChinh(image)
         updatePrice(color, selectedSize)
+        updateQuantily(color, selectedSize)
     }
 
     const handleSizeChange = (size: string) => {
         setSelectedSize(size)
         updatePrice(selectedColor, size)
+        updateQuantily(selectedColor, size)
     }
 
     const updatePrice = (color: string, size: string) => {
@@ -69,6 +73,16 @@ const ProductDetailPage = () => {
             setTypeProductID(selectedTypeProduct._id)
         } else {
             setSelectedPrice(null)
+        }
+    }
+    const updateQuantily = (color: string, size: string) => {
+        const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
+
+        if (selectedTypeProduct) {
+            setSelectedQuantity(selectedTypeProduct.quantity)
+            setTypeProductID(selectedTypeProduct._id)
+        } else {
+            setSelectedQuantity(null)
         }
     }
 
@@ -107,9 +121,7 @@ const ProductDetailPage = () => {
                 {/* <!--Section Start--> */}
                 <MenuClientComponent />
                 <div className='sigma_aside-overlay aside-trigger-right'></div>
-
                 <div className='sigma_aside-overlay aside-trigger'></div>
-
                 <div className='search-form-wrapper'>
                     <div className='search-trigger sigma_close'>
                         <span></span>
@@ -155,29 +167,56 @@ const ProductDetailPage = () => {
                                     <div className='slider'>
                                         <img src={imageChinh} alt='product' />
                                     </div>
-                                    <div className='slider-nav flex flex-row w-28'>
+                                    <div className='slider-nav flex flex-row w-24 gap-2'>
                                         {uniqueColorsWithImage &&
                                             uniqueColorsWithImage.map((item: any) => (
                                                 <img
+                                                    className=''
                                                     src={item.image}
                                                     alt='product'
                                                     onClick={() => setImageChinh(item.image)}
                                                 />
                                             ))}
                                     </div>
+                                    <div className='sigma_post-single-meta-item sigma_post-share flex flex-row gap-3 pt-3 '>
+                                        <h5 className='pt-2'>Chia sẻ</h5>
+                                        <ul className='sigma_sm'>
+                                            <li>
+                                                <a href='#'>
+                                                    <i className='fab fa-facebook-f'></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href='#'>
+                                                    <i className='fab fa-linkedin-in'></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href='#'>
+                                                    <i className='fab fa-twitter'></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href='#'>
+                                                    <i className='fab fa-youtube'></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
 
                             <div className='col-lg-7 col-md-6'>
                                 <div className='sigma_product-single-content'>
-                                    <div className='sigma_product-price'>
+                                    <div className='sigma_product-price flex flex-col gap-4'>
                                         <span>{data?.data?.name}</span>
                                         {/* <h1>{data?.maxPrice}</h1> */}
                                         {/* <h1>số lượng: {data?.totalQuantity}</h1> */}
                                         {selectedPrice !== null && (
-                                            <span>
-                                                Giá:
+                                            <span className='pr-96  '>
+                                                6700
                                                 <span
+                                                    className='px-2'
                                                     dangerouslySetInnerHTML={{
                                                         __html: formatPriceBootstrap(Number(selectedPrice))
                                                     }}
@@ -201,14 +240,14 @@ const ProductDetailPage = () => {
                                     <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
                                         <div className='sigma_product-meta'>
                                             <p>
-                                                <strong>
+                                                <strong hidden>
                                                     Mã sản phẩm <span>{data?.data?._id}</span>
                                                     <input type='hidden' {...register('product')} value={productId} />
                                                     {/* <input type='' {...register('product')} value={data?.data?._id} /> */}
                                                 </strong>
                                             </p>
                                             <p>
-                                                <strong className='flex items-baseline mb-3 pb-3 mt-3 pt-3 border-slate-200'>
+                                                <strong className='flex items-baseline mb-3 pb-3 mt-3 pt-2 border-slate-200'>
                                                     <div className='space-x-2 flex text-sm'>
                                                         <span className='pt-1 text-base font-sans pr-7'>Màu sắc</span>
                                                         {uniqueColorsWithImage &&
@@ -243,7 +282,7 @@ const ProductDetailPage = () => {
                                                 </strong>
                                             </p>
                                             <p>
-                                                <strong className='flex items-baseline mb-6 pb-6 mt-3 border-b border-slate-200'>
+                                                <strong className='flex items-baseline mb-6 pb-6 mt-2 border-b border-slate-200'>
                                                     <div className='space-x-2 flex text-sm gap-3 '>
                                                         <span className='pt-1 text-base font-sans pr-7'>Kích cỡ</span>
                                                         {uniqueSizes.map((size: any) => (
@@ -274,19 +313,29 @@ const ProductDetailPage = () => {
                                             <p>
                                                 <strong className='flex items-baseline mb-6 pb-6 mt-3 border-b border-slate-200'>
                                                     <div className='space-x-2 flex text-sm gap-3 '>
-                                                        <span className='pt-1 text-base font-sans pr-7'>SỐ lượng</span>
+                                                        <span className='pt-1 text-base font-sans'>Số lượng</span>
                                                         <input
                                                             {...register('quantity')}
                                                             className='sr-only peer'
                                                             name='quantity'
                                                             type='number'
+                                                            min={1}
                                                         />
+                                                    </div>
+                                                    <div className='px-5 pt-2 flex flex-row'>
+                                                        {selectedQuantity !== null && (
+                                                            <h2
+                                                                className=' px-2 text-xl'
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: Number(selectedQuantity)
+                                                                }}
+                                                            ></h2>
+                                                        )}
+                                                        <span className='text-xl'>sản phẩm có sẵn</span>
                                                     </div>
                                                 </strong>
                                             </p>
                                         </div>
-
-                                        <hr />
 
                                         <div className='sigma_product-atc-form'>
                                             <div className='sigma_product-buttons'>
@@ -315,38 +364,12 @@ const ProductDetailPage = () => {
                                         </div>
                                     </form>
                                     {/* <!-- Post Meta Start --> */}
-                                    <div className='sigma_post-single-meta'>
-                                        <div className='sigma_post-single-meta-item sigma_post-share'>
-                                            <h5>Chia sẻ</h5>
-                                            <ul className='sigma_sm'>
-                                                <li>
-                                                    <a href='#'>
-                                                        <i className='fab fa-facebook-f'></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href='#'>
-                                                        <i className='fab fa-linkedin-in'></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href='#'>
-                                                        <i className='fab fa-twitter'></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href='#'>
-                                                        <i className='fab fa-youtube'></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <div className='sigma_post-single-meta'></div>
                                     {/* <!-- Post Meta End --> */}
-                                    <p
+                                    {/* <p
                                         className='sigma_productnp-excerpt'
                                         dangerouslySetInnerHTML={{ __html: data?.data?.description }}
-                                    ></p>
+                                    ></p> */}
                                 </div>
                             </div>
                         </div>
@@ -367,245 +390,86 @@ const ProductDetailPage = () => {
                                         role='tab'
                                         aria-controls='tab-product-desc'
                                         aria-selected='true'
-                                    >
-                                        Mô tả
-                                    </a>
+                                    ></a>
                                 </li>
                             </ul>
 
-                            <div className='tab-content' id='bordered-tabContent'>
+                            <div className='tab-content pt-5' id='bordered-tabContent'>
                                 <div
                                     className='tab-pane fade show active'
                                     id='tab-product-desc'
                                     role='tabpanel'
                                     aria-labelledby='tab-product-desc-tab'
                                 >
-                                    <h4>Mô tả</h4>
-                                    <p> {data?.data?.description}</p>
+                                    <p className='text-amber-400 text-lg'>Mô tả</p>
+
+                                    <p
+                                        className='sigma_productnp-excerpt'
+                                        dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                                    ></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className='section bg-gray'>
-                    <div className='container'>
-                        <div className='sigma_product-additional-info'>
-                            <ul className='nav' id='bordered-tab' role='tablist'>
-                                <li className='nav-item'>
-                                    <a
-                                        className='nav-link active'
-                                        id='tab-product-desc-tab'
-                                        data-toggle='pill'
-                                        href='#tab-product-desc'
-                                        role='tab'
-                                        aria-controls='tab-product-desc'
-                                        aria-selected='true'
-                                    >
-                                        Thông tin sản phẩm
-                                    </a>
-                                </li>
-                            </ul>
 
-                            <div className='tab-content' id='bordered-tabContent'>
-                                <div
-                                    className='tab-pane fade show active'
-                                    id='tab-product-desc'
-                                    role='tabpanel'
-                                    aria-labelledby='tab-product-desc-tab'
+                {/* <div className='container'>
+                    <div className='sigma_product-additional-info'>
+                        <ul className='nav' id='bordered-tab' role='tablist'>
+                            <li className='nav-item'>
+                                <a
+                                    className='nav-link active'
+                                    id='tab-product-desc-tab'
+                                    data-toggle='pill'
+                                    href='#tab-product-desc'
+                                    role='tab'
+                                    aria-controls='tab-product-desc'
+                                    aria-selected='true'
                                 >
-                                    <h4>Thêm thông tin</h4>
+                                    Thông tin sản phẩm
+                                </a>
+                            </li>
+                        </ul>
 
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th scope='col'>Thuộc tính</th>
-                                                <th scope='col'>Giá trị</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    {' '}
-                                                    <strong>Màu săc</strong>{' '}
-                                                </td>
-                                                <td>{data?.typeProduct?.color}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    {' '}
-                                                    <strong>Kích thích</strong>{' '}
-                                                </td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <div className='tab-content' id='bordered-tabContent'>
+                            <div
+                                className='tab-pane fade show active'
+                                id='tab-product-desc'
+                                role='tabpanel'
+                                aria-labelledby='tab-product-desc-tab'
+                            >
+                                <h4>Thêm thông tin</h4>
+
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope='col'>Thuộc tính</th>
+                                            <th scope='col'>Giá trị</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {' '}
+                                                <strong>Màu săc</strong>{' '}
+                                            </td>
+                                            <td>{data?.typeProduct?.color}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {' '}
+                                                <strong>Kích thích</strong>{' '}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className='section bg-gray'>
-                    <div className='container'>
-                        <div className='sigma_product-additional-info'>
-                            <ul className='nav' id='bordered-tab' role='tablist'>
-                                <li className='nav-item'>
-                                    <a
-                                        className='nav-link'
-                                        id='tab-product-reviews-tab'
-                                        data-toggle='pill'
-                                        href='#tab-product-reviews'
-                                        role='tab'
-                                        aria-controls='tab-product-reviews'
-                                        aria-selected='false'
-                                    >
-                                        Đánh giá{' '}
-                                    </a>
-                                </li>
-                            </ul>
-
-                            <div className='tab-content' id='bordered-tabContent'>
-                                <div
-                                    className='tab-pane fade show active'
-                                    id='tab-product-desc'
-                                    role='tabpanel'
-                                    aria-labelledby='tab-product-desc-tab'
-                                >
-                                    <h4>Đánh giá</h4>
-
-                                    <div className='sigma_rating-wrapper'>
-                                        <div className='sigma_rating m-0'>
-                                            <i className='fas fa-star'></i>
-                                            <i className='fas fa-star'></i>
-                                            <i className='fas fa-star'></i>
-                                            <i className='fas fa-star'></i>
-                                            <i className='fas fa-star'></i>
-                                        </div>
-                                        <span>Your Review</span>
-                                    </div>
-
-                                    {/* <!-- Review Form start --> */}
-                                    {/* form đánh giá */}
-                                    <div className='comment-form'>
-                                        <form method='post'>
-                                            <div className='row'>
-                                                <div className='col-md-6 form-group'>
-                                                    <input
-                                                        type='text'
-                                                        className='form-control'
-                                                        placeholder='Full Name'
-                                                        name='fname'
-                                                        value=''
-                                                    />
-                                                </div>
-                                                <div className='col-md-6 form-group'>
-                                                    <input
-                                                        type='email'
-                                                        className='form-control'
-                                                        placeholder='Email Address'
-                                                        name='email'
-                                                        value=''
-                                                    />
-                                                </div>
-                                                <div className='col-md-12 form-group'>
-                                                    <textarea
-                                                        className='form-control'
-                                                        placeholder='Type your comment...'
-                                                        name='comment'
-                                                        // rows='7'
-                                                    ></textarea>
-                                                </div>
-                                            </div>
-
-                                            <button type='submit' className='sigma_btn-custom w-24 h-12' name='button'>
-                                                Gửi
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div
-                                        className='tab-pane fade'
-                                        id='tab-product-info'
-                                        role='tabpanel'
-                                        aria-labelledby='tab-product-info-tab'
-                                    ></div>
-                                    <div
-                                        className='tab-pane fade'
-                                        id='tab-product-reviews'
-                                        role='tabpanel'
-                                        aria-labelledby='tab-product-reviews-tab'
-                                    >
-                                        {/* <!-- Review Form End -->
-
-              <!-- Reviews Start --> */}
-                                        {/* NHững đánh giá */}
-
-                                        {/* <!-- Reviews End --> */}
-                                    </div>
-                                    <div className='comments-list'>
-                                        <ul>
-                                            <li className='comment-item'>
-                                                <img src='/src/assets/img/blog-details/150.png' alt='comment author' />
-                                                <div className='comment-body'>
-                                                    <h5>Robert John</h5>
-                                                    <div className='sigma_rating'>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star'></i>
-                                                    </div>
-                                                    <span>
-                                                        {' '}
-                                                        <i className='far fa-clock'></i> January 13 2024
-                                                    </span>
-                                                    <p>
-                                                        Leverage agile frameworks to provide a robust synopsis for high
-                                                        level overviews. Iterative approaches to corporate strategy
-                                                        foster collaborative thinking to further the overall value
-                                                        proposition.
-                                                    </p>
-                                                    <a href='#' className='btn-link'>
-                                                        {' '}
-                                                        Reply <i className='far fa-reply'></i>{' '}
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li className='comment-item'>
-                                                <img
-                                                    src='/src/assets/img/blog-details/150-0.png'
-                                                    alt='comment author'
-                                                />
-                                                <div className='comment-body'>
-                                                    <h5>Christine Hill</h5>
-                                                    <div className='sigma_rating'>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star active'></i>
-                                                        <i className='fa fa-star'></i>
-                                                    </div>
-                                                    <span>
-                                                        {' '}
-                                                        <i className='far fa-clock'></i> December 27 2024
-                                                    </span>
-                                                    <p>
-                                                        Leverage agile frameworks to provide a robust synopsis for high
-                                                        level overviews. Iterative approaches
-                                                    </p>
-                                                    <a href='#' className='btn-link'>
-                                                        {' '}
-                                                        Trả lời <i className='far fa-reply'></i>{' '}
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <ProductReviews />
                 {/* <!-- Additional Information End -->
   <!--Section Start--> */}
                 <FooterTemplate />

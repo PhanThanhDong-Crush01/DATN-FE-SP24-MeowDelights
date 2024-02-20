@@ -1,11 +1,11 @@
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useCartQuery } from '@/hooks/Cart/useCartQuery'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from '../ui/use-toast'
-
+import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
+import { useState } from 'react'
 const MenuClientComponent = () => {
     const { dataCart } = useCartQuery()
-
     const { onRemove } = useCartMutation({
         action: 'DELETE',
         onSuccess: () => {
@@ -16,7 +16,6 @@ const MenuClientComponent = () => {
             })
         }
     })
-
     return (
         <>
             <div className='sigma_aside-overlay aside-trigger-right'></div>
@@ -140,6 +139,41 @@ const MenuClientComponent = () => {
                                                 >
                                                     <h6>
                                                         <Link to={'/signup'}>Đăng ký</Link>
+                                                    </h6>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li className='cart-trigger header-controls-item d-none d-sm-block'>
+                                        {/* <span>{data?.datas?.name}</span> */}
+                                        <ul className='sigma_cart-dropdown'>
+                                            <li>
+                                                <div
+                                                    className='sigma_cart-product-body'
+                                                    style={{ textAlign: 'center' }}
+                                                >
+                                                    <h6>
+                                                        <Link to={'/signin'}>Tài khoản của tôi</Link>
+                                                    </h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div
+                                                    className='sigma_cart-product-body'
+                                                    style={{ textAlign: 'center' }}
+                                                >
+                                                    <h6>
+                                                        <Link to={'/signin'}>Đơn mua</Link>
+                                                    </h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div
+                                                    className='sigma_cart-product-body'
+                                                    style={{ textAlign: 'center' }}
+                                                >
+                                                    <h6>
+                                                        <Link to={'/signup'}>Đăng xuất</Link>
                                                     </h6>
                                                 </div>
                                             </li>

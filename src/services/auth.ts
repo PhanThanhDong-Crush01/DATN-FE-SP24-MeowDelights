@@ -16,13 +16,14 @@ export const getOne = async (id: string) => {
         console.log(`['GETONE_AUTH_ERROR']`, error)
     }
 }
-// export const update = async (user: IAuth) => {}
-// export const add = async (user: IAuth) => {}
-// export const remove = async (user: IAuth) => {}
-// //mẫu product
 
-export const signin = (user: any) => {
-    return instance.post('/auth/signin', user)
+export const signin = async (user: any) => {
+    try {
+        const response = await instance.post('/auth/signin', user)
+        return response.data
+    } catch (error) {
+        console.log(`['Signin_ERROR']`, error)
+    }
 }
 export const signup = (user: any) => {
     return instance.post('/auth/signup', user)

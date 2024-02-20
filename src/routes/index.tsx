@@ -28,6 +28,8 @@ import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
 import OrderPage from '@/pages/Client/AuthPage/OrderPage'
+import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
+
 
 const Routers = () => {
     return (
@@ -54,6 +56,7 @@ const Routers = () => {
                 <Route index element={<Dashboard />} />
                 <Route path='/admin/dashboard' element={<Dashboard />} />
                 <Route path='/admin/products' element={<Product />} />
+                <Route path='/admin/sales-at-the-counter' element={<Sales_at_the_counter />} />
                 {/* <Route path='/admin/products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='/admin/products/add' element={<AddProduct />} />
                 <Route path='/admin/categories' element={<ListCategory />} />

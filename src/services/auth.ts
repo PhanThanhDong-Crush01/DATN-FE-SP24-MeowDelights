@@ -30,7 +30,7 @@ export const signin = async (user: any) => {
         const response = await instance.post('/auth/signin', user)
         return response.data
     } catch (error) {
-        console.log(`['GETONE_CART_ERROR']`, error)
+        console.log(`['Signin_ERROR']`, error)
     }
 }
 export const signup = async (user: any) => {
@@ -38,6 +38,6 @@ export const signup = async (user: any) => {
         const response = await instance.post('/auth/signup', user)
         return response.data
     } catch (error) {
-        console.log(`['GETONE_CART_ERROR']`, error)
+        console.log(`['Signup_ERROR']`, error)
     }
 }

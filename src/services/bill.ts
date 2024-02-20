@@ -1,7 +1,14 @@
 import instance from './core/api'
 import { IBill } from '@/interface/IBill'
 
-export const getAll = async () => {}
+export const getAll = async () => {
+    try {
+        const response = await instance.get('/bill')
+        return response.data
+    } catch (error) {
+        console.log(`['GETALL_BILL_ERROR']`, error)
+    }
+}
 export const getBillOfUser = async (id: string) => {
     try {
         const response = await instance.get('/bill/user/' + id)

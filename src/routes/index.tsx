@@ -27,6 +27,7 @@ import PaymentMoMo from '@/pages/Client/PaymentSuccessPage/PaymentMoMo'
 import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
+import OrderPage from '@/pages/Client/AuthPage/OrderPage'
 
 const Routers = () => {
     return (
@@ -47,6 +48,7 @@ const Routers = () => {
             <Route path='signin' element={<SigninPage />} />
             <Route path='signup' element={<SignupPage />} />
             <Route path='updateProfile/:id' element={<UpdateProfile />} />
+            <Route path='order' element={<OrderPage />} />
 
             <Route path='admin' element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />

@@ -11,9 +11,19 @@ import instance from './core/api'
 // export const remove = async (user: IAuth) => {}
 // //mẫu product
 
-export const signin = (user: any) => {
-    return instance.post('/auth/signin', user)
+export const signin = async (user: any) => {
+    try {
+        const response = await instance.post('/auth/signin', user)
+        return response.data
+    } catch (error) {
+        console.log(`['Signin_ERROR']`, error)
+    }
 }
-export const signup = (user: any) => {
-    return instance.post('/auth/signup', user)
+export const signup = async (user: any) => {
+    try {
+        const response = await instance.post('/auth/signup', user)
+        return response.data
+    } catch (error) {
+        console.log(`['Signup_ERROR']`, error)
+    }
 }

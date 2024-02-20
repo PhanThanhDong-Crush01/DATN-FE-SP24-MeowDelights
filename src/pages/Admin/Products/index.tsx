@@ -8,15 +8,15 @@ import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
 import form from 'antd/es/form'
-import { IProduct } from '@/interface/IProduct'
-import instance from '@/services/core/api'
 import { formatPriceBootstrap } from '@/lib/utils'
+import { IProduct } from '@/interface/IProduct'
 type InputRef = GetRef<typeof Input>
 interface DataType {
     key: string
     _id?: string
     name: string
     image: string
+    price: number | undefined
     import_date: string
     expiry: string
     status: boolean
@@ -158,16 +158,13 @@ const Product = () => {
             key: 'categoryName',
             width: '10%'
         },
-
-        // {
-        //     title: 'Ngày',
-        //     dataIndex: 'import_date',
-        //     key: 'import_date',
-        //     width: '15%',
-        //     ...getColumnSearchProps('import_date'),
-        //     sorter: (a, b) => a.import_date.length - b.import_date.length,
-        //     sortDirections: ['descend', 'ascend']
-        // },
+        {
+            title: 'Gía',
+            dataIndex: 'price',
+            key: 'price',
+            width: '5%',
+            ...getColumnSearchProps('price')
+        },
         {
             title: 'Số lượng',
             dataIndex: 'totalQuantity',
@@ -232,11 +229,12 @@ const Product = () => {
                         <EditOutlined style={{ display: 'inline-flex' }} />
                     </Button>
 
-                    <Popconfirm
+                    {/* <Popconfirm
                         placement='topRight'
-                        title='Lưu trữ sản phẩm?'
-                        description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
-                        onConfirm={() => onStorage(record)}
+                        title='Xóa bài viết?'
+                        description='Bạn có chắc chắn xóa bài viết này không?'
+                        onConfirm={() => onRemove(record)}
+                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
@@ -244,7 +242,7 @@ const Product = () => {
                         <Button type='primary' danger>
                             <DeleteOutlined style={{ display: 'inline-flex' }} />
                         </Button>
-                    </Popconfirm>
+                    </Popconfirm> */}
                 </Space>
             )
         }

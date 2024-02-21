@@ -5,56 +5,36 @@ import Title from 'antd/es/typography/Title'
 import { FilterDropdownProps } from 'antd/es/table/interface'
 import { SearchOutlined } from '@ant-design/icons'
 import Search from 'antd/es/input/Search'
+import { useBillQuery } from '@/hooks/Bill/useBillQuery'
 
 interface DataType {
     key: string
-    idUser: number
+    iduser: number
     money: string
     date: string
-    address: string
+    adress: string
     tel: string
-    idVc: number
-    paymentMethods: string
-    paymentStatus: string[]
-    orderStatus: string[]
+    idvc: number
+    paymentmethods: string
+    paymentstatus: string
+    orderstatus: string
 }
 type DataIndex = keyof DataType
-
-const data: DataType[] = [
-    {
-        key: '1',
-        idUser: 1,
-        money: '45.000 VND',
-        date: '12/1/2024',
-        address: 'ngõ 71 Phương Canh',
-        tel: '0334370130',
-        idVc: 3,
-        paymentMethods: 'nhận tiền khi giao hàng',
-        paymentStatus: ['Chưa thanh toán'],
-        orderStatus: ['Đang giao hàng']
-    },
-    {
-        key: '1',
-        idUser: 2,
-        money: '45.000 VND',
-        date: '12/1/2024',
-        address: 'ngõ 71 Phương Canh',
-        tel: '0334370130',
-        idVc: 3,
-        paymentMethods: 'nhận tiền khi giao hàng',
-        paymentStatus: ['Chưa thanh toán'],
-        orderStatus: ['Chờ xác nhận']
-    }
-]
 const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra)
 }
-const onSearch = (value, _e, info) => console.log(info?.source, value)
-const App: React.FC = () => {
+const onSearch = (value: any, _e: any, info: { source: any }) => console.log(info?.source, value)
+const ListBill = () => {
+    const { data } = useBillQuery()
+    console.log(data)
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
-
+    const dataBill = data?.datas.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataBill)
     const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
         confirm()
         setSearchText(selectedKeys[0])
@@ -128,25 +108,16 @@ const App: React.FC = () => {
                 setTimeout(() => searchInput.current?.select(), 100)
             }
         }
-        // render: (text) =>
-        //     searchedColumn === dataIndex ? (
-        //         <Highlighter
-        //             highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-        //             searchWords={[searchText]}
-        //             autoEscape
-        //             textToHighlight={text ? text.toString() : ''}
-        //         />
-        //     ) : (
-        //         text
-        //     )
     })
     const columns: TableProps<DataType>['columns'] = [
         {
             title: 'Mã KH',
-            dataIndex: 'idUser',
-            key: 'idUser',
+            dataIndex: 'iduser',
+            key: 'iduser',
+
             // render: (text) => <a>{text}</a>,
-            ...getColumnSearchProps('idUser')
+            ...getColumnSearchProps('iduser'),
+            fixed: 'left'
         },
         {
             title: 'Tổng tiền',
@@ -160,8 +131,8 @@ const App: React.FC = () => {
         },
         {
             title: 'Địa chỉ',
-            dataIndex: 'address',
-            key: 'address'
+            dataIndex: 'adress',
+            key: 'adress'
         },
         {
             title: 'Số điện thoại',
@@ -170,107 +141,105 @@ const App: React.FC = () => {
         },
         {
             title: 'Mã voucher',
-            dataIndex: 'idVc',
-            key: 'idVc'
+            dataIndex: 'idvc',
+            key: 'idvc'
         },
         {
             title: 'Phương thức thanh toán',
-            dataIndex: 'paymentMethods',
-            key: 'paymentMethods'
+            dataIndex: 'paymentmethods',
+            key: 'paymentmethods',
+            filters: [
+                { text: 'Thanh toán qua ví điện tử', value: 'Thanh toán qua ví điện tử' },
+                { text: 'Thanh toán khi nhận hàng', value: 'Chuẩn bị hàng' }
+            ],
+            width: '12%',
+            onFilter: (value: string, record) => record.paymentmethods.indexOf(value) === 0
         },
-
         {
             title: 'Trạng thái thanh toán',
-            key: 'paymentStatus',
-            dataIndex: 'paymentStatus',
+            key: 'paymentstatus',
+            dataIndex: 'paymentstatus',
+
             filters: [
                 { text: 'Chưa thanh toán', value: 'Chưa thanh toán' },
                 { text: 'Đã thanh toán', value: 'Đã thanh toán' }
             ],
-            onFilter: (value: string, record) => record.paymentStatus.indexOf(value) === 0,
-            width: '20%',
-
-            render: (_, { paymentStatus }) => (
-                <>
-                    {paymentStatus.map((paymentStatus) => {
-                        let color = paymentStatus.length > 5 ? 'geekblue' : 'green'
-                        if (paymentStatus === 'loser') {
-                            color = 'volcano'
-                        }
-                        return (
-                            <Tag color={color} key={paymentStatus} style={{ padding: '5px' }}>
-                                {paymentStatus.toUpperCase()}
-                            </Tag>
-                        )
-                    })}
-                </>
+            onFilter: (value: string, record: any) => record.paymentstatus.indexOf(value) === 0,
+            width: '15%',
+            render: (_, record: any) => (
+                <Tag
+                    color={record.paymentstatus === 'Chưa thanh toán' ? 'volcano' : 'green'}
+                    key={record.paymentstatus}
+                    style={{ padding: '2px' }}
+                >
+                    {record.paymentstatus.toUpperCase()}
+                </Tag>
             )
         },
         {
             title: 'Trạn thái đơn hàng',
-            key: 'orderStatus',
-            dataIndex: 'orderStatus',
+            key: 'orderstatus',
+            dataIndex: 'orderstatus',
             filters: [
                 { text: 'Chờ xác nhận', value: 'Chờ xác nhận' },
                 { text: 'Chuẩn bị hàng', value: 'Chuẩn bị hàng' },
                 { text: 'Đang giao hàng', value: 'Đang giao hàng' },
-                { text: 'Giao hàng thành công', value: 'Giao hàng thành công' }
+                { text: 'Giao hàng thành công', value: 'Giao hàng thành công' },
+                { text: 'Hủy hàng', value: 'Hủy hàng' }
             ],
-            onFilter: (value: string, record) => record.orderStatus.indexOf(value) === 0,
-            // sorter: (a, b) => a.orderStatus.length - b.orderStatus.length,
-            // sortDirections: ['descend'],
-            // width: '20%',
-
-            render: (_, { orderStatus }) => (
-                <>
-                    {orderStatus.map((orderStatus) => {
-                        let color = orderStatus.length > 5 ? 'green' : 'geekblue'
-                        if (orderStatus === 'loser') {
-                            color = 'volcano'
-                        }
-                        return (
-                            <Tag color={color} key={orderStatus} style={{ padding: '5px' }}>
-                                {orderStatus.toUpperCase()}
-                            </Tag>
-                        )
-                    })}
-                </>
-            )
+            width: '15%',
+            onFilter: (value: string, record) => record.orderstatus.indexOf(value) === 0,
+            render: (_, record: any) => {
+                let color = 'green' // Mặc định màu là xanh
+                switch (record.orderstatus) {
+                    case 'Chờ xác nhận':
+                        color = 'volcano' // Đỏ
+                        break
+                    case 'Chuẩn bị hàng':
+                        color = 'cyan' // Xanh dương
+                        break
+                    case 'Đang giao hàng':
+                        color = 'blue' // Xanh lam
+                        break
+                    case 'Giao hàng thành công':
+                        color = 'green' // Xanh lá cây
+                        break
+                    case 'Hủy hàng':
+                        color = 'gray' // Xám
+                        break
+                    default:
+                        break
+                }
+                return (
+                    <Tag color={color} key={record.orderstatus} style={{ padding: '2px' }}>
+                        {record.orderstatus.toUpperCase()}
+                    </Tag>
+                )
+            }
         }
-        // {
-        //     title: 'Action',
-        //     key: 'action',
-        //     render: (_, record) => (
-        //         <Space size='middle'>
-        //             <a>Invite {record.name}</a>
-        //             <a>Delete</a>
-        //         </Space>
-        //     )
-        // }
     ]
     return (
         <>
-            <div className='flex flex-row gap-96'>
-                <Title level={2} className='px-5 pt-5 text-[30px]' style={{ fontWeight: 900 }}>
-                    Danh sách hóa đơn
-                </Title>
-                <Search
-                    className='pt-7'
-                    placeholder='Search hóa đơn chi tiết'
-                    allowClear
-                    onSearch={onSearch}
-                    style={{
-                        width: 220
-                    }}
-                />
-            </div>
+            <div>
+                <div className='flex flex-row gap-96'>
+                    <Title level={2} className='px-2 pt-5 text-[30px]' style={{ fontWeight: 900 }}>
+                        Danh sách hóa đơn
+                    </Title>
+                    <Search
+                        className='pt-7'
+                        placeholder='Search hóa đơn chi tiết'
+                        allowClear
+                        onSearch={onSearch}
+                        style={{
+                            width: 220
+                        }}
+                    />
+                </div>
 
-            <Table columns={columns} dataSource={data} onChange={onChange} />
+                <Table columns={columns} dataSource={dataBill} onChange={onChange} scroll={{ x: 100 }} />
+            </div>
         </>
     )
 }
 
-export default App
-function getColumnSearchProps(arg0: string): import('antd').TableColumnGroupType<DataType> | TableColumnType<DataType> {
-    throw new Error('Function not implemented.')
-}
+export default ListBill

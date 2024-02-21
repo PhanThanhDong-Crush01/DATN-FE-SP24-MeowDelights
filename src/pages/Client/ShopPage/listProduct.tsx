@@ -1,25 +1,47 @@
 import { toast } from '@/components/ui/use-toast'
-import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { IProduct } from '@/interface/IProduct'
+import instance from '@/services/core/api'
 import { Button } from 'antd'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const ListProduct = () => {
-    const { data } = useProductQuery()
+    const [data, setDataProduct] = useState<any>()
     const [products, setProducts] = useState<IProduct[] | null>(null)
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(9)
     const [searchTerm, setSearchTerm] = useState<string>('')
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await instance.get('/products')
+                const data = response.data?.datas || []
+
+                // Sort products by createdAt (newest to oldest)
+                data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+                const formattedData = data.map((item: any, index: any) => ({
+                    ...item,
+                    key: index + 1
+                }))
+                setDataProduct(formattedData)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
+
+    useEffect(() => {
         if (data) {
-            const filteredProducts = data?.datas.filter((product: IProduct) =>
+            const filteredProducts = data?.filter((product: IProduct) =>
                 product.name.toLowerCase().includes(searchTerm.toLowerCase())
             )
             if (filteredProducts.length === 0) {
-                setProducts(data?.datas)
+                setProducts(data)
                 toast({
                     variant: 'destructive',
                     title: 'Tìm kiếm sản phẩm thất bại!!',
@@ -52,7 +74,7 @@ const ListProduct = () => {
                         <div className='col-lg-8'>
                             <div className='row'>
                                 {/*  */}
-                                {currentPageData.map((product: IProduct) => (
+                                {currentPageData.map((product: any) => (
                                     <div key={product._id} className='col-lg-4 col-md-6'>
                                         <div className='sigma_product style-8'>
                                             <div className='sigma_product-thumb'>
@@ -151,25 +173,55 @@ const ListProduct = () => {
                             <div className='sidebar'>
                                 {/* <!-- Search Widget --> */}
                                 <div className='widget widget-search'>
-                                    <div className='input-group'>
+                                    <div
+                                        className='input-group'
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <div
+                                            className='input-group-append'
+                                            style={{
+                                                fontSize: '22px',
+                                                padding: '10px',
+                                                backgroundColor: '#00D8E8    ',
+                                                color: 'white'
+                                            }}
+                                        >
+                                            <i className='fa fa-search' aria-hidden='true'></i>
+                                        </div>
                                         <input
                                             type='text'
                                             name='search'
                                             placeholder='Tìm kiếm'
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
+                                            style={{ height: '5%' }}
                                         />
-
-                                        <div className='input-group-append'>
-                                            <button type='button'>
-                                                <i className='fal fa-search mr-0'></i>
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                                 {/* <!-- Filter: Price Start --> */}
-                                <div className='widget'>
-                                    <h5 className='widget-title'> Giá </h5>
+                                <div
+                                    className='widget'
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <h5
+                                        className='widget-title'
+                                        style={{
+                                            fontSize: '22px',
+                                            padding: '10px',
+                                            backgroundColor: '#00D8E8    ',
+                                            color: 'white'
+                                        }}
+                                    >
+                                        Giá
+                                    </h5>
                                     <input
                                         type='text'
                                         className='js-range-slider'
@@ -181,7 +233,8 @@ const ListProduct = () => {
                                         data-from='10'
                                         data-to='100'
                                         data-grid='true'
-                                        data-postfix=' $'
+                                        data-postfix='đ'
+                                        style={{ height: '5%', marginTop: '-30px' }}
                                     />
                                 </div>
                                 {/* <!-- Filter: Price End -->
@@ -223,7 +276,7 @@ const ListProduct = () => {
                                 </div>
                                 {/* <!-- Recent Posts Widget --> */}
                                 <div className='widget widget-sigma-recent-posts'>
-                                    <h5 className='widget-title'>Bình luận nhiều nhất</h5>
+                                    <h5 className='widget-title'>Đánh giá nhiều nhất</h5>
                                     <div className='sigma_recent-post'>
                                         <a href='blog-details.html' className='recent-post-image'>
                                             <img src='src/assets/img/blog-standard/80x80.jpg' alt='img' />
@@ -286,7 +339,7 @@ const ListProduct = () => {
                                 </div>
 
                                 {/* <!-- Recent Posts Widget --> */}
-                                <div className='widget widget-sigma-recent-posts style-3'>
+                                {/* <div className='widget widget-sigma-recent-posts style-3'>
                                     <h5 className='widget-title'>Bài đăng gần đây</h5>
                                     <div className='sigma_recent-post'>
                                         <div className='sigma_post-categories'>
@@ -334,7 +387,7 @@ const ListProduct = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

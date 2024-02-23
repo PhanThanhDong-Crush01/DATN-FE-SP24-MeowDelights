@@ -16,6 +16,14 @@ export const getOne = async (id: string) => {
         console.log(`['GETONE_AUTH_ERROR']`, error)
     }
 }
+export const getAuthWithRole = async (staff: number) => {
+    try {
+        const response = await instance.get(`/auth/${staff}/permission`)
+        return response.data
+    } catch (error) {
+        console.log(`['getAuthWithRole_ERROR']`, error)
+    }
+}
 
 export const signin = async (user: any) => {
     try {

@@ -25,6 +25,15 @@ export const update = async (contact: any) => {
         console.log(`['UPDATE_CONTACT_ERROR']`, error.response.data.message)
     }
 }
+export const setStaffWithContact = async (contact: any) => {
+    try {
+        const response = await instance.patch(`/contact/1/staff`, contact)
+        await instance.get('/contact')
+        return response.data
+    } catch (error: any) {
+        console.log(`['setStaffWithContact_CONTACT_ERROR']`, error.response.data.message)
+    }
+}
 export const add = async (contact: any) => {
     try {
         const response = await instance.post('/contact/', contact)

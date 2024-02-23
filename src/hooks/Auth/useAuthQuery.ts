@@ -1,14 +1,16 @@
-import { getAll, getOne } from '@/services/auth'
+import { getAll, getAuthWithRole, getOne } from '@/services/auth'
 import { useQuery } from 'react-query'
 
-export const useAuthQuery = (authId?: string) => {
-    console.log(authId)
-    // const { authId } = useAuth()
+export const useAuthQuery = (authId?: string, staff?: number) => {
+    //có thể có staff
     const { data, ...rest } = useQuery({
         queryKey: authId ? ['AUTH', authId] : ['AUTH'],
-        queryFn: () => (authId ? getOne(authId) : getAll())
+        queryFn: () => (authId ? getOne(authId) : staff ? getAuthWithRole(staff) : getAll())
     })
-    console.log(data)
+    if (staff) {
+        const dataAuthWithRole = data
+        return { dataAuthWithRole, ...rest }
+    }
     return { data, ...rest }
 }
 //mẫu product

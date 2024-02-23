@@ -1,9 +1,9 @@
-import { add, remove, update } from '@/services/contact'
+import { add, remove, setStaffWithContact, update } from '@/services/contact'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 type useContactMutationProps = {
-    action: 'ADD' | 'UPDATE' | 'DELETE'
+    action: 'ADD' | 'UPDATE' | 'DELETE' | 'SetStaff'
     defaultValues?: any
     onSuccess?: () => void
 }
@@ -18,6 +18,8 @@ export const useContactMutation = ({ action, defaultValues = {}, onSuccess }: us
                     return await add(contact)
                 case 'UPDATE':
                     return await update(contact)
+                case 'SetStaff':
+                    return await setStaffWithContact(contact)
                 case 'DELETE':
                     return await remove(contact)
                 default:

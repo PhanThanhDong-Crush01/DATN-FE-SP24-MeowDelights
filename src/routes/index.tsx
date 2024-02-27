@@ -28,7 +28,7 @@ import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
 import OrderPage from '@/pages/Client/AuthPage/OrderPage'
-import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
+// import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
 import ListContact from '@/pages/Admin/Contact'
 import EditProduct from '@/pages/Admin/Products/EditProduct'
 
@@ -50,9 +50,10 @@ const Routers = () => {
             </Route>
             <Route path='signin' element={<SigninPage />} />
             <Route path='signup' element={<SignupPage />} />
-            <Route path='updateProfile/:id' element={<UpdateProfile />} />
-            <Route path='order' element={<OrderPage />} />
-
+            <Route path='/' element={<LayoutUserPage />}>
+                <Route path='updateProfile' element={<UpdateProfile />} />
+                <Route path='order' element={<OrderPage />} />
+            </Route>
             <Route path='admin' element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />

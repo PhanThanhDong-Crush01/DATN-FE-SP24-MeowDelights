@@ -1,6 +1,16 @@
 import MenuClientComponent from '@/components/component/MenuClientComponent'
+import { useCommentQuery } from '@/hooks/Comment/useCommentQuery'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const ProductReviews = () => {
+    const { id } = useParams()
+    console.log(id)
+    const { data } = useCommentQuery(id)
+    console.log(data)
+    // const idProductType = data.idProductType
+    // console.log(idProductType)
+
     return (
         <>
             <div className='container'>
@@ -28,53 +38,6 @@ const ProductReviews = () => {
                             role='tabpanel'
                             aria-labelledby='tab-product-desc-tab'
                         >
-                            <div className='sigma_rating-wrapper'>
-                                <div className='sigma_rating m-0'>
-                                    <i className='fas fa-star'></i>
-                                    <i className='fas fa-star'></i>
-                                    <i className='fas fa-star'></i>
-                                    <i className='fas fa-star'></i>
-                                    <i className='fas fa-star'></i>
-                                </div>
-                                <span>Your Review</span>
-                            </div>
-
-                            {/* <!-- Review Form start --> */}
-                            {/* form đánh giá */}
-                            <div className='comment-form'>
-                                <form>
-                                    <div className='row'>
-                                        <div className='col-md-6 form-group'>
-                                            <input
-                                                type='text'
-                                                className='form-control'
-                                                placeholder='Full Name'
-                                                name='name'
-                                            />
-                                        </div>
-                                        <div className='col-md-6 form-group'>
-                                            <input
-                                                type='email'
-                                                className='form-control'
-                                                placeholder='Email Address'
-                                                name='email'
-                                            />
-                                        </div>
-                                        <div className='col-md-12 form-group'>
-                                            <textarea
-                                                className='form-control'
-                                                placeholder='Type your comment...'
-                                                name='comment'
-                                                // rows='7'
-                                            ></textarea>
-                                        </div>
-                                    </div>
-
-                                    <button type='submit' className='sigma_btn-custom w-24 h-12' name='button'>
-                                        Gửi
-                                    </button>
-                                </form>
-                            </div>
                             <div
                                 className='tab-pane fade'
                                 id='tab-product-info'
@@ -88,59 +51,48 @@ const ProductReviews = () => {
                                 aria-labelledby='tab-product-reviews-tab'
                             ></div>
                             <div className='comments-list'>
-                                <ul>
-                                    <li className='comment-item'>
-                                        <img src='/src/assets/img/blog-details/150.png' alt='comment author' />
-                                        <div className='comment-body'>
-                                            <h5>Robert John</h5>
-                                            <div className='sigma_rating'>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star'></i>
+                                {data?.comments?.map((comment: any, index: any) => (
+                                    <ul key={index} className='py-3'>
+                                        <li className='comment-item'>
+                                            <div className='comment-body'>
+                                                <div className='flex flex-row'>
+                                                    <img
+                                                        src={comment?.comment?.user?.img}
+                                                        style={{ height: 50, width: 50 }}
+                                                        alt=''
+                                                    />
+                                                    <div>
+                                                        <h5>{comment?.comment?.user?.name}</h5>
+                                                        <h5>{comment?.comment?.user?.email}</h5>
+                                                    </div>
+                                                </div>
+                                                <div className='px-5 '>
+                                                    <div className='sigma_rating'>
+                                                        {Array.from({ length: comment?.comment?.data?.star || 0 }).map(
+                                                            (_, index) => (
+                                                                <i key={index} className='fa fa-star active'></i>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                    <p className='text-gray-400 text-sm'>
+                                                        {' '}
+                                                        Phân loại:
+                                                        {comment?.comment?.productType?.color},
+                                                        {comment?.comment?.productType?.size}
+                                                    </p>
+                                                    <p>{comment?.comment?.data?.title}</p>
+                                                    <p>{comment?.comment?.data?.comment}</p>
+                                                    <img
+                                                        className='rounded pt-1'
+                                                        src={comment?.comment?.data?.img}
+                                                        alt=''
+                                                        style={{ height: 120, width: 100 }}
+                                                    />
+                                                </div>
                                             </div>
-                                            <span>
-                                                {' '}
-                                                <i className='far fa-clock'></i> January 13 2024
-                                            </span>
-                                            <p>
-                                                Leverage agile frameworks to provide a robust synopsis for high level
-                                                overviews. Iterative approaches to corporate strategy foster
-                                                collaborative thinking to further the overall value proposition.
-                                            </p>
-                                            <a href='#' className='btn-link'>
-                                                {' '}
-                                                Reply <i className='far fa-reply'></i>{' '}
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li className='comment-item'>
-                                        <img src='/src/assets/img/blog-details/150-0.png' alt='comment author' />
-                                        <div className='comment-body'>
-                                            <h5>Christine Hill</h5>
-                                            <div className='sigma_rating'>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star active'></i>
-                                                <i className='fa fa-star'></i>
-                                            </div>
-                                            <span>
-                                                {' '}
-                                                <i className='far fa-clock'></i> December 27 2024
-                                            </span>
-                                            <p>
-                                                Leverage agile frameworks to provide a robust synopsis for high level
-                                                overviews. Iterative approaches
-                                            </p>
-                                            <a href='#' className='btn-link'>
-                                                {' '}
-                                                Trả lời <i className='far fa-reply'></i>{' '}
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
+                                        </li>
+                                    </ul>
+                                ))}
                             </div>
                         </div>
                     </div>

@@ -18,19 +18,19 @@ const SigninPage = () => {
         }
         try {
             const response = await signin(values)
-            if (response?.data?.user) {
+            console.log('🚀 ~ onSubmit ~ response:', response)
+            if (response?.user) {
                 // Lưu thông tin người dùng vào Local Storage
-                localStorage.setItem('user', JSON.stringify(response?.data?.user))
-                localStorage.setItem('userID', response?.data?.user?._id)
-                if (response?.data?.user?.role === 'admin') {
+                localStorage.setItem('userID', response?.user?._id)
+                if (response?.user?.role === 'admin') {
                     message.success('Đăng nhập thành công admin')
                     navigate('/admin')
                 }
-                if (response?.data?.user?.role === 'nhanvien') {
+                if (response?.user?.role === 'nhanvien') {
                     message.success('Đăng nhập thành công nhân viên')
                     navigate('/admin')
                 }
-                if (response?.data?.user?.role === 'member') {
+                if (response?.user?.role === 'member') {
                     message.success('Đăng nhập thành công !')
 
                     // if (Auth !== null) {
@@ -41,13 +41,13 @@ const SigninPage = () => {
                     // } else {
                     //     console.log('User data not found in localStorage')
                     // }
-                    // navigate(`/updateProfile/${response?.data?.user?._id}`)
-                    navigate(`/updateProfile`)
+                    navigate(`/updateProfile/${response?.user?._id}`)
+                    // navigate(`/`)
                 }
             }
         } catch (error: any) {
             console.log(error)
-            message.warning(error?.response?.data?.message)
+            message.warning(error?.response?.message)
             // navigate('/signup')
         }
 
@@ -91,7 +91,7 @@ const SigninPage = () => {
                     </h2>
                 </div>
 
-                <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+                <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm' id='mainpage'>
                     <form className='space-y-6' action='#' method='POST' onSubmit={handleSubmit(onSubmit)}>
                         <div>
                             <label htmlFor='email' className='block text-sm font-medium leading-6 text-gray-900'>

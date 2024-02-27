@@ -49,7 +49,7 @@ const AgeForm = ({ data }: AgeFormProps) => {
 
     return (
         <>
-            <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+            <div className='mt-6 border bg-slate-100 rounded-md p-3'>
                 <div className='font-medium flex items-center justify-between'>
                     Tuổi
                     <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
@@ -66,12 +66,16 @@ const AgeForm = ({ data }: AgeFormProps) => {
                 {!editAuth && <p className='text-sm mt-2'>{data?.datas?.age}</p>}
                 {editAuth && (
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>
+                        <form
+                            onSubmit={form.handleSubmit(onHandleSubmit)}
+                            className='flex'
+                            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <FormField
                                 control={form.control}
                                 name='age'
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem style={{ width: '80%' }}>
                                         <FormControl>
                                             <Input {...field} placeholder='Mời nhập tuổi' />
                                         </FormControl>

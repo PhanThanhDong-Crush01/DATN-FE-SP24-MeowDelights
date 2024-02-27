@@ -31,8 +31,9 @@ const columns: TableProps<DataType>['columns'] = [
         dataIndex: 'user',
         key: 'user',
         render: (user) => (
-            <div style={{ color: 'blue' }}>
-                <a>{user?.name}</a> <br /> <a>{user?.email}</a>
+            <div>
+                <a style={{ color: 'blue' }}>{user?.name}</a>
+                <p>{user?.email}</p>
             </div>
         )
     },
@@ -98,13 +99,18 @@ const columns: TableProps<DataType>['columns'] = [
     }
 ]
 
-const ID_USER = '65b9451b0bbb2b6e014e5588'
-
 const List_Bill_Order = () => {
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
     const [bill, setBill] = useState()
     useEffect(() => {
         const fetchBill = async () => {
-            const data = await getBillOfUser(ID_USER)
+            const data = await getBillOfUser(userID)
             setBill(
                 data?.bill.map((item: any) => {
                     return { ...item, key: item._id }

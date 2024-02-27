@@ -9,6 +9,8 @@ import Search, { SearchProps } from 'antd/es/input/Search'
 import { useBillQuery } from '@/hooks/Bill/useBillQuery'
 import { SearchOutlined, StarOutlined } from '@ant-design/icons'
 import { FilterDropdownProps } from 'antd/es/table/interface'
+import MenuClientComponent from '@/components/component/MenuClientComponent'
+import FooterTemplate from '@/components/component/Footer'
 import {
     Dialog,
     DialogContent,
@@ -28,8 +30,8 @@ interface DataType {
     key: string
     products: {
         // hasReviewed: boolean
-        product: Product
-        productType: ProductType
+        product: any
+        productType: any
     }[]
     _id: string
     tel: string
@@ -407,16 +409,76 @@ const OrderPage: React.FC = () => {
         }
     ]
     return (
-        <Content>
-            <main className=' px-8'>
-                <div>
-                    <div className='flex flex-col gap-5 '>
-                        <Tabs defaultActiveKey='1' items={items} onChange={onChangeTab} style={{ padding: '0 40px' }} />
-                        <Table columns={columns} dataSource={filteredData} />;
+        <div>
+            <MenuClientComponent />
+            <div className='sigma_subheader style-5 bg-gray '>
+                <div className='container'>
+                    <div className='sigma_subheader-inner'>
+                        <h1>Trang quản lý đơn hàng</h1>
                     </div>
+                    <ol className='breadcrumb'>
+                        <li className='breadcrumb-item'>
+                            <a className='btn-link' href='#'>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li className='breadcrumb-item active' aria-current='page'>
+                            Đơn hàng
+                        </li>
+                    </ol>
                 </div>
-            </main>
-        </Content>
+
+                <img src='/src/assets/img/subheader-br.png' className='br' alt='subheader' />
+                <img src='/src/assets/img/subheader-bl.png' className='bl' alt='subheader' />
+                <img src='/src/assets/img/subheader-tr.png' className='tr' alt='subheader' />
+            </div>
+            <Content style={{ padding: '10px 0px' }}>
+                <Layout style={{ padding: '0px 0' }}>
+                    <Sider theme='light' trigger={null} collapsible>
+                        <div className='demo-logo-vertical'>
+                            <Menu
+                                theme='light'
+                                mode='inline'
+                                defaultSelectedKeys={['1']}
+                                items={[
+                                    {
+                                        key: '1',
+                                        icon: <AiOutlineUser />,
+                                        label: <Link to='/updateProfile/76873928409-'>Hồ sơ của tôi</Link>
+                                    },
+                                    {
+                                        key: '2',
+                                        icon: <AiOutlineAntDesign />,
+                                        label: <Link to='/order'>Đơn mua</Link>
+                                    },
+                                    {
+                                        key: '3',
+                                        icon: <AiOutlineAccountBook />,
+                                        label: <Link to='/products'>Thông báo</Link>
+                                    },
+                                    {
+                                        key: '4',
+                                        icon: <AiOutlineAim />,
+                                        label: <Link to='/products'>Kho voucher</Link>
+                                    }
+                                ]}
+                            />
+                        </div>
+                    </Sider>
+                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                        <main className=' px-8'>
+                            <div>
+                                <div className='flex flex-col gap-5 '>
+                                    <Tabs defaultActiveKey='1' items={items} onChange={onChangeTab} />
+                                    <Table columns={columns} dataSource={filteredData} />;
+                                </div>
+                            </div>
+                        </main>
+                    </Content>
+                </Layout>
+            </Content>
+            <FooterTemplate />
+        </div>
     )
 }
 export default OrderPage

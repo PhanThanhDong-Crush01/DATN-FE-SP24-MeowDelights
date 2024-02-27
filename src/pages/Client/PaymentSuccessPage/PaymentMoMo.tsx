@@ -12,56 +12,8 @@ const ID_USER = '65b9451b0bbb2b6e014e5588'
 
 moment.locale('vi')
 const PaymentMoMo = () => {
-    // Log data order
-    const location = useLocation()
-    const searchParams = new URLSearchParams(location.search)
-    const encodedOrder: any = searchParams.get('order')
-    const Order = JSON.parse(decodeURIComponent(encodedOrder))
-
-    const { onSubmit } = useBillMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Đặt hàng thành công!!'
-            })
-        }
-    })
-
-    const currentDate = moment().format('YYYY/MM/DD HH:mm:ss') // Sử dụng Moment.js
-
     const navigate = useNavigate()
-    useEffect(() => {
-        const billdetails: any = Order?.thongTinDonHang?.order.map((item: any) => {
-            return {
-                idpro: item?.idpro,
-                idprotype: item?.idprotype,
-                quantity: item?.quantity,
-                money: item?.money
-            }
-        })
 
-        const addNew = {
-            bill: {
-                iduser: ID_USER,
-                money: Order?.thongTinDonHang?.tongTien,
-                date: currentDate,
-                adress: Order?.thongTinNhanHang?.adress,
-                tel: Order?.thongTinNhanHang?.phone,
-                idvc: Order?.thongTinDonHang?.voucher?.idVc,
-                paymentmethods: Order?.thongTinNhanHang?.paymentmethods,
-                paymentstatus: 'Chưa thanh toán',
-                orderstatus: 'Chờ xác nhận'
-            },
-            billdetails: billdetails
-        }
-
-        onSubmit(addNew)
-        const pttt = Order?.thongTinNhanHang?.paymentmethods
-        if (pttt == 'Thanh toán khi nhận hàng') {
-            navigate('/payment_success')
-        }
-    }, [Order])
     return (
         <>
             <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-9'>

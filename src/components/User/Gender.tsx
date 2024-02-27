@@ -69,12 +69,16 @@ const GenderForm = ({ data }: GenderFormProps) => {
                 {!editAuth && <p className='text-sm mt-2'>{data?.datas?.gender ? 'Nam' : 'Nữ'}</p>}
                 {editAuth && (
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>
+                        <form
+                            onSubmit={form.handleSubmit(onHandleSubmit)}
+                            className='flex'
+                            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <FormField
                                 control={form.control}
                                 name='gender'
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem style={{ width: '80%' }}>
                                         <FormControl>
                                             <Select>
                                                 <SelectTrigger className='w-[180px]'>

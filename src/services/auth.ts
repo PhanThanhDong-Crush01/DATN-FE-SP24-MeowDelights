@@ -38,19 +38,6 @@ export const updateUserProfile = async (user: IAuth) => {
         const response = await instance.patch(`/auth/${user._id}`, user)
         return response.data
     } catch (error) {
-        console.log(`['Signin_ERROR']`, error)
-    }
-}
-export const signup = (user: any) => {
-    return instance.post('/auth/signup', user)
-}
-
-export const updateUserProfile = async (user: IAuth) => {
-    try {
-        console.log(user)
-        const response = await instance.patch(`/auth/${user._id}`, user)
-        return response.data
-    } catch (error) {
         console.log(`['UPDATEUSERPROFILE_AUTH_ERROR']`, error)
     }
 }

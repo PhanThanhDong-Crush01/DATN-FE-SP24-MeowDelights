@@ -1,3 +1,4 @@
+import { toast } from '@/components/ui/use-toast'
 import instance from './core/api'
 import { IBill } from '@/interface/IBill'
 
@@ -5,15 +6,24 @@ export const getAll = async () => {
     try {
         const response = await instance.get('/bill')
         return response.data
-    } catch (error) {
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
         console.log(`['GETALL_BILL_ERROR']`, error)
     }
 }
 export const getBillOfUser = async (id: string) => {
+    console.log('🚀 ~ getBillOfUser ~ id:', id)
     try {
         const response = await instance.get('/bill/user/' + id)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
         console.log(`['getBillOfUser_ERROR']`, error)
     }
 }
@@ -23,7 +33,11 @@ export const add = async (bill: IBill) => {
     try {
         const response = await instance.post('/bill/', bill)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
         console.log(`['ADD_BILL_ERROR']`, error)
     }
 }

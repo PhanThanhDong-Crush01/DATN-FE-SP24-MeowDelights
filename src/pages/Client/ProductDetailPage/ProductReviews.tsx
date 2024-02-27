@@ -6,7 +6,7 @@ const ProductReviews = () => {
             <div className='container'>
                 <div className='sigma_product-additional-info'>
                     <ul className='nav' id='bordered-tab' role='tablist'>
-                        <li className='nav-item'>
+                        <li className='nav-item' style={{ textAlign: 'left' }}>
                             <a
                                 className='nav-link'
                                 id='tab-product-reviews-tab'
@@ -16,7 +16,7 @@ const ProductReviews = () => {
                                 aria-controls='tab-product-reviews'
                                 aria-selected='false'
                             >
-                                <h2 className='text-2xl pt-3'>Đánh giá</h2>{' '}
+                                <h2 className='text-2xl pt-3'> Đánh giá</h2>
                             </a>
                         </li>
                     </ul>

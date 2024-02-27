@@ -50,7 +50,7 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
 
     return (
         <>
-            <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+            <div className='mt-6 border bg-slate-100 rounded-md p-3'>
                 <div className='font-medium flex items-center justify-between'>
                     Avatar
                     <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
@@ -67,12 +67,16 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
                 {!editAuth && <p className='text-sm mt-2'>{data?.datas?.imgUser}</p>}
                 {editAuth && (
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>
+                        <form
+                            onSubmit={form.handleSubmit(onHandleSubmit)}
+                            className='flex'
+                            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <FormField
                                 control={form.control}
                                 name='imgUser'
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem style={{ width: '80%' }}>
                                         <FormControl>
                                             <Input {...field} placeholder='Nhập đường dẫn ảnh' />
                                         </FormControl>

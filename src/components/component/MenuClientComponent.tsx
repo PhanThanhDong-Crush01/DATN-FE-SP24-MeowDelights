@@ -1,9 +1,9 @@
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useCartQuery } from '@/hooks/Cart/useCartQuery'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from '../ui/use-toast'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 const MenuClientComponent = () => {
     const { dataCart } = useCartQuery()
     const { onRemove } = useCartMutation({
@@ -16,6 +16,24 @@ const MenuClientComponent = () => {
             })
         }
     })
+
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
+
+    const { data }: any = useAuthQuery(userID)
+
+    const navigate = useNavigate()
+    const handleLogout = () => {
+        localStorage.removeItem('userID')
+        localStorage.removeItem('user')
+        navigate('/signin')
+    }
+
     return (
         <>
             <div className='sigma_aside-overlay aside-trigger-right'></div>
@@ -118,67 +136,116 @@ const MenuClientComponent = () => {
                             <div className='sigma_header-controls style-2'>
                                 <ul className='sigma_header-controls-inner'>
                                     <li className='cart-trigger header-controls-item d-none d-sm-block'>
-                                        <a className='sigma_header-control-cart' title='Your Cart' href='cart.html'>
-                                            <i className='fal fa-solid fa-user' />
-                                        </a>
-                                        <ul className='sigma_cart-dropdown'>
-                                            <li>
-                                                <div
-                                                    className='sigma_cart-product-body'
-                                                    style={{ textAlign: 'center' }}
+                                        {!data?.datas ? (
+                                            <>
+                                                <a
+                                                    className='sigma_header-control-cart'
+                                                    title='Your Cart'
+                                                    href='cart.html'
+                                                    style={{ borderRadius: '50%', overflow: 'hidden' }}
                                                 >
-                                                    <h6>
-                                                        <Link to={'/signin'}>Đăng nhập</Link>
-                                                    </h6>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div
-                                                    className='sigma_cart-product-body'
-                                                    style={{ textAlign: 'center' }}
+                                                    <i className='fal fa-solid fa-user' />
+                                                </a>
+                                                <ul
+                                                    className='sigma_cart-dropdown'
+                                                    style={{ textAlign: 'left', width: '3%', marginRight: '100px' }}
                                                 >
-                                                    <h6>
-                                                        <Link to={'/signup'}>Đăng ký</Link>
-                                                    </h6>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                                    <li>
+                                                        <div
+                                                            className='sigma_cart-product-body'
+                                                            style={{ textAlign: 'center' }}
+                                                        >
+                                                            <h6>
+                                                                <Link to={'/signin'}>Đăng nhập</Link>
+                                                            </h6>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div
+                                                            className='sigma_cart-product-body'
+                                                            style={{ textAlign: 'center' }}
+                                                        >
+                                                            <h6>
+                                                                <Link to={'/signup'}>Đăng ký</Link>
+                                                            </h6>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <a
+                                                    className='sigma_header-control-cart'
+                                                    title='Your Cart'
+                                                    href='cart.html'
+                                                    style={{ borderRadius: '50%', overflow: 'hidden' }}
+                                                >
+                                                    <img
+                                                        src={data?.datas?.imgUser}
+                                                        alt='usser '
+                                                        style={{ width: '100%', height: 'auto' }}
+                                                    />
+                                                </a>
+                                                <ul
+                                                    className='sigma_cart-dropdown pl-10'
+                                                    style={{ textAlign: 'left', width: '3%', marginRight: '100px' }}
+                                                >
+                                                    <li>
+                                                        <h1
+                                                            style={{
+                                                                fontSize: '20px',
+                                                                color: 'black',
+                                                                fontWeight: 700
+                                                            }}
+                                                        >
+                                                            Xin chào {data?.datas?.name}
+                                                        </h1>
+                                                    </li>
+                                                    <li>
+                                                        <div className='sigma_cart-product-body'>
+                                                            <h6>
+                                                                <Link to={'/updateProfile/123624879238108765    '}>
+                                                                    Tài khoản của tôi
+                                                                </Link>
+                                                            </h6>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div className='sigma_cart-product-body'>
+                                                            <h6>
+                                                                <Link to={'/order'}>Đơn mua</Link>
+                                                            </h6>
+                                                        </div>
+                                                    </li>
+                                                    <li
+                                                        style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'space-around',
+                                                            width: '80%'
+                                                        }}
+                                                    >
+                                                        <div className='sigma_cart-product-body'>
+                                                            <button className='btn btn-danger' onClick={handleLogout}>
+                                                                Đăng xuất
+                                                            </button>
+                                                        </div>
+                                                        &nbsp;
+                                                        <div className='sigma_cart-product-body'>
+                                                            <Link to={'/admin'}>
+                                                                <button
+                                                                    className='btn btn-primary'
+                                                                    onClick={handleLogout}
+                                                                >
+                                                                    Quản lý web
+                                                                </button>
+                                                            </Link>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </>
+                                        )}
                                     </li>
-                                    <li className='cart-trigger header-controls-item d-none d-sm-block'>
-                                        {/* <span>{data?.datas?.name}</span> */}
-                                        <ul className='sigma_cart-dropdown'>
-                                            <li>
-                                                <div
-                                                    className='sigma_cart-product-body'
-                                                    style={{ textAlign: 'center' }}
-                                                >
-                                                    <h6>
-                                                        <Link to={'/signin'}>Tài khoản của tôi</Link>
-                                                    </h6>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div
-                                                    className='sigma_cart-product-body'
-                                                    style={{ textAlign: 'center' }}
-                                                >
-                                                    <h6>
-                                                        <Link to={'/signin'}>Đơn mua</Link>
-                                                    </h6>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div
-                                                    className='sigma_cart-product-body'
-                                                    style={{ textAlign: 'center' }}
-                                                >
-                                                    <h6>
-                                                        <Link to={'/signup'}>Đăng xuất</Link>
-                                                    </h6>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
+
                                     <li className='cart-trigger header-controls-item d-none d-sm-block'>
                                         <Link to={'/cart'} className='sigma_header-control-cart'>
                                             <i className='far fa-shopping-basket' />
@@ -221,8 +288,10 @@ const MenuClientComponent = () => {
                                     </li>
                                     <li className='d-none d-sm-block'>
                                         <a href='shop-grid.html' className='sigma_btn btn-sm'>
-                                            Order Here
-                                            <i className='fal fa-plus ml-3' />
+                                            <Link to={'/products'}>
+                                                Đơn mua
+                                                <i className='fal fa-plus ml-3' />
+                                            </Link>
                                         </a>
                                     </li>
                                     <li className='aside-toggle aside-trigger'>

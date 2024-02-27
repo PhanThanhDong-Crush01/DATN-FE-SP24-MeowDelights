@@ -14,7 +14,7 @@ const formItemLayout = {
     }
 }
 
-const AddProduct = () => {
+const EditProduct = () => {
     const { onSubmit } = useProductMutation({
         action: 'ADD',
         onSuccess() {
@@ -66,9 +66,13 @@ const AddProduct = () => {
                             <div className='form_left'>
                                 <FormProduct />
                             </div>
+                            <div className='form_right'></div>
                         </div>
 
-                        <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                        <Form.Item
+                            wrapperCol={{ offset: 6, span: 16 }}
+                            style={{ margin: '30px', textAlign: 'center', marginLeft: '-200px' }}
+                        >
                             <Button
                                 type='primary'
                                 htmlType='submit'
@@ -76,10 +80,9 @@ const AddProduct = () => {
                                 style={{
                                     width: '30%',
                                     height: '70px',
-                                    borderColor: 'blue',
-                                    color: 'blue',
-                                    marginTop: '-200px',
-                                    marginRight: '30px'
+                                    border: '1px solid blue',
+                                    color: 'red',
+                                    backgroundColor: '#1C2434'
                                 }}
                             >
                                 Thêm
@@ -92,4 +95,4 @@ const AddProduct = () => {
     )
 }
 
-export default AddProduct
+export default EditProduct

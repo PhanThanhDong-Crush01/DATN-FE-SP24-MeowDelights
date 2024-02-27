@@ -11,14 +11,19 @@ import PhoneForm from '@/components/User/Phone'
 import AddressForm from '@/components/User/Address'
 import AgeForm from '@/components/User/Age'
 import GenderForm from '@/components/User/Gender'
-import SigninPage from './SigninPage'
+import { useEffect, useState } from 'react'
 const { Content, Sider } = Layout
 type Props = {}
 const UpdateProfile = (_props: Props) => {
-    const { id } = useParams()
-    console.log(id)
-    const { data } = useAuthQuery(id)
-    console.log(data)
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
+
+    const { data }: any = useAuthQuery(userID)
     return (
         <>
             <div>
@@ -57,7 +62,7 @@ const UpdateProfile = (_props: Props) => {
                                         {
                                             key: '1',
                                             icon: <AiOutlineUser />,
-                                            label: <Link to='/'>Hồ sơ của tôi</Link>
+                                            label: <Link to='/updateProfile/76873928409-'>Hồ sơ của tôi</Link>
                                         },
                                         {
                                             key: '2',
@@ -67,12 +72,12 @@ const UpdateProfile = (_props: Props) => {
                                         {
                                             key: '3',
                                             icon: <AiOutlineAccountBook />,
-                                            label: <Link to='/admin/product'>Thông báo</Link>
+                                            label: <Link to='/products'>Thông báo</Link>
                                         },
                                         {
                                             key: '4',
                                             icon: <AiOutlineAim />,
-                                            label: <Link to='/admin/product'>Kho voucher</Link>
+                                            label: <Link to='/products'>Kho voucher</Link>
                                         }
                                     ]}
                                 />
@@ -85,27 +90,24 @@ const UpdateProfile = (_props: Props) => {
                                         <p className='text-2xl font-sans pb-3'>Hồ sơ của tôi</p>
                                     </div>
 
-                                    <div className='flex flex-col gap-20 py-5'>
-                                        <div>
+                                    <div
+                                        className='flex'
+                                        style={{ justifyContent: 'space-evenly', alignItems: 'center' }}
+                                    >
+                                        <div style={{ width: '45%' }}>
                                             <ImgUserForm data={data} />
-                                        </div>
-                                        <div>
+
                                             <NameForm data={data} />
-                                        </div>
-                                        <div>
+
+                                            <PhoneForm data={data} />
+
                                             <EmailForm data={data} />
                                         </div>
-                                        <div>
-                                            <PhoneForm data={data} />
-                                        </div>
-                                        <div>
-                                            <AddressForm data={data} />
-                                        </div>
-                                        <div>
+                                        <div style={{ width: '45%' }}>
                                             <AgeForm data={data} />
-                                        </div>
-                                        <div>
                                             <GenderForm data={data} />
+                                            <AddressForm data={data} />
+                                            <AddressForm data={data} /> đổi mật khẩu
                                         </div>
                                     </div>
                                 </div>

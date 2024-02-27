@@ -6,10 +6,9 @@ import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
 import '@/styles/Cart.css'
-import { Button, Card, Popconfirm, Space } from 'antd'
+import { Card, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import PaymentInformationPage from '../PaymentInformationPage'
+import { Link, useNavigate } from 'react-router-dom'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
@@ -90,14 +89,19 @@ const CartPage = () => {
             alert('Mã voucher hoặc điều kiệu áp dụng không hợp lệ !!!')
         }
     }
-    const thongtindonhang: any = {
-        order: dataCart?.data,
-        phiVanChuyen: phiVanChuyen,
-        voucher: {
-            idVc: data?.datas?._id || '',
-            soTienGiam: voucherGiamGia || 0
-        },
-        tongTien: tongTienCanThanhToan
+    const navigate = useNavigate()
+    const handleCheckout = () => {
+        const thongtindonhang: any = {
+            order: dataCart?.data,
+            phiVanChuyen: phiVanChuyen,
+            voucher: {
+                idVc: data?.datas?._id || '',
+                soTienGiam: voucherGiamGia || 0
+            },
+            tongTien: tongTienCanThanhToan
+        }
+        localStorage.setItem('thongtindonhang', JSON.stringify(thongtindonhang))
+        navigate('/payment_information')
     }
 
     return (
@@ -420,23 +424,17 @@ const CartPage = () => {
                             </tr>
                             <tr>
                                 <td colSpan={3} style={{ width: '100%' }}>
-                                    <Link
-                                        to={`/payment_information?thongtindonhang=${encodeURIComponent(
-                                            JSON.stringify(thongtindonhang)
-                                        )}`}
+                                    <button
+                                        onClick={handleCheckout}
+                                        type='button'
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                            backgroundColor: '#00D8E8'
+                                        }}
                                     >
-                                        <button
-                                            type='button'
-                                            style={{
-                                                width: '300%',
-                                                height: '50px',
-                                                backgroundColor: '#00D8E8',
-                                                margin: '0 100%'
-                                            }}
-                                        >
-                                            Thanh toán
-                                        </button>
-                                    </Link>
+                                        Thanh toán
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>

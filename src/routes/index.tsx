@@ -30,6 +30,7 @@ import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
 import OrderPage from '@/pages/Client/AuthPage/OrderPage'
 import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
 import ListContact from '@/pages/Admin/Contact'
+import EditProduct from '@/pages/Admin/Products/EditProduct'
 
 const Routers = () => {
     return (
@@ -57,7 +58,7 @@ const Routers = () => {
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
                 <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} />
-                {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
+                <Route path='products/:id/edit' element={<EditProduct />} />
                 <Route path='products/add' element={<AddProduct />} />
                 <Route path='categories' element={<ListCategory />} />
                 {/* <Route path='categories/:id/edit' element={<EditCategory />}/> */}

@@ -49,7 +49,6 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
                 typeProduct.push(product)
             }
         })
-        console.log('🚀 ~ Object.keys ~ typeProduct:', typeProduct)
         localStorage.setItem('typeProduct', JSON.stringify(typeProduct))
         toast({
             variant: 'success',
@@ -141,7 +140,7 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
             ))}
 
             <Form.Item {...tailLayout}>
-                <Button type='primary' htmlType='submit'>
+                <Button type='primary' htmlType='submit' style={{ color: 'blue', borderColor: 'blue' }}>
                     Submit
                 </Button>
             </Form.Item>

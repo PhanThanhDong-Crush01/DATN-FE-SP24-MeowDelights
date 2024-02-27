@@ -17,23 +17,38 @@ const SigninPage = () => {
             password: data.password
         }
         try {
-            const reponse = await signin(values)
-            console.log('api SIgnin', reponse)
-            if (reponse?.data?.user?.role === 'admin') {
-                message.success('Đăng nhập thành công admin')
-                navigate('/admin')
-            }
-            if (reponse?.data?.user?.role === 'nhanvien') {
-                message.success('Đăng nhập thành công nhân viên')
-                navigate('/admin')
-            }
-            if (reponse?.data?.user?.role === 'member') {
-                message.success('Đăng nhập thành công !')
-                navigate('/')
+            const response = await signin(values)
+            console.log('🚀 ~ onSubmit ~ response:', response)
+            if (response?.user) {
+                // Lưu thông tin người dùng vào Local Storage
+                localStorage.setItem('userID', response?.user?._id)
+                if (response?.user?.role === 'admin') {
+                    message.success('Đăng nhập thành công admin')
+                    navigate('/admin')
+                }
+                if (response?.user?.role === 'nhanvien') {
+                    message.success('Đăng nhập thành công nhân viên')
+                    navigate('/admin')
+                }
+                if (response?.user?.role === 'member') {
+                    message.success('Đăng nhập thành công !')
+
+                    // if (Auth !== null) {
+                    //     const storedUser: any = JSON.parse(Auth)
+                    //     console.log('🚀 ~ UpdateProfile ~ storedUser:', storedUser)
+                    //     console.log('User ID:', storedUser._id)
+                    //     navigate(`/updateProfile/${storedUser._id}`)
+                    // } else {
+                    //     console.log('User data not found in localStorage')
+                    // }
+                    navigate(`/updateProfile/${response?.user?._id}`)
+                    // navigate(`/`)
+                }
             }
         } catch (error: any) {
             console.log(error)
-            message.warning(error?.response?.data?.message)
+            message.warning(error?.response?.message)
+            // navigate('/signup')
         }
 
         // Thực hiện xử lý đăng ký tài khoản tại đây
@@ -76,7 +91,7 @@ const SigninPage = () => {
                     </h2>
                 </div>
 
-                <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+                <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm' id='mainpage'>
                     <form className='space-y-6' action='#' method='POST' onSubmit={handleSubmit(onSubmit)}>
                         <div>
                             <label htmlFor='email' className='block text-sm font-medium leading-6 text-gray-900'>

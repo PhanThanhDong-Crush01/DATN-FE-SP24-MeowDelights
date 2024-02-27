@@ -64,7 +64,7 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
                         )}
                     </Button>
                 </div>
-                {!editAuth && <p className='text-sm mt-2'>{data?.datas?.imgUser}</p>}
+                {!editAuth && <img className='text-sm mt-2 rounded' src={data?.datas?.imgUser}></img>}
                 {editAuth && (
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>

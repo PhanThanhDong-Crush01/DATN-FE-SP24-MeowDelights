@@ -231,9 +231,9 @@ const Product = () => {
 
                     {/* <Popconfirm
                         placement='topRight'
-                        title='Xóa bài viết?'
-                        description='Bạn có chắc chắn xóa bài viết này không?'
-                        onConfirm={() => onRemove(record)}
+                        title='Lưu trữ sản phẩm?'
+                        description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
+                        onConfirm={() => onStorage(record)}
                         // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'

@@ -65,7 +65,7 @@ const Routers = () => {
                 <Route path='categories/edit/:id' element={<EditCategory />} />
                 <Route path='categories/add' element={<AddCategory />} />
                 <Route path='voucher' element={<Voucher />} />
-                {/* <Route path='voucher/:id/edit' element={<EditListVoucher />}/> */}
+                <Route path='voucher/edit/:id' element={<EditVoucher />} />
                 <Route path='voucher/add' element={<AddVoucher />} />
                 <Route path='type_voucher' element={<ListTypeVoucher />} />
                 {/* <Route path='type_voucher/:id/edit' element={<EditListTypeVoucher />}/> */}

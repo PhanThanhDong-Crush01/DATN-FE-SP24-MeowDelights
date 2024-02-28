@@ -2,6 +2,7 @@ import { Button, Form } from 'antd'
 import FormProduct from './FormProduct'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
+import { useState } from 'react'
 
 const formItemLayout = {
     labelCol: {
@@ -26,6 +27,9 @@ const AddProduct = () => {
         }
     })
 
+    const [imageUrl, setImageUrl] = useState<string>('') // Khai báo state để lưu trữ imageUrl
+    console.log('🚀 ~ AddProduct ~ imageUrl:', imageUrl)
+
     const onFinish = (values: any) => {
         const typeProductString = localStorage.getItem('typeProduct')
         const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
@@ -33,7 +37,7 @@ const AddProduct = () => {
         const addNew = {
             product: {
                 name: values.name,
-                image: values.image,
+                image: imageUrl,
                 import_date: values.import_date,
                 expiry: `${values.manufacture_date} - ${values.expiry_date}`,
                 status: true,
@@ -42,7 +46,16 @@ const AddProduct = () => {
             },
             typeProduct: typeProduct
         }
-        onSubmit(addNew)
+        console.log('🚀 ~ onFinish ~ addNew:', addNew)
+        localStorage.removeItem('typeProduct')
+        if (typeProduct[0]?.color == undefined) {
+            toast({
+                variant: 'destructive',
+                title: 'Bạn chưa thêm dữ liệu biến thể loại, size, số lượng,... của sản phẩm!'
+            })
+        } else {
+            onSubmit(addNew)
+        }
     }
 
     return (
@@ -64,7 +77,7 @@ const AddProduct = () => {
                             }}
                         >
                             <div className='form_left'>
-                                <FormProduct />
+                                <FormProduct imageUrl={imageUrl} setImageUrl={setImageUrl} />
                             </div>
                         </div>
 
@@ -77,9 +90,7 @@ const AddProduct = () => {
                                     width: '30%',
                                     height: '70px',
                                     borderColor: 'blue',
-                                    color: 'blue',
-                                    marginTop: '-200px',
-                                    marginRight: '30px'
+                                    color: 'blue'
                                 }}
                             >
                                 Thêm

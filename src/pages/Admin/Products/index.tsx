@@ -463,7 +463,7 @@ const Product = () => {
                         description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
                         onConfirm={() => onStorage(record)}
                         onCancel={cancel}
-                        okText='Đồng ý'
+                        okText={<span style={{ color: 'green' }}>Đồng ý</span>} // Thay đổi màu của văn bản nút "Đồng ý"
                         cancelText='Không'
                     >
                         <Button type='default' style={{ color: 'red', borderColor: 'red' }}>

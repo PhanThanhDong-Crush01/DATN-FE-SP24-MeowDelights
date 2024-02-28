@@ -14,12 +14,6 @@ const PaymentSuccessPage = () => {
                         <span></span>
                         <span></span>
                     </div>
-                    {/* <form className='search-form' method='post'>
-                        <input type='text' placeholder='Search...' value='' />
-                        <button type='submit' className='btn search-btn'>
-                            <i className='fal fa-search m-0'></i>
-                        </button>
-                    </form> */}
                 </div>
 
                 <div className='sigma_subheader style-5 bg-gray'>
@@ -60,10 +54,10 @@ const PaymentSuccessPage = () => {
                             </h3>
                         </div>
                         <div style={{ margin: '0 auto', textAlign: 'center' }}>
-                            <Link to={'/bill_order'}>
+                            <Link to={'/order'}>
                                 <button className='btn'>Danh sách đơn hàng</button>
                             </Link>
-                            <Link to={'/bill_order/'} style={{ marginLeft: '20px' }}>
+                            <Link to={'/order/'} style={{ marginLeft: '20px' }}>
                                 <button className='btn'>Xem đơn hàng</button>
                             </Link>
                         </div>

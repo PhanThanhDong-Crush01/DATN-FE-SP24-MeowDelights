@@ -84,12 +84,16 @@ const NameForm = ({ data }: NameFormProps) => {
                 {!editAuth && <p className='text-sm mt-2'>{data?.datas?.name}</p>}
                 {editAuth && (
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>
+                        <form
+                            onSubmit={form.handleSubmit(onHandleSubmit)}
+                            className='flex'
+                            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <FormField
                                 control={form.control}
                                 name='name'
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem style={{ width: '80%' }}>
                                         <FormControl>
                                             <Input {...field} placeholder='Nhập tên' />
                                         </FormControl>

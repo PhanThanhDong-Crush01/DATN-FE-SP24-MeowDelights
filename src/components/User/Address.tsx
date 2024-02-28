@@ -54,7 +54,7 @@ const AddressForm = ({ data }: AddressFormProps) => {
 
     return (
         <>
-            <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+            <div className='mt-6 border bg-slate-100 rounded-md p-3'>
                 <div className='font-medium flex items-center justify-between'>
                     Địa chỉ
                     <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
@@ -71,12 +71,16 @@ const AddressForm = ({ data }: AddressFormProps) => {
                 {!editAuth && <p className='text-sm mt-2'>{data?.datas?.address}</p>}
                 {editAuth && (
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>
+                        <form
+                            onSubmit={form.handleSubmit(onHandleSubmit)}
+                            className='flex'
+                            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <FormField
                                 control={form.control}
                                 name='address'
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem style={{ width: '80%' }}>
                                         <FormControl>
                                             <Input {...field} placeholder='Nhập địa chỉ' />
                                         </FormControl>

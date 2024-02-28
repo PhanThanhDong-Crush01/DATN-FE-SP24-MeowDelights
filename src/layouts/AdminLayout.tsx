@@ -1,37 +1,132 @@
-import HeaderAdminComponents from '@/components/component/HeaderAdminComponents'
-import SidebarAdminComponent from '@/components/component/SidebarAdminComponent'
-import { Outlet } from 'react-router-dom'
-import '../styles/AdminLayout.css'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { FaRegChartBar } from 'react-icons/fa6'
+import { LiaProductHunt } from 'react-icons/lia'
+import { MdOutlineCategory } from 'react-icons/md'
+import { RiBillLine } from 'react-icons/ri'
+import { FaRegMoneyBillAlt } from 'react-icons/fa'
+import { MdOutlineAccountCircle } from 'react-icons/md'
+import { VscAccount } from 'react-icons/vsc'
+import { MdOutlineSettingsPhone } from 'react-icons/md'
+import { FiSettings } from 'react-icons/fi'
+import { MdPowerSettingsNew } from 'react-icons/md'
+
+import { Layout, Menu, Button, theme } from 'antd'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
+import { toast } from '@/components/ui/use-toast'
+
+const { Header, Sider, Content } = Layout
 
 const AdminLayout = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const [collapsed, setCollapsed] = useState(false)
+    const {
+        token: { colorBgContainer, borderRadiusLG }
+    } = theme.useToken()
 
-    const handleToggleDarkMode = () => {
-        setIsDarkMode((prevMode) => !prevMode)
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
+
+    const { data }: any = useAuthQuery(userID)
+
+    const navigate = useNavigate()
+    const handleLogout = () => {
+        localStorage.removeItem('userID')
+        localStorage.removeItem('user')
+        toast({
+            variant: 'destructive',
+            title: 'Bạn đã đăng xuất thành công!'
+        })
+        navigate('/signin')
     }
+
     return (
-        <div className={`flex ${isDarkMode ? 'dark-mode' : ''}`}>
-            <div
-                className='SidebarAdminComponent'
-                style={{
-                    width: '270px',
-                    position: 'fixed',
-                    height: '100vh', // Set the height to 100% of the viewport height
-                    top: 0,
-                    left: 0,
-                    zIndex: 1
-                }}
-            >
-                <SidebarAdminComponent />
-            </div>
-            <main className='flex-grow ml-64 p-8'>
-                <HeaderAdminComponents darkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
-                <div className={`bg-main ${isDarkMode ? 'dark-mode-content' : ''}`}>
+        <Layout>
+            <Sider trigger={null} collapsible collapsed={collapsed}>
+                <div className='demo-logo-vertical' />
+                <Link to='/' style={{ width: '100%' }}>
+                    <img
+                        src='https://res.cloudinary.com/drwpkuqxv/image/upload/v1709051842/logo_meowdelights.jpg'
+                        alt=''
+                        style={{ borderRadius: 10, width: 50, margin: '0 auto' }}
+                    />
+                </Link>
+                <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
+                    <Menu.Item key='1' icon={<FaRegChartBar />}>
+                        <Link to='/admin'>Thống kê</Link>
+                    </Menu.Item>
+                    <Menu.Item key='2' icon={<LiaProductHunt />}>
+                        <Link to='/admin/products'>Sản phẩm</Link>
+                    </Menu.Item>
+                    <Menu.Item key='3' icon={<MdOutlineCategory />}>
+                        <Link to='/admin/categories'>Danh mục</Link>
+                    </Menu.Item>
+                    <Menu.Item
+                        key='4'
+                        icon={
+                            <img
+                                src='https://down-vn.img.susercontent.com/file/84feaa363ce325071c0a66d3c9a88748'
+                                alt=''
+                                style={{ width: '10px' }}
+                            />
+                        }
+                    >
+                        <Link to='/admin/voucher'>Khuyến mãi</Link>
+                    </Menu.Item>
+                    <Menu.Item key='5' icon={<RiBillLine />}>
+                        <Link to='/admin/type_voucher'>Loại khuyến mãi</Link>
+                    </Menu.Item>
+                    <Menu.Item key='6' icon={<FaRegMoneyBillAlt />}>
+                        <Link to='/admin/bill'>Hóa đơn</Link>
+                    </Menu.Item>
+                    <Menu.Item key='7' icon={<MdOutlineSettingsPhone />}>
+                        <Link to='/admin/contact'>Liên hệ</Link>
+                    </Menu.Item>
+                    <Menu.Item key='8' icon={<MdOutlineAccountCircle />}>
+                        <Link to='/admin/'>Tài khoản</Link>
+                    </Menu.Item>
+                    <Menu.Item key='9' icon={<VscAccount />}>
+                        <Link to='/admin/'>Thông tin của tôi</Link>
+                    </Menu.Item>
+                    <Menu.Item key='10' icon={<FiSettings />}>
+                        <Link to='/admin/'>Cài đặt</Link>
+                    </Menu.Item>
+                    <Menu.Item key='11' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
+                        Đăng xuất
+                    </Menu.Item>
+                </Menu>
+            </Sider>
+            <Layout>
+                <Header style={{ padding: 0, background: colorBgContainer }}>
+                    <Button
+                        type='text'
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                            fontSize: '16px',
+                            width: 64,
+                            height: 64
+                        }}
+                    />
+                </Header>
+                <Content
+                    style={{
+                        margin: '24px 16px',
+                        padding: 24,
+                        minHeight: 700,
+                        background: colorBgContainer,
+                        borderRadius: borderRadiusLG
+                    }}
+                >
                     <Outlet />
-                </div>
-            </main>
-        </div>
+                </Content>
+            </Layout>
+        </Layout>
     )
 }
 

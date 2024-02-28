@@ -87,6 +87,7 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
         setTypeProduct(combined)
 
         setCombinedData(combined)
+        setTypeProduct(combined)
     }, [colors, sizes])
 
     const showDrawer = () => {

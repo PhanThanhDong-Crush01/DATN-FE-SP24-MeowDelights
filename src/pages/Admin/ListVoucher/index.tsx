@@ -7,13 +7,16 @@ import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { useVoucherMutation } from '@/hooks/Voucher/useVoucherMutation'
 import { toast } from '@/components/ui/use-toast'
 import AddVoucher from './AddVoucher'
+import { formatPrice } from '@/lib/utils'
+import { Link } from 'react-router-dom'
 type InputRef = GetRef<typeof Input>
 
 interface DataType {
     key: string
     _id: string
+    name: string
     status: boolean
-    codeVc: string
+    quantity: number
     decrease: number
     expiry: string
     conditions: string
@@ -30,22 +33,12 @@ const Voucher = () => {
         onSuccess: () => {
             toast({
                 variant: 'success',
-                title: 'Xoá sản phẩm thành công!!',
-                description: 'Sẩn phẩm đã bị xóa'
+                title: 'Xoá thành công!!',
+                description: 'Danh mục khuyến mại đã bị xóa'
             })
         }
     })
 
-    const { onSubmit } = useVoucherMutation({
-        action: 'UPDATE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật thành công!!',
-                description: 'Cập nhật danh mục khuyến mại thành công!'
-            })
-        }
-    })
     const dataVoucher = data?.datas.map((item: any, index: any) => ({
         ...item,
         key: index + 1
@@ -56,9 +49,9 @@ const Voucher = () => {
         setIsModalOpen(true)
     }
 
-    const handleOk = () => {
-        setIsModalOpen(false)
-    }
+    // const handleOk = () => {
+    //     setIsModalOpen(false)
+    // }
 
     const handleCancel = () => {
         setIsModalOpen(false)
@@ -67,63 +60,6 @@ const Voucher = () => {
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
 
-    const [editStatus, setEditStatus] = useState(true)
-    const [editDecrease, setEditDecrease] = useState('')
-    const [editCodeVc, setEditCodeVc] = useState('')
-    const [editExpiry, setEditExpiry] = useState('')
-    const [editConditions, setEditConditions] = useState('')
-    const [editIdTypeVoucher, setEditIdTypeVoucher] = useState('')
-    const [editedVoucherId, setEditedVoucherId] = useState(null)
-
-    const handleEditVoucher = (
-        id: any,
-        status: any,
-        decrease: any,
-        codeVc: any,
-        expiry: any,
-        conditions: any,
-        idTypeVoucher: any
-    ) => {
-        setEditedVoucherId(id)
-        setEditStatus(status)
-        setEditDecrease(decrease)
-        setEditCodeVc(codeVc)
-        setEditExpiry(expiry)
-        setEditConditions(conditions)
-        setEditIdTypeVoucher(idTypeVoucher)
-    }
-
-    const handleSaveEdit = () => {
-        onSubmit({
-            _id: editedVoucherId,
-            status: editStatus,
-            decrease: editDecrease,
-            codeVc: editCodeVc,
-            expiry: editExpiry,
-            conditions: editConditions,
-            idTypeVoucher: editIdTypeVoucher
-        })
-
-        // Reset state after saving
-        setEditedVoucherId(null)
-        setEditStatus(true)
-        setEditDecrease('')
-        setEditCodeVc('')
-        setEditExpiry('')
-        setEditConditions('')
-        setEditIdTypeVoucher('')
-    }
-
-    const handleCancelEdit = () => {
-        // Reset state on cancel
-        setEditedVoucherId(null)
-        setEditStatus(true)
-        setEditDecrease('')
-        setEditCodeVc('')
-        setEditExpiry('')
-        setEditConditions('')
-        setEditIdTypeVoucher('')
-    }
     const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
         confirm()
         setSearchText(selectedKeys[0])
@@ -203,74 +139,54 @@ const Voucher = () => {
             width: '2%'
         },
         {
+            title: 'Tên voucher',
+            dataIndex: 'name',
+            key: 'name',
+            width: '10%',
+            ...getColumnSearchProps('name'),
+            render: (_, record) => record.name
+        },
+        {
+            title: 'Giảm',
+            dataIndex: 'decrease',
+            key: 'decrease',
+            width: '10%',
+            // ...getColumnSearchProps('decrease'),
+            render: (_, record) => (
+                <p
+                    className='text-base '
+                    dangerouslySetInnerHTML={{
+                        __html: formatPrice(record?.decrease)
+                    }}
+                ></p>
+            )
+        },
+        {
+            title: 'Điều kiện',
+            dataIndex: 'conditions',
+            key: 'conditions',
+            width: '10%',
+            // ...getColumnSearchProps('conditions'),
+            // sorter: (a, b) => a.conditions - b.conditions,
+            // sortDirections: ['descend', 'ascend'],
+            render: (_, record) => (
+                <p
+                    className='text-base '
+                    dangerouslySetInnerHTML={{
+                        __html: formatPrice(record?.conditions)
+                    }}
+                ></p>
+            )
+        },
+        {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             width: '20%',
-            render: (_, record) =>
-                editedVoucherId === record._id ? (
-                    <Select
-                        className=' w-32'
-                        labelInValue
-                        value={{ value: editStatus, label: getStatusLabel(editStatus) }}
-                        onChange={(value) => setEditStatus(value.value)}
-                        options={[
-                            {
-                                value: true,
-                                label: 'Còn voucher'
-                            },
-                            {
-                                value: false,
-                                label: 'Hết voucher'
-                            }
-                        ]}
-                    ></Select>
-                ) : (
-                    getStatusLabel(record.status)
-                    // <option value='record.status'></option>
-                )
+            render: (_, record) => getStatusLabel(record.status)
+            // <option value='record.status'></option>
         },
 
-        {
-            title: 'Giảm bớt',
-            dataIndex: 'decrease',
-            key: 'decrease',
-            width: '10%',
-            ...getColumnSearchProps('decrease'),
-            render: (_, record) =>
-                editedVoucherId === record._id ? (
-                    <input
-                        className='border border-gray-300 rounded-md'
-                        style={{ overflow: 'hidden', display: 'block', width: '100%', height: '100%', padding: '6px' }}
-                        type='text'
-                        value={editDecrease}
-                        onChange={(e) => setEditDecrease(e.target.value)}
-                        placeholder='giảm bớt'
-                    />
-                ) : (
-                    record.decrease
-                )
-        },
-        {
-            title: 'Mã voucher',
-            dataIndex: 'codeVc',
-            key: 'codeVc',
-            width: '10%',
-            ...getColumnSearchProps('codeVc'),
-            render: (_, record) =>
-                editedVoucherId === record._id ? (
-                    <input
-                        className='border border-gray-300 rounded-md'
-                        style={{ overflow: 'hidden', display: 'block', width: '100%', height: '100%', padding: '6px' }}
-                        type='text'
-                        value={editCodeVc}
-                        onChange={(e) => setEditCodeVc(e.target.value)}
-                        placeholder='Mã giảm giá'
-                    />
-                ) : (
-                    record.codeVc
-                )
-        },
         {
             title: 'Hết hạn',
             dataIndex: 'expiry',
@@ -279,62 +195,15 @@ const Voucher = () => {
             ...getColumnSearchProps('expiry'),
             sorter: (a, b) => a.expiry.length - b.expiry.length,
             sortDirections: ['descend', 'ascend'],
-            render: (_, record) =>
-                editedVoucherId === record._id ? (
-                    <input
-                        className='border border-gray-300 rounded-md'
-                        style={{ overflow: 'hidden', display: 'block', width: '100%', height: '100%', padding: '6px' }}
-                        type='text'
-                        value={editExpiry}
-                        onChange={(e) => setEditExpiry(e.target.value)}
-                        placeholder='ngày hết hạn'
-                    />
-                ) : (
-                    record.expiry
-                )
+            render: (_, record) => record.expiry
         },
 
         {
-            title: 'Điều kiện',
-            dataIndex: 'conditions',
-            key: 'conditions',
-            width: '10%',
-            ...getColumnSearchProps('conditions'),
-            // sorter: (a, b) => a.conditions - b.conditions,
-            // sortDirections: ['descend', 'ascend'],
-            render: (_, record) =>
-                editedVoucherId === record._id ? (
-                    <input
-                        className='border border-gray-300 rounded-md'
-                        style={{ overflow: 'hidden', display: 'block', width: '100%', height: '100%', padding: '6px' }}
-                        type='text'
-                        value={editConditions}
-                        onChange={(e) => setEditConditions(e.target.value)}
-                        placeholder='điều kiện'
-                    />
-                ) : (
-                    record.conditions
-                )
-        },
-
-        {
-            title: 'Loại Voucher',
+            title: 'Loại mã',
             dataIndex: 'idTypeVoucher',
             key: 'idTypeVoucher',
             width: '20%',
-            render: (_, record) =>
-                editedVoucherId === record._id ? (
-                    <input
-                        className='border border-gray-300 rounded-md'
-                        style={{ overflow: 'hidden', display: 'block', width: '100%', height: '100%', padding: '6px' }}
-                        type='text'
-                        value={editIdTypeVoucher}
-                        onChange={(e) => setEditIdTypeVoucher(e.target.value)}
-                        placeholder='điều kiện'
-                    />
-                ) : (
-                    record.idTypeVoucher
-                )
+            render: (_, record) => record.idTypeVoucher
         },
 
         {
@@ -344,40 +213,14 @@ const Voucher = () => {
             width: '15%',
             render: (_, record) => (
                 <Space size='middle'>
-                    {editedVoucherId === record._id ? (
-                        <div className='flex flex-col gap-1'>
-                            <button onClick={handleSaveEdit} className='bg-blue-500 px-4 py-1 rounded text-white'>
-                                Lưu
-                            </button>
-                            &nbsp; &nbsp;
-                            <button onClick={handleCancelEdit} className='bg-red-500 px-4  py-1 rounded text-white'>
-                                Hủy
-                            </button>
-                        </div>
-                    ) : (
-                        <Button
-                            type='primary'
-                            onClick={() =>
-                                handleEditVoucher(
-                                    record._id,
-                                    record.status,
-                                    record.decrease,
-                                    record.codeVc,
-                                    record.expiry,
-                                    record.conditions,
-                                    record.idTypeVoucher
-                                )
-                            }
-                            ghost
-                        >
-                            <EditOutlined style={{ display: 'inline-flex' }} />
-                        </Button>
-                    )}
+                    <Link to={`edit/${record._id}`} type='primary' ghost>
+                        <EditOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
 
                     <Popconfirm
                         placement='topRight'
-                        title='Xóa bài viết?'
-                        description='Bạn có chắc chắn xóa bài viết này không?'
+                        title='Xóa mã khuyến mại?'
+                        description='Bạn có chắc chắn xóa mã khuyến mại này không?'
                         onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
@@ -409,7 +252,7 @@ const Voucher = () => {
                         onClick={showModal}
                     ></Button>
                 </div>
-                <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <Modal open={isModalOpen} onCancel={handleCancel}>
                     <AddVoucher />
                 </Modal>
             </div>

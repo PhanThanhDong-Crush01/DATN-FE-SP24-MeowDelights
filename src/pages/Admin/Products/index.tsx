@@ -462,6 +462,7 @@ const Product = () => {
                         title='Lưu trữ sản phẩm?'
                         description='Bạn có chắc chắn muốn lưu trữ sản phẩm này không?'
                         onConfirm={() => onStorage(record)}
+                        // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'

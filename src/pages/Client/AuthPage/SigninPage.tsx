@@ -41,7 +41,7 @@ const SigninPage = () => {
                     // } else {
                     //     console.log('User data not found in localStorage')
                     // }
-                    navigate(`/updateProfile/${response?.user?._id}`)
+                    navigate(`/updateProfile/${response?.data?.user?._id}`)
                     // navigate(`/`)
                 }
             }

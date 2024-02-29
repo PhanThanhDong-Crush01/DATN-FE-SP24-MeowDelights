@@ -43,44 +43,7 @@ const AddVoucher = () => {
             <div className='px-7 w-auto'>
                 <div className='flex flex-row gap-5'>
                     <div>
-                        <p>Trạng thái</p>
-                        {/* <Input
-                           
-                            type='text'
-                            onChange={(e) => setNewStatus(e.target.value)}
-                            placeholder='Trạng thái'
-                        /> */}
-
-                        <Select
-                            className=' w-48'
-                            labelInValue
-                            defaultValue={{ value: 'Còn voucher', label: 'Hết voucher' }}
-                            onChange={(_e) => setNewStatus(true)}
-                            options={[
-                                {
-                                    value: 'Còn voucher',
-                                    label: 'Còn voucher'
-                                },
-                                {
-                                    value: 'Hết voucher',
-                                    label: 'Hết voucher'
-                                }
-                            ]}
-                        ></Select>
-                    </div>
-                    <div>
-                        <p>Giam giá</p>
-                        <Input
-                            className='border-spacing-1 border-gray-200  rounded-md pl-3 mb-4'
-                            type='text'
-                            onChange={(e) => setNewDecrease(parseInt(e.target.value, 10))}
-                            placeholder='Hết hạn'
-                        />
-                    </div>
-                </div>
-                <div className='flex flex-row gap-5'>
-                    <div>
-                        <p>Mã voucher</p>
+                        <p>Tên voucher</p>
                         <Input
                             className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-4'
                             type='text'
@@ -88,6 +51,17 @@ const AddVoucher = () => {
                             placeholder='Mã voucher'
                         />
                     </div>
+                    <div>
+                        <p>Giảm</p>
+                        <Input
+                            className='border-spacing-1 border-gray-200   pl-3 mb-4'
+                            type='text'
+                            onChange={(e) => setNewDecrease(parseInt(e.target.value, 10))}
+                            placeholder='Hết hạn'
+                        />
+                    </div>
+                </div>
+                <div className='flex flex-row gap-5'>
                     <div>
                         <p>Ngày hết hạn</p>
                         <Input
@@ -97,8 +71,6 @@ const AddVoucher = () => {
                             placeholder='Ngày hết hạn'
                         />
                     </div>
-                </div>
-                <div className='flex flex-row gap-5'>
                     <div>
                         <p>Điều kiện</p>
                         <Input
@@ -108,8 +80,10 @@ const AddVoucher = () => {
                             placeholder='Điều kiện'
                         />
                     </div>
+                </div>
+                <div className='flex flex-row gap-5'>
                     <div>
-                        <p>Loại voucher</p>
+                        <p>Loại mã</p>
                         <Input
                             className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-4'
                             type='text'

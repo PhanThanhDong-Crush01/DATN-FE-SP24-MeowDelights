@@ -138,14 +138,16 @@ const MenuClientComponent = () => {
                                     <li className='cart-trigger header-controls-item d-none d-sm-block'>
                                         {!data?.datas ? (
                                             <>
-                                                <a
-                                                    className='sigma_header-control-cart'
-                                                    title='Your Cart'
-                                                    href='cart.html'
-                                                    style={{ borderRadius: '50%', overflow: 'hidden' }}
-                                                >
-                                                    <i className='fal fa-solid fa-user' />
-                                                </a>
+                                                <Link to={'/signin'}>
+                                                    <p
+                                                        className='sigma_header-control-cart'
+                                                        title='Your Cart'
+                                                        style={{ borderRadius: '50%', overflow: 'hidden' }}
+                                                    >
+                                                        <i className='fal fa-solid fa-user' />
+                                                    </p>
+                                                </Link>
+
                                                 <ul
                                                     className='sigma_cart-dropdown'
                                                     style={{ textAlign: 'left', width: '3%', marginRight: '100px' }}
@@ -174,18 +176,20 @@ const MenuClientComponent = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <a
-                                                    className='sigma_header-control-cart'
-                                                    title='Your Cart'
-                                                    href='cart.html'
-                                                    style={{ borderRadius: '50%', overflow: 'hidden' }}
-                                                >
-                                                    <img
-                                                        src={data?.datas?.imgUser}
-                                                        alt='usser '
-                                                        style={{ width: '100%', height: 'auto' }}
-                                                    />
-                                                </a>
+                                                <Link to={'/signin'}>
+                                                    <p
+                                                        className='sigma_header-control-cart'
+                                                        title='Your Cart'
+                                                        style={{ borderRadius: '50%', overflow: 'hidden' }}
+                                                    >
+                                                        <img
+                                                            src={data?.datas?.imgUser}
+                                                            alt='usser '
+                                                            style={{ width: '100%', height: 'auto' }}
+                                                        />
+                                                    </p>
+                                                </Link>
+
                                                 <ul
                                                     className='sigma_cart-dropdown pl-10'
                                                     style={{ textAlign: 'left', width: '3%', marginRight: '100px' }}

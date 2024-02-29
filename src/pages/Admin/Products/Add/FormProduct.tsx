@@ -5,7 +5,7 @@ import { SlClose } from 'react-icons/sl'
 import '@/styles/FormProduct.css'
 import { IoMdAdd } from 'react-icons/io'
 import { Modal, Space } from 'antd'
-import FromAddColorOfSize from './FormAddColorOfSize'
+import FromAddColorOfSize from '../FormAddColorOfSize'
 import { formatPriceBootstrap, getRandomNumber } from '@/lib/utils'
 import FormAddInfoTypeProduct from './FormAddInfoTypeProduct'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
@@ -36,7 +36,8 @@ const sizesData: Size[] = [
     // Thêm các kích thước khác nếu cần
 ]
 
-const FormProduct = ({ imageUrl, setImageUrl }: any) => {
+const FormProduct = ({ dataProduct, imageUrl, setImageUrl }: any) => {
+    console.log('🚀 ~ FormProduct ~ dataProduct:', dataProduct)
     const { data } = useCategoryQuery()
     const [categories, setCate] = useState()
     useEffect(() => {
@@ -129,7 +130,15 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
                     name='name'
                     rules={[{ required: true, message: 'Vui lòng nhập Tên sản phẩm!' }]}
                 >
-                    <Input style={{ height: '40px', width: '100%' }} />
+                    <Input
+                        style={{
+                            height: '40px',
+                            width: '100%',
+                            borderColor: 'gray',
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: '5px'
+                        }}
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -137,7 +146,7 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
                     name='import_date'
                     rules={[{ required: true, message: 'Vui lòng thêm ngày nhập hàng!' }]}
                 >
-                    <input type='date' style={{ height: '40px', width: '100%' }} />
+                    <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -145,7 +154,7 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
                     name='manufacture_date'
                     rules={[{ required: true, message: 'Vui lòng thêm ngày sản xuất!' }]}
                 >
-                    <input type='date' style={{ height: '40px', width: '100%' }} />
+                    <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -153,7 +162,7 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
                     name='expiry_date'
                     rules={[{ required: true, message: 'Vui lòng thêm ngày hết hạn!' }]}
                 >
-                    <input type='date' style={{ height: '40px', width: '100%' }} />
+                    <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -162,7 +171,7 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
                     rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm!' }]}
                 >
                     <Select
-                        style={{ height: '40px', width: '100%', background: 'white' }}
+                        style={{ height: '40px', width: '100%', borderColor: 'gray' }}
                         placeholder='Chọn danh mục'
                         optionFilterProp='children'
                         options={categories}
@@ -173,7 +182,7 @@ const FormProduct = ({ imageUrl, setImageUrl }: any) => {
                     name='description'
                     rules={[{ required: true, message: 'Vui lòng nhập mô tả của sản phẩm!' }]}
                 >
-                    <Input.TextArea style={{ height: '160px', background: 'white' }} />
+                    <Input.TextArea style={{ height: '160px', borderColor: 'gray' }} />
                 </Form.Item>
             </div>
             <div style={{ width: '40%' }}>

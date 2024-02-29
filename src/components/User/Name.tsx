@@ -67,8 +67,8 @@ const NameForm = ({ data }: NameFormProps) => {
 
     return (
         <>
-            <div className='mt-6 border bg-slate-100 rounded-md p-3'>
-                <div className='font-medium flex items-center justify-between'>
+            <div className='mt-6 border bg-slate-100 rounded-md p-4  '>
+                <div className='font-medium flex items-center justify-between '>
                     Tên
                     <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
                         {editAuth ? (

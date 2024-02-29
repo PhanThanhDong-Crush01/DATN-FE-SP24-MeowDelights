@@ -28,9 +28,8 @@ import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
 import OrderPage from '@/pages/Client/AuthPage/OrderPage'
+import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
 import ListContact from '@/pages/Admin/Contact'
-import EditProduct from '@/pages/Admin/Products/EditProduct'
-import LayoutUserPage from '@/components/component/LayoutUser'
 
 const Routers = () => {
     return (
@@ -58,14 +57,15 @@ const Routers = () => {
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
-                <Route path='products/:id/edit' element={<EditProduct />} />
+                <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} />
+                {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='products/add' element={<AddProduct />} />
                 <Route path='categories' element={<ListCategory />} />
                 {/* <Route path='categories/:id/edit' element={<EditCategory />}/> */}
                 <Route path='categories/edit/:id' element={<EditCategory />} />
                 <Route path='categories/add' element={<AddCategory />} />
                 <Route path='voucher' element={<Voucher />} />
-                {/* <Route path='voucher/:id/edit' element={<EditListVoucher />}/> */}
+                <Route path='voucher/edit/:id' element={<EditVoucher />} />
                 <Route path='voucher/add' element={<AddVoucher />} />
                 <Route path='type_voucher' element={<ListTypeVoucher />} />
                 {/* <Route path='type_voucher/:id/edit' element={<EditListTypeVoucher />}/> */}

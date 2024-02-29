@@ -41,17 +41,8 @@ export const getAuthWithRole = async (staff: number) => {
     }
 }
 
-export const signin = async (user: any) => {
-    try {
-        const response = await instance.post('/auth/signin', user)
-        return response.data
-    } catch (error: any) {
-        toast({
-            variant: 'destructive',
-            title: error?.response?.data?.message + '!'
-        })
-        console.log(`['Signin_ERROR']`, error)
-    }
+export const signin = (user: any) => {
+    return instance.post('/auth/signin', user)
 }
 export const signup = async (user: any) => {
     try {

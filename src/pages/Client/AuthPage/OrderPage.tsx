@@ -401,7 +401,11 @@ const OrderPage: React.FC = () => {
                         </Space>
                     )
                 } else {
-                    return <Button>Xem chi tiết</Button>
+                    return (
+                        <Link to={`order_detail/${record._id}`}>
+                            <Button>Xem chi tiết</Button>
+                        </Link>
+                    )
                 }
             }
         }

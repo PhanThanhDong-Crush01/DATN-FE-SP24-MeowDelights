@@ -17,12 +17,14 @@ const SigninPage = () => {
             password: data.password
         }
         try {
-            const response: any = await signin(values)
-            console.log('🚀 ~ onSubmit ~ response:', response?.data?.user)
-            if (response?.data?.user) {
+            const response = await signin(values)
+            console.log('🚀 ~ onSubmit ~ response:', response)
+            if (response?.user) {
+                const user = JSON.stringify(response?.user)
                 // Lưu thông tin người dùng vào Local Storage
-                localStorage.setItem('userID', response?.data?.user?._id)
-                if (response?.data?.user?.role === 'admin') {
+                localStorage.setItem('user', user)
+                localStorage.setItem('userID', response?.user?._id)
+                if (response?.user?.role === 'admin') {
                     message.success('Đăng nhập thành công admin')
                     navigate('/admin')
                 }
@@ -42,7 +44,6 @@ const SigninPage = () => {
                     //     console.log('User data not found in localStorage')
                     // }
                     navigate(`/updateProfile`)
-
                     // navigate(`/`)
                 }
             }

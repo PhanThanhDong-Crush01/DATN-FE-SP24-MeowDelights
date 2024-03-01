@@ -1,5 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Form, Input, Select, Upload, Drawer } from 'antd'
+import { Button, Form, Input, Select, Drawer } from 'antd'
 import { useEffect, useState } from 'react'
 import { SlClose } from 'react-icons/sl'
 import '@/styles/FormProduct.css'
@@ -9,6 +8,7 @@ import FromAddColorOfSize from './FormAddColorOfSize'
 import { formatPriceBootstrap, getRandomNumber } from '@/lib/utils'
 import FormAddInfoTypeProduct from './FormAddInfoTypeProduct'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
+import ImageUpload from '@/lib/uploadFile'
 
 interface Color {
     id: number
@@ -34,7 +34,7 @@ const sizesData: Size[] = [
     // Thêm các kích thước khác nếu cần
 ]
 
-const FormProduct = () => {
+const FormProduct = ({ setImageUrl }: any) => {
     const { data } = useCategoryQuery()
     const [categories, setCate] = useState()
     useEffect(() => {
@@ -77,6 +77,12 @@ const FormProduct = () => {
                 size: size.size
             }))
         )
+        const typeProductString = localStorage.getItem('typeProduct')
+        const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
+        if (typeProduct) {
+            setTypeProduct(typeProduct)
+        }
+        setTypeProduct(combined)
 
         setCombinedData(combined)
         setTypeProduct(combined)
@@ -89,8 +95,9 @@ const FormProduct = () => {
     const onClose = () => {
         const typeProductString = localStorage.getItem('typeProduct')
         const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
-        console.log('🚀 ~ FormProduct ~ typeProduct:', typeProduct)
-        setTypeProduct(typeProduct)
+        if (typeProduct) {
+            setTypeProduct(typeProduct)
+        }
         setOpen(false)
     }
 
@@ -99,38 +106,36 @@ const FormProduct = () => {
             content: <FromAddColorOfSize name={name} updateDataColorOfSize={updateDataColorOfSize} />
         })
     }
+
+    //xử lý ảnh
+    const handleImageUpload = (url: string) => {
+        // Nhận link ảnh từ ImageUpload và lưu vào state để sử dụng trong FormProduct
+        setImageUrl(url)
+    }
+
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: '60%', textAlign: 'center' }}>
                 <h1 style={{ fontSize: '20px', marginBottom: '10px' }}>Thông tin chính sản phẩm:</h1>
+                <div className='anh'>
+                    <Form.Item label='Ảnh' name='image'>
+                        <ImageUpload onImageUpload={handleImageUpload} />
+                    </Form.Item>
+                </div>
                 <Form.Item
                     label='Tên sản phẩm'
                     name='name'
                     rules={[{ required: true, message: 'Vui lòng nhập Tên sản phẩm!' }]}
                 >
-                    <Input style={{ height: '40px', width: '100%' }} />
-                </Form.Item>
-
-                {/* <Form.Item label='Ảnh sản phẩm' valuePropName='fileList' getValueFromEvent={normFile}>
-                <Upload action='/upload.do' listType='picture-card'>
-                    <button style={{ border: 0, background: 'none' }} type='button'>
-                        <PlusOutlined />
-                        <div style={{ marginTop: 8 }}>Tải lên file</div>
-                    </button>
-                </Upload>
-            </Form.Item> */}
-
-                <Form.Item
-                    label='Ảnh '
-                    name='image'
-                    rules={[
-                        {
-                            required: true,
-                            message: `Vui lòng nhập ảnh của sản phẩm!`
-                        }
-                    ]}
-                >
-                    <Input style={{ height: '40px', width: '100%' }} placeholder='Nhập link ảnh ở đây' />
+                    <Input
+                        style={{
+                            height: '40px',
+                            width: '100%',
+                            borderColor: 'gray',
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: '5px'
+                        }}
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -138,7 +143,7 @@ const FormProduct = () => {
                     name='import_date'
                     rules={[{ required: true, message: 'Vui lòng thêm ngày nhập hàng!' }]}
                 >
-                    <input type='date' style={{ height: '40px', width: '100%' }} />
+                    <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -146,7 +151,7 @@ const FormProduct = () => {
                     name='manufacture_date'
                     rules={[{ required: true, message: 'Vui lòng thêm ngày sản xuất!' }]}
                 >
-                    <input type='date' style={{ height: '40px', width: '100%' }} />
+                    <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -154,7 +159,7 @@ const FormProduct = () => {
                     name='expiry_date'
                     rules={[{ required: true, message: 'Vui lòng thêm ngày hết hạn!' }]}
                 >
-                    <input type='date' style={{ height: '40px', width: '100%' }} />
+                    <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -163,7 +168,7 @@ const FormProduct = () => {
                     rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm!' }]}
                 >
                     <Select
-                        style={{ height: '40px', width: '100%', background: 'white' }}
+                        style={{ height: '40px', width: '100%', borderColor: 'gray' }}
                         placeholder='Chọn danh mục'
                         optionFilterProp='children'
                         options={categories}
@@ -174,14 +179,18 @@ const FormProduct = () => {
                     name='description'
                     rules={[{ required: true, message: 'Vui lòng nhập mô tả của sản phẩm!' }]}
                 >
-                    <Input.TextArea style={{ height: '160px', background: 'white' }} />
+                    <Input.TextArea style={{ height: '160px', borderColor: 'gray' }} />
                 </Form.Item>
             </div>
             <div style={{ width: '40%' }}>
-                <div style={{display:"flex"}}>
+                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start' }}>
                     <h1 style={{ fontSize: '20px', marginBottom: '10px' }}>Phân loại sản phẩm:</h1>
-                    <div className='them_phan_loai' style={{ textAlign: 'center' }}>
-                        <Button type='primary' onClick={showDrawer} style={{ color: 'red' }}>
+                    <div className='them_phan_loai' style={{ textAlign: 'left' }}>
+                        <Button
+                            type='primary'
+                            onClick={showDrawer}
+                            style={{ color: '#6AC4D8', marginBottom: '10px', borderColor: '#6AC4D8' }}
+                        >
                             Thêm phân loại sản phẩm
                         </Button>
                         <Drawer title='Màu - Kích cỡ' width={'auto'} closable={false} onClose={onClose} open={open}>
@@ -276,20 +285,24 @@ const FormProduct = () => {
                     </thead>
                     <tbody>
                         {typeProducts.map((item: any) => (
-                            <tr key={item.color}>
+                            <tr key={item.color + item.id}>
                                 <td>
                                     {item?.color} x {item?.size}
                                     <br />
-                                    <img src={item?.image} alt='ảnh' width={'70px'} />
+                                    <img src={item?.image} alt='?' width={'70px'} />
                                 </td>
-                                <td>{item?.quantity}</td>
-                                <td>{item?.weight}</td>
-                                <td
-                                    style={{ fontWeight: 700 }}
-                                    dangerouslySetInnerHTML={{
-                                        __html: formatPriceBootstrap(item?.price)
-                                    }}
-                                ></td>
+                                <td>{item?.quantity ? item?.quantity : '?'}</td>
+                                <td>{item?.weight ? item?.weight : '?'}</td>
+                                {item?.price ? (
+                                    <td
+                                        style={{ fontWeight: 700 }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: formatPriceBootstrap(item?.price)
+                                        }}
+                                    ></td>
+                                ) : (
+                                    <td>? </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>

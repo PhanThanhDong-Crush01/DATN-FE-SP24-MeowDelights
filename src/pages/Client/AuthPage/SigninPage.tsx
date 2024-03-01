@@ -18,7 +18,7 @@ const SigninPage = () => {
         }
         try {
             const response: any = await signin(values)
-            console.log('🚀 ~ onSubmit ~ response:', response)
+            console.log('🚀 ~ onSubmit ~ response:', response?.data?.user)
             if (response?.data?.user) {
                 // Lưu thông tin người dùng vào Local Storage
                 localStorage.setItem('userID', response?.data?.user?._id)

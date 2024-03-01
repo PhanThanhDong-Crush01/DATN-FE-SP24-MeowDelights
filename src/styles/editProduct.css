@@ -1,0 +1,7 @@
+.nutEditTypeproduct {
+    color: 'red';
+}
+.nutEditTypeproduct:hover {
+    background-color: 'red';
+    color: 'white';
+}

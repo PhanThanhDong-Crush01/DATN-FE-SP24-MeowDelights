@@ -1,15 +1,13 @@
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Form, Input, Select, Upload, Drawer } from 'antd'
+import { Button, Form, Input, Select, Drawer } from 'antd'
 import { useEffect, useState } from 'react'
 import { SlClose } from 'react-icons/sl'
 import '@/styles/FormProduct.css'
 import { IoMdAdd } from 'react-icons/io'
 import { Modal, Space } from 'antd'
-import FromAddColorOfSize from '../FormAddColorOfSize'
+import FromAddColorOfSize from './FormAddColorOfSize'
 import { formatPriceBootstrap, getRandomNumber } from '@/lib/utils'
 import FormAddInfoTypeProduct from './FormAddInfoTypeProduct'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
-import type { GetProp, UploadFile, UploadProps } from 'antd'
 import ImageUpload from '@/lib/uploadFile'
 
 interface Color {
@@ -36,8 +34,7 @@ const sizesData: Size[] = [
     // Thêm các kích thước khác nếu cần
 ]
 
-const FormProduct = ({ dataProduct, imageUrl, setImageUrl }: any) => {
-    console.log('🚀 ~ FormProduct ~ dataProduct:', dataProduct)
+const FormProduct = ({ setImageUrl }: any) => {
     const { data } = useCategoryQuery()
     const [categories, setCate] = useState()
     useEffect(() => {

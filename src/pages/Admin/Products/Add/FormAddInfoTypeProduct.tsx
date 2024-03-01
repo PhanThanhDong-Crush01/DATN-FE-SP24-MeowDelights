@@ -1,8 +1,6 @@
 import { toast } from '@/components/ui/use-toast'
 import { Button, Form, Input, InputNumber } from 'antd'
-import axios from 'axios'
 import React from 'react'
-import { useRef } from 'react'
 
 const layout = {
     labelCol: { span: 8 },
@@ -13,22 +11,6 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 }
 }
 
-const uploadImageAndGetURL = async (imageFile: any) => {
-    const formData = new FormData()
-    formData.append('file', imageFile)
-    formData.append('upload_preset', 'ecma_ph28020') // Thay 'your_cloudinary_upload_preset' bằng upload preset của bạn
-
-    try {
-        const response = await axios.post(
-            'https://api.cloudinary.com/v1_1/dsi8kycrz/image/upload', // Thay 'your_cloud_name' bằng tên cloud của bạn
-            formData
-        )
-        return response.data.secure_url
-    } catch (error) {
-        console.error('Error uploading image: ', error)
-        return null
-    }
-}
 const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
     const colorAndSizes: any = []
 
@@ -45,7 +27,6 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
             })
         }
     })
-    const fileInputRef: any = useRef(null)
 
     const onFinish = async (values: any) => {
         const typeProduct = []
@@ -54,14 +35,7 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
             if (Object.hasOwnProperty.call(values, key)) {
                 const [color, id, size] = key.split('_')
 
-                if (size === 'image') {
-                    console.log('🚀 ~ onFinish ~ fileInputRef:', fileInputRef.current.files)
-                    const file = fileInputRef.current.files[0]
-                    if (file) {
-                        const imageUrl = await uploadImageAndGetURL(file)
-                        values[key] = imageUrl
-                    }
-                }
+                if (size === 'image') return
 
                 let product: any = typeProduct.find((item) => item.color === color && item.size === size)
                 if (!product) {
@@ -94,7 +68,7 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
                     >
                         <h3 style={{ fontSize: '30px', marginRight: '20px' }}>{item.color.toUpperCase()}</h3>
                         <Form.Item name={`${item.color}_${item.id}_image`}>
-                            <Input type='file' ref={fileInputRef} />
+                            <Input type='text' placeholder='link ảnh' />
                         </Form.Item>
                     </div>
                     <table style={{ textAlign: 'center', marginBottom: '20px' }}>

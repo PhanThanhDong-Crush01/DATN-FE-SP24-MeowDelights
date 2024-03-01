@@ -8,33 +8,13 @@ import { InputNumber } from 'antd'
 import ImageUpload from '@/lib/uploadFile'
 import instance from '@/services/core/api'
 import { toast } from '@/components/ui/use-toast'
+import { useParams } from 'react-router-dom'
 
-export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
+export const AddTypeProduct = ({ onTypeProductChange }: any) => {
+    const { id } = useParams()
     const [isSheetClosed, setIsSheetClosed] = useState<boolean>(false) // Thêm state để điều khiển việc đóng SheetContent
-    const [typeProduct, setTypeProduct] = useState<any>()
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const { data } = await instance.get(`/type_product/${id}`)
-                setTypeProduct(data?.data)
-            } catch (error) {
-                console.error('Error fetching type product data:', error)
-            }
-        }
-        fetchData()
-    }, [])
 
     const form = useForm<any>()
-
-    useEffect(() => {
-        if (typeProduct) {
-            form.setValue('color', typeProduct?.color)
-            form.setValue('size', typeProduct?.size)
-            form.setValue('weight', typeProduct?.weight)
-            form.setValue('quantity', typeProduct?.quantity)
-            form.setValue('price', typeProduct?.price)
-        }
-    }, [typeProduct])
 
     const [imageUrl, setImageUrl] = useState<string>('')
 
@@ -46,18 +26,28 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
         event.preventDefault()
         try {
             // Gửi dữ liệu form đi
+            console.log('🚀 ~ handleSubmit ~ imageUrl:', imageUrl)
             const values = form.getValues()
-            const updatedData = {
-                ...values,
-                image: imageUrl ? imageUrl : typeProduct?.image
+            if (imageUrl == '') {
+                toast({
+                    variant: 'destructive',
+                    title: 'Vui lòng thêm ảnh cho biến thể'
+                })
+            } else {
+                const updatedData = {
+                    ...values,
+                    image: imageUrl,
+                    idPro: id
+                }
+
+                const response = await instance.post(`/type_product`, updatedData)
+                toast({
+                    variant: 'success',
+                    title: response.data.message
+                })
+                onTypeProductChange()
+                setIsSheetClosed(true)
             }
-            const response = await instance.patch(`/type_product/${id}`, updatedData)
-            toast({
-                variant: 'success',
-                title: response.data.message
-            })
-            onTypeProductChange()
-            setIsSheetClosed(true)
         } catch (error) {
             console.error('Error updating type product:', error)
         }
@@ -67,7 +57,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
             {!isSheetClosed && (
                 <SheetContent>
                     <SheetHeader>
-                        <SheetTitle>Chỉnh sửa biến thể sản phẩm</SheetTitle>
+                        <SheetTitle>Thêm biến thể sản phẩm</SheetTitle>
                     </SheetHeader>
                     <div className='border p-6'>
                         <Form {...form}>
@@ -86,6 +76,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
                                             </FormItem>
                                         )
                                     }}
+                                    rules={{ required: 'Vui lòng nhập loại' }}
                                 ></FormField>
                                 <FormField
                                     control={form.control}
@@ -99,6 +90,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
                                             <FormMessage />
                                         </FormItem>
                                     )}
+                                    rules={{ required: 'Vui lòng nhập size' }}
                                 ></FormField>
                                 <FormField
                                     control={form.control}
@@ -112,6 +104,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
                                             <FormMessage />
                                         </FormItem>
                                     )}
+                                    rules={{ required: 'Vui lòng nhập khối lượng' }}
                                 ></FormField>
                                 <FormField
                                     control={form.control}
@@ -125,6 +118,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
                                             <FormMessage />
                                         </FormItem>
                                     )}
+                                    rules={{ required: 'Vui lòng nhập số lượng' }}
                                 ></FormField>
                                 <FormField
                                     control={form.control}
@@ -138,6 +132,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
                                             <FormMessage />
                                         </FormItem>
                                     )}
+                                    rules={{ required: 'Vui lòng nhập giá' }}
                                 ></FormField>
                                 <FormControl>
                                     <ImageUpload onImageUpload={handleImageUpload} />
@@ -145,7 +140,7 @@ export const EditTypeProduct = ({ id, onTypeProductChange }: any) => {
 
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button onClick={handleSubmit}>Lưu thay đổi</Button>
+                                        <Button onClick={handleSubmit}>Lưu</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </form>

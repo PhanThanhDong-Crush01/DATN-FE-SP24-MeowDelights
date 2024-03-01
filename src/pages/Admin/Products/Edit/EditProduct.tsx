@@ -1,6 +1,6 @@
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
-import { Button, Form, Input, Select, Drawer, Modal } from 'antd'
+import { Button, Form, Input, Select } from 'antd'
 import { useEffect, useState } from 'react'
 import { formatPriceBootstrap } from '@/lib/utils'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
@@ -8,8 +8,11 @@ import ImageUpload from '@/lib/uploadFile'
 import { useParams } from 'react-router-dom'
 import instance from '@/services/core/api'
 import { FaRegEdit } from 'react-icons/fa'
+import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 import { EditTypeProduct } from './EditTypeProduct'
-
+import { AddTypeProduct } from './AddTypeProduct'
+import { IoMdAdd } from 'react-icons/io'
+import { RiDeleteBin5Line } from 'react-icons/ri'
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -24,6 +27,12 @@ const formItemLayout = {
 const EditProduct = () => {
     const { id } = useParams()
     const [productOne, setProductOne] = useState<any>()
+    const [typeProduct, setTypeProduct] = useState<any>()
+    const [thayDoiTypeProduct, setThayDoiTypeProduct] = useState(false)
+
+    const handleTypeProductChange = () => {
+        setThayDoiTypeProduct(true)
+    }
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -35,6 +44,17 @@ const EditProduct = () => {
         }
         fetchData()
     }, [])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data } = await instance.get(`/type_product/pro/${id}`)
+                setTypeProduct(data?.data)
+            } catch (error) {
+                console.error('Error fetching product data:', error)
+            }
+        }
+        fetchData()
+    }, [thayDoiTypeProduct])
 
     const [form] = Form.useForm()
 
@@ -73,31 +93,17 @@ const EditProduct = () => {
     const [imageUrl, setImageUrl] = useState<string>('') // Khai báo state để lưu trữ imageUrl
 
     const onFinish = (values: any) => {
-        const typeProductString = localStorage.getItem('typeProduct')
-        const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
-
-        const addNew = {
-            product: {
-                name: values.name,
-                image: imageUrl,
-                import_date: values.import_date,
-                expiry: `${values.manufacture_date} - ${values.expiry_date}`,
-                status: true,
-                description: values.description,
-                idCategory: values.idCategory
-            },
-            typeProduct: typeProduct
+        const product = {
+            _id: id,
+            name: values.name,
+            image: imageUrl ? imageUrl : productOne?.data?.image,
+            import_date: values.import_date,
+            expiry: `${values.manufacture_date} - ${values.expiry_date}`,
+            status: true,
+            description: values.description,
+            idCategory: values.idCategory
         }
-        console.log('🚀 ~ onFinish ~ addNew:', addNew)
-        localStorage.removeItem('typeProduct')
-        if (typeProduct[0]?.color == undefined) {
-            toast({
-                variant: 'destructive',
-                title: 'Bạn chưa thêm dữ liệu biến thể loại, size, số lượng,... của sản phẩm!'
-            })
-        } else {
-            onSubmit(addNew)
-        }
+        onSubmit(product)
     }
 
     const { data } = useCategoryQuery()
@@ -112,15 +118,6 @@ const EditProduct = () => {
             })
         )
     }, [data])
-    const [open, setOpen] = useState(false)
-
-    const showDrawer = () => {
-        setOpen(true)
-    }
-
-    const onClose = () => {
-        setOpen(false)
-    }
 
     //xử lý ảnh
     const handleImageUpload = (url: string) => {
@@ -128,11 +125,20 @@ const EditProduct = () => {
         setImageUrl(url)
     }
 
+    const onRemoveTypeProduct = async (id: any) => {
+        const response = await instance.delete(`/type_product/${id}`)
+        setThayDoiTypeProduct(true)
+        toast({
+            variant: 'success',
+            title: response.data.message
+        })
+    }
+
     return (
         <>
             <div className='container'>
                 <div className='title' style={{ fontSize: '25px', margin: '10px 0', fontWeight: '700' }}>
-                    <h2>Thêm mới sản phẩm</h2>
+                    <h2>Chỉnh sửa sản phẩm</h2>
                 </div>
                 <div className='form'>
                     <Form
@@ -153,23 +159,21 @@ const EditProduct = () => {
                                         <h1 style={{ fontSize: '20px', marginBottom: '10px' }}>
                                             Thông tin chính sản phẩm:
                                         </h1>
-                                        <div
-                                            className='anh'
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'self-start'
-                                            }}
-                                        >
-                                            <Form.Item label='Ảnh' name='image' style={{ width: '60%' }}>
-                                                <ImageUpload onImageUpload={handleImageUpload} />
-                                            </Form.Item>
+                                        <div>
                                             <img
                                                 src={productOne?.data?.image}
                                                 alt='anh'
-                                                style={{ width: 100, borderRadius: '10px', marginRight: '10%' }}
+                                                style={{ width: 100, borderRadius: '10px', margin: '0 auto' }}
                                             />
                                         </div>
+                                        <Form.Item
+                                            label='Ảnh'
+                                            name='image'
+                                            style={{ margin: '20px 0', marginRight: '35px' }}
+                                        >
+                                            <ImageUpload onImageUpload={handleImageUpload} />
+                                        </Form.Item>
+
                                         <Form.Item
                                             label='Tên sản phẩm'
                                             name='name'
@@ -240,37 +244,8 @@ const EditProduct = () => {
                                         </Form.Item>
                                     </div>
                                     <div style={{ width: '45%' }}>
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'space-around',
-                                                alignItems: 'flex-start'
-                                            }}
-                                        >
-                                            <h1 style={{ fontSize: '20px', marginBottom: '10px' }}>
-                                                Phân loại sản phẩm:
-                                            </h1>
-                                            <div className='them_phan_loai' style={{ textAlign: 'left' }}>
-                                                <Button
-                                                    type='primary'
-                                                    onClick={showDrawer}
-                                                    style={{
-                                                        color: '#6AC4D8',
-                                                        marginBottom: '10px',
-                                                        borderColor: '#6AC4D8'
-                                                    }}
-                                                >
-                                                    Thêm phân loại sản phẩm
-                                                </Button>
-                                                <Drawer
-                                                    title='Màu - Kích cỡ'
-                                                    width={'auto'}
-                                                    closable={false}
-                                                    onClose={onClose}
-                                                    open={open}
-                                                ></Drawer>
-                                            </div>
-                                        </div>
+                                        <h1 style={{ fontSize: '20px', marginBottom: '10px' }}>Phân loại sản phẩm:</h1>
+
                                         <table>
                                             <thead>
                                                 <tr>
@@ -278,12 +253,29 @@ const EditProduct = () => {
                                                     <th>Số lượng</th>
                                                     <th>Khối lượng</th>
                                                     <th>Giá tiền</th>
-                                                    <th></th>
+                                                    <th>
+                                                        {' '}
+                                                        <Sheet>
+                                                            <SheetTrigger>
+                                                                <Button type='primary'>
+                                                                    <IoMdAdd
+                                                                        style={{
+                                                                            fontSize: '18px',
+                                                                            color: 'blue'
+                                                                        }}
+                                                                    />
+                                                                </Button>
+                                                            </SheetTrigger>
+                                                            <AddTypeProduct
+                                                                onTypeProductChange={handleTypeProductChange}
+                                                            />
+                                                        </Sheet>
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {productOne?.typeProduct &&
-                                                    productOne?.typeProduct.map((item: any) => (
+                                                {typeProduct &&
+                                                    typeProduct.map((item: any) => (
                                                         <tr key={item.color + item.id}>
                                                             <td style={{ width: '30%' }}>
                                                                 {item?.color} x {item?.size}
@@ -298,20 +290,34 @@ const EditProduct = () => {
                                                                     __html: formatPriceBootstrap(item?.price)
                                                                 }}
                                                             ></td>
-                                                            <td>
-                                                                <p onClick={showDrawer}>
-                                                                    <FaRegEdit
-                                                                        style={{ fontSize: '18px', color: 'red' }}
+                                                            <td style={{ width: '10%' }}>
+                                                                <Sheet>
+                                                                    <SheetTrigger>
+                                                                        <Button type='primary'>
+                                                                            <FaRegEdit
+                                                                                style={{
+                                                                                    fontSize: '18px',
+                                                                                    color: 'orange'
+                                                                                }}
+                                                                            />
+                                                                        </Button>
+                                                                    </SheetTrigger>
+                                                                    <EditTypeProduct
+                                                                        id={item?._id}
+                                                                        onTypeProductChange={handleTypeProductChange}
                                                                     />
-                                                                </p>
-                                                                <Modal
-                                                                    title='Màu - Kích cỡ'
-                                                                    width={'auto'}
-                                                                    closable={false}
-                                                                    open={open}
+                                                                </Sheet>
+                                                                <Button
+                                                                    type='primary'
+                                                                    onClick={() => onRemoveTypeProduct(item._id)}
                                                                 >
-                                                                    <EditTypeProduct id={item._id} />
-                                                                </Modal>
+                                                                    <RiDeleteBin5Line
+                                                                        style={{
+                                                                            fontSize: '18px',
+                                                                            color: 'red'
+                                                                        }}
+                                                                    />
+                                                                </Button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -334,7 +340,7 @@ const EditProduct = () => {
                                     color: 'blue'
                                 }}
                             >
-                                Thêm
+                                Lưu
                             </Button>
                         </Form.Item>
                     </Form>

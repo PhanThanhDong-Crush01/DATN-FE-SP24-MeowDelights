@@ -17,20 +17,20 @@ const SigninPage = () => {
             password: data.password
         }
         try {
-            const response = await signin(values)
-            console.log('🚀 ~ onSubmit ~ response:', response)
-            if (response?.user) {
+            const response: any = await signin(values)
+            console.log('🚀 ~ onSubmit ~ response:', response?.data?.user)
+            if (response?.data?.user) {
                 // Lưu thông tin người dùng vào Local Storage
-                localStorage.setItem('userID', response?.user?._id)
-                if (response?.user?.role === 'admin') {
+                localStorage.setItem('userID', response?.data?.user?._id)
+                if (response?.data?.user?.role === 'admin') {
                     message.success('Đăng nhập thành công admin')
                     navigate('/admin')
                 }
-                if (response?.user?.role === 'nhanvien') {
+                if (response?.data?.user?.role === 'nhanvien') {
                     message.success('Đăng nhập thành công nhân viên')
                     navigate('/admin')
                 }
-                if (response?.user?.role === 'member') {
+                if (response?.data?.user?.role === 'member') {
                     message.success('Đăng nhập thành công !')
 
                     // if (Auth !== null) {
@@ -41,7 +41,7 @@ const SigninPage = () => {
                     // } else {
                     //     console.log('User data not found in localStorage')
                     // }
-                    navigate(`/updateProfile/${response?.data?.user?._id}`)
+                    navigate(`/updateProfile`)
                     // navigate(`/`)
                 }
             }

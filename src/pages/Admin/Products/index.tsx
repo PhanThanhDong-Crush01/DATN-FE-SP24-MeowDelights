@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
-import { Button, Image, Input, Popconfirm, Space, Table, message } from 'antd'
+import { Button, Image, Input, Popconfirm, Result, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 import { Link } from 'react-router-dom'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
@@ -156,7 +156,6 @@ const Product = () => {
     })
 
     const [getBill, setGetBill] = useState<any>()
-    console.log('🚀 ~ Product ~ getBill:', getBill)
     const getProductOneBill = async (id: any) => {
         const response = await instance.get(`/products/${id}`)
         setGetBill(response.data)
@@ -250,7 +249,18 @@ const Product = () => {
             title: 'Danh Mục',
             dataIndex: 'categoryName',
             key: 'categoryName',
-            width: '9%'
+            width: '9%',
+            filters: [
+                {
+                    text: 'Phụ kiện - đồ chơi',
+                    value: 'Phụ kiện - đồ chơi'
+                },
+                {
+                    text: 'Đồ ăn - đồ uống',
+                    value: 'Đồ ăn - đồ uống'
+                }
+            ],
+            onFilter: (value: any, record) => record.categoryName.indexOf(value) === 0
         },
         {
             title: 'Đã bán',
@@ -464,7 +474,7 @@ const Product = () => {
                         onConfirm={() => onStorage(record)}
                         // onConfirm={() => onRemove(record)}
                         onCancel={cancel}
-                        okText='Đồng ý'
+                        okText={<span style={{ color: 'green' }}>Đồng ý</span>} // Thay đổi màu của văn bản nút "Đồng ý"
                         cancelText='Không'
                     >
                         <Button type='default' style={{ color: 'red', borderColor: 'red' }}>
@@ -478,6 +488,7 @@ const Product = () => {
     const cancel = () => {
         message.error('Đã hủy!')
     }
+
     return (
         <div>
             <div className='flex justify-between items-center mx-[50px]'>

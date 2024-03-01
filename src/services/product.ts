@@ -18,7 +18,7 @@ export const getAll = async () => {
 }
 export const update = async (product: IProduct) => {
     try {
-        const response = await instance.patch(`/products/${product._id}`, product)
+        const response = await instance.patch(`/products/${product._id}/update`, product)
         return response.data
     } catch (error: any) {
         toast({

@@ -2,6 +2,7 @@ import { Button, Form } from 'antd'
 import FormProduct from './FormProduct'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
+import { useState } from 'react'
 
 const formItemLayout = {
     labelCol: {
@@ -14,7 +15,7 @@ const formItemLayout = {
     }
 }
 
-const EditProduct = () => {
+const AddProduct = () => {
     const { onSubmit } = useProductMutation({
         action: 'ADD',
         onSuccess() {
@@ -26,6 +27,9 @@ const EditProduct = () => {
         }
     })
 
+    const [imageUrl, setImageUrl] = useState<string>('') // Khai báo state để lưu trữ imageUrl
+    console.log('🚀 ~ AddProduct ~ imageUrl:', imageUrl)
+
     const onFinish = (values: any) => {
         const typeProductString = localStorage.getItem('typeProduct')
         const typeProduct = typeProductString ? JSON.parse(typeProductString) : []
@@ -33,7 +37,7 @@ const EditProduct = () => {
         const addNew = {
             product: {
                 name: values.name,
-                image: values.image,
+                image: imageUrl,
                 import_date: values.import_date,
                 expiry: `${values.manufacture_date} - ${values.expiry_date}`,
                 status: true,
@@ -42,7 +46,16 @@ const EditProduct = () => {
             },
             typeProduct: typeProduct
         }
-        onSubmit(addNew)
+        console.log('🚀 ~ onFinish ~ addNew:', addNew)
+        localStorage.removeItem('typeProduct')
+        if (typeProduct[0]?.color == undefined) {
+            toast({
+                variant: 'destructive',
+                title: 'Bạn chưa thêm dữ liệu biến thể loại, size, số lượng,... của sản phẩm!'
+            })
+        } else {
+            onSubmit(addNew)
+        }
     }
 
     return (
@@ -64,15 +77,11 @@ const EditProduct = () => {
                             }}
                         >
                             <div className='form_left'>
-                                <FormProduct />
+                                <FormProduct imageUrl={imageUrl} setImageUrl={setImageUrl} />
                             </div>
-                            <div className='form_right'></div>
                         </div>
 
-                        <Form.Item
-                            wrapperCol={{ offset: 6, span: 16 }}
-                            style={{ margin: '30px', textAlign: 'center', marginLeft: '-200px' }}
-                        >
+                        <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                             <Button
                                 type='primary'
                                 htmlType='submit'
@@ -80,9 +89,8 @@ const EditProduct = () => {
                                 style={{
                                     width: '30%',
                                     height: '70px',
-                                    border: '1px solid blue',
-                                    color: 'red',
-                                    backgroundColor: '#1C2434'
+                                    borderColor: 'blue',
+                                    color: 'blue'
                                 }}
                             >
                                 Thêm
@@ -95,4 +103,4 @@ const EditProduct = () => {
     )
 }
 
-export default EditProduct
+export default AddProduct

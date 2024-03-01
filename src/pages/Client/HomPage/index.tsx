@@ -1,7 +1,58 @@
 import MenuClientComponent from '@/components/component/MenuClientComponent.js'
 import FooterTemplate from '@/components/component/Footer.js'
+import { useEffect, useState } from 'react'
+import { IProduct } from '@/interface/IProduct'
+import instance from '@/services/core/api'
+import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 
 const HomePage = () => {
+    const [dataProduct, setDataProduct] = useState<IProduct[]>([])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await instance.get('/products')
+                const dataPro = response.data?.datas || []
+
+                // Sort products by createdAt (newest to oldest)
+                dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+                const formattedData = dataPro.map((item: any, index: any) => ({
+                    ...item,
+                    key: index + 1
+                }))
+                setDataProduct(formattedData)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
+    const dataProductTrue = dataProduct.filter((item: any) => {
+        return item.status === true
+    })
+    const { data }: any = useCategoryQuery()
+
+    // Lấy 4 sản phẩm đầu tiên từ mảng dataProductTrue
+    const productFour = dataProductTrue.slice(0, 4)
+
+    const [productEight, setProductEight] = useState<any>()
+    console.log('🚀 ~ HomePage ~ productEight:', productEight)
+    useEffect(() => {
+        setProductEight(dataProductTrue.slice(0, 8))
+    }, [dataProduct])
+
+    const locCate = (idcate: any) => {
+        const proLoc = dataProduct.filter((item: any) => {
+            if (item.idCategory === idcate && item.status === true) {
+                return item
+            }
+        })
+        if (proLoc) {
+            setProductEight(proLoc)
+        }
+    }
+
     return (
         <>
             <div className='sigma_header-absolute btn-style-5 btn-rounded sidebar-style-3'>
@@ -12,7 +63,7 @@ const HomePage = () => {
                         <span></span>
                     </div>
                     <form className='search-form' method='post'>
-                        <input type='text' placeholder='Search...' value='' />
+                        <input type='text' placeholder='Tìm kiếm...' value='' />
                         <button type='submit' className='search-btn'>
                             <i className='fal fa-search m-0' />
                         </button>
@@ -27,14 +78,14 @@ const HomePage = () => {
                             <div className='container'>
                                 <div className='row align-items-center'>
                                     <div className='col-lg-6'>
-                                        <h5 className='primary-color'>Everything Your Pet Needs</h5>
-                                        <h1 className='title'>Mental and Physical Health</h1>
+                                        <h5 className='primary-color'>Mọi thứ thú cưng bạn cần</h5>
+                                        <h1 className='title'>Sức khỏe tinh thần và thể chất</h1>
                                         <div className='banner-links d-flex align-items-center'>
                                             <a href='contact-us.html' className='sigma_btn'>
-                                                Get a Quote
+                                                Nhận báo cáo
                                             </a>
                                             <a href='about-us.html' className='sigma_btn light ml-4'>
-                                                Read more
+                                                Đọc thêm
                                             </a>
                                         </div>
                                     </div>
@@ -55,9 +106,9 @@ const HomePage = () => {
                     <div className='container'>
                         <div className='sigma_service-wrapper style-18 margin-negative'>
                             <div className='section-title flex-title'>
-                                <h3 className='title mb-0'>What your pet needs, when they need it.</h3>
+                                <h3 className='title mb-0'>Thú cưng của bạn cần gì, khi nào chúng cần.</h3>
                                 <a href='contact-us.html' className='sigma_btn mt-3 mt-sm-0'>
-                                    Get a Quote
+                                    Nhận báo cáo
                                     <i className='fal fa-arrow-right ml-3' />
                                 </a>
                             </div>
@@ -69,9 +120,9 @@ const HomePage = () => {
                                         </div>
                                         <div className='sigma_service-body'>
                                             <h5>
-                                                <a href='service-details.html'>Cat Care</a>
+                                                <a href='service-details.html'>Chăm sóc mèo</a>
                                             </h5>
-                                            <p>From nutrition to health care. Everything in one.</p>
+                                            <p>Từ dinh dưỡng đến chăm sóc sức khỏe. Mọi thứ trong một.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -82,9 +133,9 @@ const HomePage = () => {
                                         </div>
                                         <div className='sigma_service-body'>
                                             <h5>
-                                                <a href='service-details.html'>Vet Tips</a>
+                                                <a href='service-details.html'>Mẹo thú y</a>
                                             </h5>
-                                            <p>Anything related to your pets furry, flying or crawling.</p>
+                                            <p>Bất cứ điều gì liên quan đến thú cưng của bạn có lông, bay hoặc bò.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -95,9 +146,9 @@ const HomePage = () => {
                                         </div>
                                         <div className='sigma_service-body'>
                                             <h5>
-                                                <a href='service-details.html'>Dog Care</a>
+                                                <a href='service-details.html'>Chăm sóc mèo</a>
                                             </h5>
-                                            <p>Training, nurture or anything else. We are here for you.</p>
+                                            <p>Đào tạo, nuôi dưỡng hoặc bất cứ điều gì khác. Chúng tôi ở đây vì bạn.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +221,9 @@ const HomePage = () => {
                             <div className='col-lg-6'>
                                 <div className='sigma_about style-9 mt-5 mt-lg-0'>
                                     <div className='section-title'>
-                                        <h3 className='title mb-5'>Pet Adoption. Be Part of Something Beautiful!</h3>
+                                        <h3 className='title mb-5'>
+                                            Nhận nuôi thú cưng. Hãy là một phần của điều gì đó tươi đẹp!
+                                        </h3>
                                     </div>
                                     <div className='sigma_about-content'>
                                         <div className='row'>
@@ -178,11 +231,11 @@ const HomePage = () => {
                                                 <div className='sigma_info style-15'>
                                                     <div className='sigma_info-description'>
                                                         <h5>
-                                                            <a href='#'>Dog Boarding</a>
+                                                            <a href='#'>Nuôi mèo</a>
                                                         </h5>
                                                         <p>
-                                                            We have a large selection of cats and dogs. Our animals are
-                                                            spayed-neutered
+                                                            Chúng tôi có nhiều lựa chọn về mèo như phụ kiện, đồ chơi,
+                                                            thức ăn.
                                                         </p>
                                                     </div>
                                                 </div>
@@ -191,18 +244,18 @@ const HomePage = () => {
                                                 <div className='sigma_info style-15'>
                                                     <div className='sigma_info-description'>
                                                         <h5>
-                                                            <a href='#'>Cat Boarding</a>
+                                                            <a href='#'>Nuôi mèo</a>
                                                         </h5>
                                                         <p>
-                                                            We have a large selection of cats and dogs. Our animals are
-                                                            spayed-neutered
+                                                            Chúng tôi có nhiều lựa chọn về mèo như phụ kiện, đồ chơi,
+                                                            thức ăn.
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <a href='contact-us.html' className='sigma_btn'>
-                                            Get A Quote
+                                            Nhận báo cáo
                                             <i className='fal fa-arrow-right ml-3' />
                                         </a>
                                     </div>
@@ -214,69 +267,30 @@ const HomePage = () => {
                 <div className='section section-padding pt-0'>
                     <div className='container'>
                         <div className='section-title centered'>
-                            <span className='subtitle'>Trending</span>
-                            <h3 className='title mb-0'>Pet Supplies</h3>
+                            <span className='subtitle'>Xu hướng</span>
+                            <h3 className='title mb-0'>Đồ dùng cho thú cưng</h3>
                         </div>
                         <div className='row'>
                             <div className='col-12'>
                                 <div className='sigma_tab-item style-2 with-dots'>
                                     <ul className='nav nav-tabs' id='myTab' role='tablist'>
-                                        <li className='nav-item'>
-                                            <a
-                                                className='nav-link active'
-                                                id='photo-tab'
-                                                data-toggle='tab'
-                                                href='#photo'
-                                                role='tab'
-                                                aria-controls='photo'
-                                                aria-selected='true'
-                                            >
-                                                <span className='pulsive-dot'></span>
-                                                Accessories
-                                            </a>
-                                        </li>
-                                        <li className='nav-item'>
-                                            <a
-                                                className='nav-link'
-                                                id='image-tab'
-                                                data-toggle='tab'
-                                                href='#image'
-                                                role='tab'
-                                                aria-controls='image'
-                                                aria-selected='false'
-                                            >
-                                                <span className='pulsive-dot'></span>
-                                                Belts
-                                            </a>
-                                        </li>
-                                        <li className='nav-item'>
-                                            <a
-                                                className='nav-link'
-                                                id='documents-tab'
-                                                data-toggle='tab'
-                                                href='#documents'
-                                                role='tab'
-                                                aria-controls='documents'
-                                                aria-selected='false'
-                                            >
-                                                <span className='pulsive-dot'></span>
-                                                Cages
-                                            </a>
-                                        </li>
-                                        <li className='nav-item'>
-                                            <a
-                                                className='nav-link'
-                                                id='letters-tab'
-                                                data-toggle='tab'
-                                                href='#letters'
-                                                role='tab'
-                                                aria-controls='letters'
-                                                aria-selected='false'
-                                            >
-                                                <span className='pulsive-dot'></span>
-                                                Food Container
-                                            </a>
-                                        </li>
+                                        {data?.data &&
+                                            data?.data.map((cate: any) => (
+                                                <li className='nav-item' onClick={() => locCate(cate._id)}>
+                                                    <a
+                                                        className='nav-link active'
+                                                        id='photo-tab'
+                                                        data-toggle='tab'
+                                                        href='#photo'
+                                                        role='tab'
+                                                        aria-controls='photo'
+                                                        aria-selected='true'
+                                                    >
+                                                        <span className='pulsive-dot'></span>
+                                                        {cate?.name}
+                                                    </a>
+                                                </li>
+                                            ))}
                                     </ul>
                                 </div>
                             </div>
@@ -288,210 +302,61 @@ const HomePage = () => {
                                     aria-labelledby='photo-tab'
                                 >
                                     <div className='row'>
-                                        <div className='col-lg-3 col-md-6'>
-                                            <div className='sigma_product style-8'>
-                                                <div className='sigma_product-thumb'>
-                                                    <a href='product-details.html'>
-                                                        <img src='src/assets/img/shop/1.png' alt='product' />
-                                                    </a>
-                                                    <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
-                                                        <a
-                                                            href='product-details.html'
-                                                            data-toggle='tooltip'
-                                                            title='Add To Cart'
-                                                        >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
-                                                        </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
-                                                            <i
-                                                                data-toggle='modal'
-                                                                data-target='#quickViewModal'
-                                                                className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                        {productEight &&
+                                            productEight.map((pro: any) => (
+                                                <div className='col-lg-3 col-md-6'>
+                                                    <div className='sigma_product style-8'>
+                                                        <div className='sigma_product-thumb'>
+                                                            <a href={'products/' + pro?._id}>
+                                                                <img src={pro?.image} alt='anh' />
+                                                            </a>
+                                                            <div className='sigma_product-controls'>
+                                                                <a href='#' data-toggle='tooltip' title='Wishlist'>
+                                                                    {' '}
+                                                                    <i className='far fa-heart' />{' '}
+                                                                </a>
+                                                                <a
+                                                                    href='product-details.html'
+                                                                    data-toggle='tooltip'
+                                                                    title='Add To Cart'
+                                                                >
+                                                                    {' '}
+                                                                    <i className='far fa-shopping-basket' />{' '}
+                                                                </a>
+                                                                <a href='#' data-toggle='tooltip' title='Quick View'>
+                                                                    {' '}
+                                                                    <i
+                                                                        data-toggle='modal'
+                                                                        data-target='#quickViewModal'
+                                                                        className='far fa-eye'
+                                                                    />{' '}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div className='sigma_product-body'>
+                                                            <h5 className='sigma_product-title'>
+                                                                {' '}
+                                                                <a href={'products/' + pro?._id}>{pro?.name}</a>{' '}
+                                                            </h5>
+                                                            <div className='sigma_rating'>
+                                                                <i className='fas fa-star' />
+                                                                <i className='fas fa-star' />
+                                                                <i className='fas fa-star' />
+                                                                <i className='fas fa-star' />
+                                                                <i className='fal fa-star' />
+                                                            </div>
+                                                            <div className='sigma_product-price'>
+                                                                <span>{pro?.minPrice} </span>
+                                                                <span>{pro?.maxPrice} </span>
+                                                                <i> VNĐ </i>
+                                                            </div>
+                                                            <a href='#' className='sigma_btn btn-sm'>
+                                                                Thêm giỏ hàng
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className='sigma_product-body'>
-                                                    <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Food Dispenser</a>{' '}
-                                                    </h5>
-                                                    <div className='sigma_rating'>
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fal fa-star' />
-                                                    </div>
-                                                    <div className='sigma_product-price'>
-                                                        <span>29$</span>
-                                                        <span>49$</span>
-                                                    </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='col-lg-3 col-md-6'>
-                                            <div className='sigma_product style-8'>
-                                                <div className='sigma_product-thumb'>
-                                                    <a href='product-details.html'>
-                                                        <img src='src/assets/img/shop/2.png' alt='product' />
-                                                    </a>
-                                                    <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
-                                                        <a
-                                                            href='product-details.html'
-                                                            data-toggle='tooltip'
-                                                            title='Add To Cart'
-                                                        >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
-                                                        </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
-                                                            <i
-                                                                data-toggle='modal'
-                                                                data-target='#quickViewModal'
-                                                                className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div className='sigma_product-body'>
-                                                    <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Leather Belts</a>{' '}
-                                                    </h5>
-                                                    <div className='sigma_rating'>
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fal fa-star' />
-                                                    </div>
-                                                    <div className='sigma_product-price'>
-                                                        <span>78$</span>
-                                                        <span>99$</span>
-                                                    </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='col-lg-3 col-md-6'>
-                                            <div className='sigma_product style-8'>
-                                                <div className='sigma_product-thumb'>
-                                                    <a href='product-details.html'>
-                                                        <img src='src/assets/img/shop/3.png' alt='product' />
-                                                    </a>
-                                                    <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
-                                                        <a
-                                                            href='product-details.html'
-                                                            data-toggle='tooltip'
-                                                            title='Add To Cart'
-                                                        >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
-                                                        </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
-                                                            <i
-                                                                data-toggle='modal'
-                                                                data-target='#quickViewModal'
-                                                                className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div className='sigma_product-body'>
-                                                    <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Cat Play House</a>{' '}
-                                                    </h5>
-                                                    <div className='sigma_rating'>
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fal fa-star' />
-                                                    </div>
-                                                    <div className='sigma_product-price'>
-                                                        <span>36$</span>
-                                                        <span>55$</span>
-                                                    </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='col-lg-3 col-md-6'>
-                                            <div className='sigma_product style-8'>
-                                                <div className='sigma_product-thumb'>
-                                                    <a href='product-details.html'>
-                                                        <img src='src/assets/img/shop/4.png' alt='product' />
-                                                    </a>
-                                                    <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
-                                                        <a
-                                                            href='product-details.html'
-                                                            data-toggle='tooltip'
-                                                            title='Add To Cart'
-                                                        >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
-                                                        </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
-                                                            <i
-                                                                data-toggle='modal'
-                                                                data-target='#quickViewModal'
-                                                                className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div className='sigma_product-body'>
-                                                    <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Pet Crate</a>{' '}
-                                                    </h5>
-                                                    <div className='sigma_rating'>
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fas fa-star' />
-                                                        <i className='fal fa-star' />
-                                                    </div>
-                                                    <div className='sigma_product-price'>
-                                                        <span>45$</span>
-                                                        <span>87$</span>
-                                                    </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            ))}
                                     </div>
                                 </div>
                                 <div className='tab-pane fade' id='image' role='tabpanel' aria-labelledby='image-tab'>
@@ -1135,8 +1000,10 @@ const HomePage = () => {
                 <div className='section section-padding bg-gray'>
                     <div className='container'>
                         <div className='section-title centered'>
-                            <span className='subtitle'>Our Team</span>
-                            <h3 className='title mb-0'>Meet Our Team of True Pet Lovers</h3>
+                            <span className='subtitle'>Đội của chúng tôi</span>
+                            <h3 className='title mb-0'>
+                                Gặp gỡ đội ngũ những người yêu thú cưng đích thực của chúng tôi
+                            </h3>
                         </div>
                         <div className='row'>
                             <div className='col-lg-3 col-md-4 col-sm-6'>
@@ -1150,7 +1017,7 @@ const HomePage = () => {
                                         </h5>
                                         <div className='sigma_team-categories'>
                                             <a href='#' className='sigma_team-category'>
-                                                Founder
+                                                Người sáng lập
                                             </a>
                                         </div>
                                         <ul className='sigma_social-icons'>
@@ -1184,7 +1051,7 @@ const HomePage = () => {
                                         </h5>
                                         <div className='sigma_team-categories'>
                                             <a href='#' className='sigma_team-category'>
-                                                Pet instructor
+                                                Người hướng dẫn thú cưng
                                             </a>
                                         </div>
                                         <ul className='sigma_social-icons'>
@@ -1218,7 +1085,7 @@ const HomePage = () => {
                                         </h5>
                                         <div className='sigma_team-categories'>
                                             <a href='#' className='sigma_team-category'>
-                                                Assistent
+                                                Trợ lý
                                             </a>
                                         </div>
                                         <ul className='sigma_social-icons'>
@@ -1252,7 +1119,7 @@ const HomePage = () => {
                                         </h5>
                                         <div className='sigma_team-categories'>
                                             <a href='#' className='sigma_team-category'>
-                                                Pet Doctor
+                                                Bác sĩ thú cưng
                                             </a>
                                         </div>
                                         <ul className='sigma_social-icons'>
@@ -1281,504 +1148,116 @@ const HomePage = () => {
                 <div className='section section-padding'>
                     <div className='container'>
                         <div className='section-title centered'>
-                            <span className='subtitle'>Best Seller</span>
-                            <h3 className='title mb-0'>Everything your pet needs</h3>
+                            <span className='subtitle'>Phụ kiện và thức ăn</span>
+                            <h3 className='title mb-0'>Mọi thứ thú cưng của bạn cần</h3>
                         </div>
                         <div className='row'>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/4.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Food Dispenser</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
+                            {productFour &&
+                                productFour.map((item: any) => (
+                                    <div className='col-lg-3 col-md-6'>
+                                        <div className='sigma_product style-6'>
+                                            <div className='sigma_product-thumb'>
+                                                <a href={'products/' + item?._id}>
+                                                    <img src={item?.image} alt='product' />
+                                                </a>
+                                            </div>
+                                            <div className='sigma_product-body'>
+                                                <h5 className='sigma_product-title'>
+                                                    {' '}
+                                                    <a href='product-details.html'>{item?.name}</a>{' '}
+                                                </h5>
+                                                <div className='sigma_rating'>
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                </div>
+                                                <div className='sigma_product-price'>
+                                                    <span>{item?.minPrice}</span>
+                                                    <span>{item?.maxPrice}</span>
+                                                    <i>VNĐ</i>
+                                                </div>
+                                                <a href='#' className='sigma_btn btn-sm'>
+                                                    Thêm vào giỏ hàng
+                                                </a>
+                                                <a
+                                                    href='#'
+                                                    className='sigma_btn btn-sm light'
+                                                    data-toggle='modal'
+                                                    data-target='#quickViewModal'
+                                                >
+                                                    Xem lướt qua
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div className='sigma_product-price'>
-                                            <span>29$</span>
-                                            <span>49$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
                                     </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/7.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Organic Food</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>55$</span>
-                                            <span>76$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/1.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Renee Beanie</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>29$</span>
-                                            <span>49$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/9.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Mouse bell</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>56$</span>
-                                            <span>87$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/3.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Party Hat</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>65$</span>
-                                            <span>98$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/12.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Rubber Bone</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>39$</span>
-                                            <span>59$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/4.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Organic Food</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>55$</span>
-                                            <span>76$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-6'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/11.png' alt='product' />
-                                        </a>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Mouse bell</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>55$</span>
-                                            <span>76$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='sigma_btn btn-sm light'
-                                            data-toggle='modal'
-                                            data-target='#quickViewModal'
-                                        >
-                                            Quick View
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                ))}
                         </div>
                     </div>
                 </div>
                 <div className='section section-padding pt-0'>
                     <div className='container'>
                         <div className='section-title centered'>
-                            <span className='subtitle'>Trending</span>
-                            <h3 className='title mb-0'>Our Top Products</h3>
+                            <span className='subtitle'>Xu huớng</span>
+                            <h3 className='title mb-0'>Sản phẩm hàng đầu của chúng tôi</h3>
                         </div>
                         <div className='row'>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-8'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/1.png' alt='product' />
-                                        </a>
-                                        <div className='sigma_product-controls'>
-                                            <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                {' '}
-                                                <i className='far fa-heart' />{' '}
-                                            </a>
-                                            <a href='product-details.html' data-toggle='tooltip' title='Add To Cart'>
-                                                {' '}
-                                                <i className='far fa-shopping-basket' />{' '}
-                                            </a>
-                                            <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                {' '}
-                                                <i
-                                                    data-toggle='modal'
-                                                    data-target='#quickViewModal'
-                                                    className='far fa-eye'
-                                                />{' '}
-                                            </a>
+                            {productFour &&
+                                productFour.map((pro: any) => (
+                                    <div className='col-lg-3 col-md-6'>
+                                        <div className='sigma_product style-8'>
+                                            <div className='sigma_product-thumb'>
+                                                <a href={'products/' + pro?._id}>
+                                                    <img src={pro?.image} alt='product' />
+                                                </a>
+                                                <div className='sigma_product-controls'>
+                                                    <a href='#' data-toggle='tooltip' title='Wishlist'>
+                                                        {' '}
+                                                        <i className='far fa-heart' />{' '}
+                                                    </a>
+                                                    <a
+                                                        href='product-details.html'
+                                                        data-toggle='tooltip'
+                                                        title='Add To Cart'
+                                                    >
+                                                        {' '}
+                                                        <i className='far fa-shopping-basket' />{' '}
+                                                    </a>
+                                                    <a href='#' data-toggle='tooltip' title='Quick View'>
+                                                        {' '}
+                                                        <i
+                                                            data-toggle='modal'
+                                                            data-target='#quickViewModal'
+                                                            className='far fa-eye'
+                                                        />{' '}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div className='sigma_product-body'>
+                                                <h5 className='sigma_product-title'>
+                                                    {' '}
+                                                    <a href='product-details.html'>{pro?.name}</a>{' '}
+                                                </h5>
+                                                <div className='sigma_rating'>
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fal fa-star' />
+                                                </div>
+                                                <div className='sigma_product-price'>
+                                                    <span>{pro?.minPrice}</span>
+                                                    <span>{pro?.maxPrice}</span>
+                                                    <i>VNĐ</i>
+                                                </div>
+                                                <a href='#' className='sigma_btn btn-sm'>
+                                                    Thêm vào giỏ hàng
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Food Dispenser</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fal fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>29$</span>
-                                            <span>49$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-8'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/2.png' alt='product' />
-                                        </a>
-                                        <div className='sigma_product-controls'>
-                                            <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                {' '}
-                                                <i className='far fa-heart' />{' '}
-                                            </a>
-                                            <a href='product-details.html' data-toggle='tooltip' title='Add To Cart'>
-                                                {' '}
-                                                <i className='far fa-shopping-basket' />{' '}
-                                            </a>
-                                            <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                {' '}
-                                                <i
-                                                    data-toggle='modal'
-                                                    data-target='#quickViewModal'
-                                                    className='far fa-eye'
-                                                />{' '}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Leather Belts</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fal fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>78$</span>
-                                            <span>99$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-8'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/3.png' alt='product' />
-                                        </a>
-                                        <div className='sigma_product-controls'>
-                                            <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                {' '}
-                                                <i className='far fa-heart' />{' '}
-                                            </a>
-                                            <a href='product-details.html' data-toggle='tooltip' title='Add To Cart'>
-                                                {' '}
-                                                <i className='far fa-shopping-basket' />{' '}
-                                            </a>
-                                            <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                {' '}
-                                                <i
-                                                    data-toggle='modal'
-                                                    data-target='#quickViewModal'
-                                                    className='far fa-eye'
-                                                />{' '}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Cat Play House</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fal fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>36$</span>
-                                            <span>55$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-3 col-md-6'>
-                                <div className='sigma_product style-8'>
-                                    <div className='sigma_product-thumb'>
-                                        <a href='product-details.html'>
-                                            <img src='src/assets/img/shop/4.png' alt='product' />
-                                        </a>
-                                        <div className='sigma_product-controls'>
-                                            <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                {' '}
-                                                <i className='far fa-heart' />{' '}
-                                            </a>
-                                            <a href='product-details.html' data-toggle='tooltip' title='Add To Cart'>
-                                                {' '}
-                                                <i className='far fa-shopping-basket' />{' '}
-                                            </a>
-                                            <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                {' '}
-                                                <i
-                                                    data-toggle='modal'
-                                                    data-target='#quickViewModal'
-                                                    className='far fa-eye'
-                                                />{' '}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className='sigma_product-body'>
-                                        <h5 className='sigma_product-title'>
-                                            {' '}
-                                            <a href='product-details.html'>Pet Crate</a>{' '}
-                                        </h5>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fas fa-star' />
-                                            <i className='fal fa-star' />
-                                        </div>
-                                        <div className='sigma_product-price'>
-                                            <span>45$</span>
-                                            <span>87$</span>
-                                        </div>
-                                        <a href='#' className='sigma_btn btn-sm'>
-                                            Add to Cart
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                ))}
                         </div>
                     </div>
                 </div>
@@ -1786,93 +1265,6 @@ const HomePage = () => {
                     className='section section-padding bg-cover bg-center bg-secondary-1'
                     style={{ backgroundImage: 'url(src/assets/img/pattern-4.png)' }}
                 >
-                    <div className='container'>
-                        <div className='section-title centered'>
-                            <span className='subtitle text-white'>What We Do</span>
-                            <h3 className='title text-white'>Services for You</h3>
-                        </div>
-                        <div className='row'>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_service style-18 has-bg'>
-                                    <div className='sigma_service-thumb'>
-                                        <i className='flaticon-dog-1' />
-                                    </div>
-                                    <div className='sigma_service-body'>
-                                        <h5>
-                                            <a href='service-details.html'>Dog Care</a>
-                                        </h5>
-                                        <p>You Can adopt or list a pet for adoption lorem ipsum dolor sitam amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_service style-18 has-bg'>
-                                    <div className='sigma_service-thumb'>
-                                        <i className='flaticon-pet-insurance' />
-                                    </div>
-                                    <div className='sigma_service-body'>
-                                        <h5>
-                                            <a href='service-details.html'>Cat Care</a>
-                                        </h5>
-                                        <p>You Can adopt or list a pet for adoption lorem ipsum dolor sitam amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_service style-18 has-bg'>
-                                    <div className='sigma_service-thumb'>
-                                        <i className='flaticon-mobile' />
-                                    </div>
-                                    <div className='sigma_service-body'>
-                                        <h5>
-                                            <a href='service-details.html'>Vet Tips</a>
-                                        </h5>
-                                        <p>You Can adopt or list a pet for adoption lorem ipsum dolor sitam amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_service style-18 has-bg'>
-                                    <div className='sigma_service-thumb'>
-                                        <i className='flaticon-collar' />
-                                    </div>
-                                    <div className='sigma_service-body'>
-                                        <h5>
-                                            <a href='service-details.html'>Adoption Center</a>
-                                        </h5>
-                                        <p>You Can adopt or list a pet for adoption lorem ipsum dolor sitam amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_service style-18 has-bg'>
-                                    <div className='sigma_service-thumb'>
-                                        <i className='flaticon-beauty-saloon' />
-                                    </div>
-                                    <div className='sigma_service-body'>
-                                        <h5>
-                                            <a href='service-details.html'>Grooming</a>
-                                        </h5>
-                                        <p>You Can adopt or list a pet for adoption lorem ipsum dolor sitam amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4 col-md-6'>
-                                <div className='sigma_service style-18 has-bg'>
-                                    <div className='sigma_service-thumb'>
-                                        <i className='flaticon-vaccine' />
-                                    </div>
-                                    <div className='sigma_service-body'>
-                                        <h5>
-                                            <a href='service-details.html'>Agility</a>
-                                        </h5>
-                                        <p>You Can adopt or list a pet for adoption lorem ipsum dolor sitam amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div className='section section-padding p-0 margin-negative'>
                         <div className='container-fluid p-0'>
                             <div className='sigma_instagram style-1 insta-images'>
@@ -1898,8 +1290,8 @@ const HomePage = () => {
                 <div className='section section-padding bg-gray'>
                     <div className='container'>
                         <div className='section-title centered'>
-                            <span className='subtitle'>Client Testimonials</span>
-                            <h3 className='title'>What Our Clients Say</h3>
+                            <span className='subtitle'>Đánh giá</span>
+                            <h3 className='title'>Những khách hàng thân thiết</h3>
                         </div>
                         <div className='row'>
                             <div className='col-md-6'>
@@ -1955,18 +1347,18 @@ const HomePage = () => {
                                     <div className='col-lg-5'>
                                         <div className='sigma_cta-content'>
                                             <h3 className='mb-0 text-white'>
-                                                Get notified about the event! Subscribe Today
+                                                Nhận thông báo về sự kiện này! Đăng ký ngay hôm nay
                                             </h3>
                                         </div>
                                     </div>
                                     <div className='col-lg-7 mt-lg-0 mt-3'>
                                         <form method='post'>
                                             <div className='input-group'>
-                                                <input type='email' name='email' placeholder='Email Address' />
+                                                <input type='email' name='email' placeholder='Địa chỉ email' />
                                                 <div className='input-group-append'>
                                                     <button type='button' className='light'>
                                                         <i className='fal fa-envelope mr-2' />
-                                                        Subscribe
+                                                        Đặt mua
                                                     </button>
                                                 </div>
                                             </div>
@@ -1998,23 +1390,28 @@ const HomePage = () => {
                             >
                                 <div className='sigma_form style-6'>
                                     <div className='section-title'>
-                                        <h3 className='title mb-1 text-white'>Get in Touch</h3>
-                                        <p className='text-white'>We Will Be Happy To Assist You</p>
+                                        <h3 className='title mb-1 text-white'>Liên lạc</h3>
+                                        <p className='text-white'>Chúng tôi sẽ rất vui để hỗ trợ bạn</p>
                                     </div>
                                     <form method='post'>
                                         <div className='form-group'>
                                             <i className='fal fa-user' />
-                                            <input type='text' name='fname' placeholder='Name' />
+                                            <input type='text' name='fname' placeholder='Tên' />
                                         </div>
                                         <div className='form-group'>
                                             <i className='fal fa-envelope' />
                                             <input type='email' name='email' placeholder='Email' />
                                         </div>
                                         <div className='form-group'>
-                                            <textarea name='message' rows={5} placeholder='Message'></textarea>
+                                            <textarea
+                                                name='message'
+                                                rows={5}
+                                                style={{ paddingLeft: '20px', paddingTop: '10px' }}
+                                                placeholder='Tin nhắn'
+                                            ></textarea>
                                         </div>
                                         <button type='button' className='btn btn-block secondary'>
-                                            Send
+                                            Gửi
                                         </button>
                                     </form>
                                 </div>
@@ -2025,8 +1422,8 @@ const HomePage = () => {
                 <div className='section section-padding pt-0'>
                     <div className='container'>
                         <div className='section-title centered'>
-                            <span className='subtitle'>Latest Pet</span>
-                            <h3 className='title'>Our Insights & Articles</h3>
+                            <span className='subtitle'>Sản phẩm mới nhất</span>
+                            <h3 className='title'>Thông tin chi tiết và bài viết của chúng tôi</h3>
                         </div>
                         <div className='row'>
                             <div className='col-lg-4 col-md-6'>

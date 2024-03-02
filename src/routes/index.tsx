@@ -7,8 +7,6 @@ import ListCategory from '@/pages/Admin/Category'
 import ListTypeVoucher from '@/pages/Admin/ListTypeVoucher'
 import SigninPage from '@/pages/Client/AuthPage/SigninPage'
 import SignupPage from '@/pages/Client/AuthPage/SignupPage'
-// import SigninPage from '@/pages/Client/AuthPage/Signin'
-// import SignupPage from '@/pages/Client/AuthPage/Signup'
 import CartPage from '@/pages/Client/CartPage'
 import ContactPage from '@/pages/Client/ContactPage'
 import HomePage from '@/pages/Client/HomPage'
@@ -32,6 +30,7 @@ import ListContact from '@/pages/Admin/Contact'
 import EditProduct from '@/pages/Admin/Products/Edit/EditProduct'
 import LayoutUserPage from '@/components/component/LayoutUser'
 import EditVoucher from '@/pages/Admin/ListVoucher/EditVoucher'
+import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 
 const Routers = () => {
     return (
@@ -54,6 +53,7 @@ const Routers = () => {
             <Route path='/' element={<LayoutUserPage />}>
                 <Route path='updateProfile' element={<UpdateProfile />} />
                 <Route path='order' element={<OrderPage />} />
+                <Route path='order/order_detail/:id' element={<OrderDetailPage />} />
             </Route>
             <Route path='admin' element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
@@ -62,19 +62,14 @@ const Routers = () => {
                 <Route path='products/:id/edit' element={<EditProduct />} />
                 <Route path='products/add' element={<AddProduct />} />
                 <Route path='categories' element={<ListCategory />} />
-                {/* <Route path='categories/:id/edit' element={<EditCategory />}/> */}
                 <Route path='categories/edit/:id' element={<EditCategory />} />
                 <Route path='categories/add' element={<AddCategory />} />
                 <Route path='voucher' element={<Voucher />} />
                 <Route path='voucher/edit/:id' element={<EditVoucher />} />
                 <Route path='voucher/add' element={<AddVoucher />} />
                 <Route path='type_voucher' element={<ListTypeVoucher />} />
-                {/* <Route path='type_voucher/:id/edit' element={<EditListTypeVoucher />}/> */}
-                {/* <Route path='type_voucher/add' element={<AddListTypeVoucher />}/> */}
                 <Route path='bill' element={<ListBill />} />
-                {/* <Route path='bill/:id/edit' element={<EditListBill />}/> */}
                 <Route path='bill/:id' element={<BillDetail />} />
-                {/* contact */}
                 <Route path='contact' element={<ListContact />} />
             </Route>
         </Routes>

@@ -27,6 +27,18 @@ export const getBillOfUser = async (id: string) => {
         console.log(`['getBillOfUser_ERROR']`, error)
     }
 }
+export const getBillDetail = async (id: string) => {
+    try {
+        const response = await instance.get(`/bill/${id}`)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['getBillDetail_ERROR']`, error)
+    }
+}
 export const update = async (bill: IBill) => {}
 export const add = async (bill: IBill) => {
     console.log('🚀 ~ add ~ bill:', bill)

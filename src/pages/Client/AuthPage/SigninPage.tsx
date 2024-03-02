@@ -21,8 +21,8 @@ const SigninPage = () => {
             console.log('🚀 ~ onSubmit ~ response:', response?.data?.user)
             if (response?.data?.user) {
                 // Lưu thông tin người dùng vào Local Storage
-                localStorage.setItem('userID', response?.data?.user?._id)
-                if (response?.data?.user?.role === 'admin') {
+                localStorage.setItem('userID', response?.user?._id)
+                if (response?.user?.role === 'admin') {
                     message.success('Đăng nhập thành công admin')
                     navigate('/admin')
                 }

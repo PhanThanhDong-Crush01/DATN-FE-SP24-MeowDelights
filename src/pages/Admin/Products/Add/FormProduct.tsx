@@ -9,6 +9,7 @@ import { formatPriceBootstrap, getRandomNumber } from '@/lib/utils'
 import FormAddInfoTypeProduct from './FormAddInfoTypeProduct'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 import ImageUpload from '@/lib/uploadFile'
+import ProductFormDescription from './CKE_Form_Description'
 
 interface Color {
     id: number
@@ -35,6 +36,12 @@ const sizesData: Size[] = [
 ]
 
 const FormProduct = ({ setImageUrl }: any) => {
+    const [descriptionData, setDescriptionData] = useState<string>('')
+    const onSetDescriptionData = (value: any) => {
+        console.log('🚀 ~ onSetDescriptionData ~ value:', value)
+        setDescriptionData(value)
+    }
+
     const { data } = useCategoryQuery()
     const [categories, setCate] = useState()
     useEffect(() => {
@@ -174,12 +181,15 @@ const FormProduct = ({ setImageUrl }: any) => {
                         options={categories}
                     />
                 </Form.Item>
+
                 <Form.Item
+                    // Bên trong jsx của FormProduct, truyền hàm setDescriptionData xuống ProductFormDescription
+
                     label='Mô tả'
                     name='description'
                     rules={[{ required: true, message: 'Vui lòng nhập mô tả của sản phẩm!' }]}
                 >
-                    <Input.TextArea style={{ height: '160px', borderColor: 'gray' }} />
+                    <ProductFormDescription setDescriptionData={onSetDescriptionData} />
                 </Form.Item>
             </div>
             <div style={{ width: '40%' }}>

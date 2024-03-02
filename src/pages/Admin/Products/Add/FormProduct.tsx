@@ -35,10 +35,8 @@ const sizesData: Size[] = [
     // Thêm các kích thước khác nếu cần
 ]
 
-const FormProduct = ({ setImageUrl }: any) => {
-    const [descriptionData, setDescriptionData] = useState<string>('')
+const FormProduct = ({ setImageUrl, setDescriptionData }: any) => {
     const onSetDescriptionData = (value: any) => {
-        console.log('🚀 ~ onSetDescriptionData ~ value:', value)
         setDescriptionData(value)
     }
 
@@ -187,7 +185,6 @@ const FormProduct = ({ setImageUrl }: any) => {
 
                     label='Mô tả'
                     name='description'
-                    rules={[{ required: true, message: 'Vui lòng nhập mô tả của sản phẩm!' }]}
                 >
                     <ProductFormDescription setDescriptionData={onSetDescriptionData} />
                 </Form.Item>

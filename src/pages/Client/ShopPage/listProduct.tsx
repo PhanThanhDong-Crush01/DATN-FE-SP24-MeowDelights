@@ -26,7 +26,8 @@ const ListProduct = () => {
                     ...item,
                     key: index + 1
                 }))
-                setDataProduct(formattedData)
+                const productTrue = formattedData.filter((item: any) => item.status == true)
+                setDataProduct(productTrue)
             } catch (error) {
                 console.error('Error fetching data:', error)
             }

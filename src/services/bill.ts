@@ -55,3 +55,16 @@ export const add = async (bill: IBill) => {
 }
 export const remove = async (bill: IBill) => {}
 //mẫu product
+
+export const apiChangeStatusOrder = async (data: any) => {
+    try {
+        const response = await instance.patch(`/bill/${data.idBill}/changeOrderStatus`, data)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['ADD_BILL_ERROR']`, error)
+    }
+}

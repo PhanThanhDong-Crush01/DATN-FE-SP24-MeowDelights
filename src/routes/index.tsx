@@ -28,7 +28,12 @@ import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
 import OrderPage from '@/pages/Client/AuthPage/OrderPage'
+// import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
 import ListContact from '@/pages/Admin/Contact'
+import LayoutUserPage from '@/components/component/LayoutUser'
+import EditVoucher from '@/pages/Admin/ListVoucher/EditVoucher'
+import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
+
 import EditProduct from '@/pages/Admin/Products/Edit/EditProduct'
 import LayoutUserPage from '@/components/component/LayoutUser'
 import EditVoucher from '@/pages/Admin/ListVoucher/EditVoucher'
@@ -54,12 +59,14 @@ const Routers = () => {
             <Route path='/' element={<LayoutUserPage />}>
                 <Route path='updateProfile' element={<UpdateProfile />} />
                 <Route path='order' element={<OrderPage />} />
+                <Route path='order/order_detail/:id' element={<OrderDetailPage />} />
             </Route>
             <Route path='admin' element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
-                <Route path='products/:id/edit' element={<EditProduct />} />
+                {/* <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} /> */}
+                {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='products/add' element={<AddProduct />} />
                 <Route path='categories' element={<ListCategory />} />
                 {/* <Route path='categories/:id/edit' element={<EditCategory />}/> */}

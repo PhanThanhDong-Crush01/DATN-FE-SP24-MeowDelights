@@ -169,7 +169,7 @@ const Voucher = () => {
             // ...getColumnSearchProps('conditions'),
             // sorter: (a, b) => a.conditions - b.conditions,
             // sortDirections: ['descend', 'ascend'],
-            render: (_, record: any) => (
+            render: (_, record) => (
                 <p
                     className='text-base '
                     dangerouslySetInnerHTML={{

@@ -18,19 +18,19 @@ const SigninPage = () => {
         }
         try {
             const response: any = await signin(values)
-            console.log('🚀 ~ onSubmit ~ response:', response?.data?.user)
-            if (response?.data?.user) {
+            console.log('🚀 ~ onSubmit ~ response:', response?.user)
+            if (response?.user) {
                 // Lưu thông tin người dùng vào Local Storage
                 localStorage.setItem('userID', response?.user?._id)
                 if (response?.user?.role === 'admin') {
                     message.success('Đăng nhập thành công admin')
-                    navigate('/admin')
+                    navigate('/admin/products')
                 }
-                if (response?.data?.user?.role === 'nhanvien') {
+                if (response?.user?.role === 'nhanvien') {
                     message.success('Đăng nhập thành công nhân viên')
-                    navigate('/admin')
+                    navigate('/admin/products')
                 }
-                if (response?.data?.user?.role === 'member') {
+                if (response?.user?.role === 'member') {
                     message.success('Đăng nhập thành công !')
 
                     // if (Auth !== null) {

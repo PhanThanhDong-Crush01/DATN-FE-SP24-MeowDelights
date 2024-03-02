@@ -31,6 +31,7 @@ import EditProduct from '@/pages/Admin/Products/Edit/EditProduct'
 import LayoutUserPage from '@/components/component/LayoutUser'
 import EditVoucher from '@/pages/Admin/ListVoucher/EditVoucher'
 import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
+import { SendOTP } from '@/components/component/SendOtp'
 
 const Routers = () => {
     return (
@@ -47,6 +48,7 @@ const Routers = () => {
                 <Route path='introduce' element={<IntroducePage />} />
 
                 <Route path='bill_order' element={<List_Bill_Order />} />
+                <Route path='check_order' element={<SendOTP />} />
             </Route>
             <Route path='signin' element={<SigninPage />} />
             <Route path='signup' element={<SignupPage />} />

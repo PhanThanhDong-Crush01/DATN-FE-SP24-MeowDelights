@@ -30,8 +30,6 @@ const PaymentInformationPage = () => {
     useEffect(() => {
         setValue('name', data?.datas?.name || '')
         setValue('adress', data?.datas?.address || '')
-        // setValue('city', data?.datas?.city || '')
-        // setValue('country', data?.datas?.country || '')
         setValue('phone', data?.datas?.phone || '')
         setValue('email', data?.datas?.email)
         setValue('note', '')
@@ -61,7 +59,7 @@ const PaymentInformationPage = () => {
             }
         })
 
-        const addNew = {
+        const addNew: any = {
             bill: {
                 iduser: userID,
                 money: Order?.thongTinDonHang?.tongTien,
@@ -76,13 +74,8 @@ const PaymentInformationPage = () => {
             billdetails: billdetails
         }
 
-        onSubmit(addNew)
-        const pttt = Order?.thongTinNhanHang?.paymentmethods
-        if (pttt == 'Thanh toán khi nhận hàng') {
-            navigate('/payment_success')
-        } else {
-            navigate('/payment_method_momo')
-        }
+        localStorage.setItem('donhang', JSON.stringify(addNew))
+        navigate('/check_order')
     }
 
     const [khongGhiRoDiaChi, setkhongGhiRoDiaChi] = useState('')
@@ -113,16 +106,6 @@ const PaymentInformationPage = () => {
     useEffect(() => {
         getCityAndCountry(data?.datas?.address)
     }, [data])
-
-    const { onSubmit } = useBillMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Đặt hàng thành công!!'
-            })
-        }
-    })
 
     return (
         <>
@@ -401,7 +384,7 @@ const PaymentInformationPage = () => {
                                                 backgroundColor: '#FFCC01'
                                             }}
                                         >
-                                            --- Đặt Hàng ---
+                                            --- Tiếp Tục Đặt Hàng ---
                                         </button>
                                     </div>
                                 </div>

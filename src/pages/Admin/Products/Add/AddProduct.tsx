@@ -3,6 +3,7 @@ import FormProduct from './FormProduct'
 import { useProductMutation } from '@/hooks/Product/useProductMutation'
 import { toast } from '@/components/ui/use-toast'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const formItemLayout = {
     labelCol: {
@@ -27,8 +28,10 @@ const AddProduct = () => {
         }
     })
 
-    const [imageUrl, setImageUrl] = useState<string>('') // Khai báo state để lưu trữ imageUrl
-    console.log('🚀 ~ AddProduct ~ imageUrl:', imageUrl)
+    const [imageUrl, setImageUrl] = useState<string>('')
+    const [descriptionData, setDescriptionData] = useState<string>('')
+
+    const navigate = useNavigate()
 
     const onFinish = (values: any) => {
         const typeProductString = localStorage.getItem('typeProduct')
@@ -41,13 +44,11 @@ const AddProduct = () => {
                 import_date: values.import_date,
                 expiry: `${values.manufacture_date} - ${values.expiry_date}`,
                 status: true,
-                description: values.description,
+                description: descriptionData,
                 idCategory: values.idCategory
             },
             typeProduct: typeProduct
         }
-        console.log('🚀 ~ onFinish ~ addNew:', addNew)
-        localStorage.removeItem('typeProduct')
         if (typeProduct[0]?.color == undefined) {
             toast({
                 variant: 'destructive',
@@ -55,6 +56,8 @@ const AddProduct = () => {
             })
         } else {
             onSubmit(addNew)
+            localStorage.removeItem('typeProduct')
+            navigate('/admin/products')
         }
     }
 
@@ -77,7 +80,11 @@ const AddProduct = () => {
                             }}
                         >
                             <div className='form_left'>
-                                <FormProduct imageUrl={imageUrl} setImageUrl={setImageUrl} />
+                                <FormProduct
+                                    imageUrl={imageUrl}
+                                    setImageUrl={setImageUrl}
+                                    setDescriptionData={setDescriptionData}
+                                />
                             </div>
                         </div>
 

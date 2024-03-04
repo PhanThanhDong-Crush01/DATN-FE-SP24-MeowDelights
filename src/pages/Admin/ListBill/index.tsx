@@ -34,7 +34,6 @@ type DataIndex = keyof DataType
 
 const ListBill = () => {
     const [bill, setBill] = useState<any>()
-    console.log('🚀 ~ ListBill ~ bill:', bill)
     const { data } = useBillQuery()
     useEffect(() => {
         if (data) {
@@ -54,14 +53,19 @@ const ListBill = () => {
                     time: createdAtDate.toLocaleTimeString('en-GB', { hour12: false }) // Thêm biến time vào dataContact
                 }
             })
+            dataBill.sort((a: any, b: any) => new Date(b.createdAt) - new Date(a.createdAt))
             setBill(dataBill)
         }
     }, [data])
 
-    const handleSearchInput = (e: any) => {
+    const handleSearchButnInput = (e: any) => {
         const value = e.target.value
-        const billSearch = bill.filter((item: any) => item._id == value)
-        if (billSearch.lenght > 0) {
+        const billSearch = bill.filter((item: any) => {
+            if (item._id === value) {
+                return item
+            }
+        })
+        if (billSearch.length != 0) {
             setBill(billSearch)
         }
     }
@@ -349,7 +353,7 @@ const ListBill = () => {
                         type='text'
                         name='search'
                         placeholder='Tìm kiếm theo mã hóa đơn'
-                        onChange={handleSearchInput}
+                        onChange={handleSearchButnInput}
                         style={{ width: '240px', height: '30px', border: '1px solid gray' }}
                     />
                 </div>

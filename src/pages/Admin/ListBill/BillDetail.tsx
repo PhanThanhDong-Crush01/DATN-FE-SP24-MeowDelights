@@ -1,4 +1,3 @@
-import React from 'react'
 import '../../../styles/BillDetail.css'
 import { useParams } from 'react-router-dom'
 import { useBillDetailQuery } from '@/hooks/BillDetail/useBillDetailQuery'

@@ -26,13 +26,13 @@ const SigninPage = () => {
                 localStorage.setItem('userID', response?.user?._id)
                 if (response?.user?.role === 'admin') {
                     message.success('Đăng nhập thành công admin')
-                    navigate('/admin')
+                    navigate('/admin/products')
                 }
-                if (response?.data?.user?.role === 'nhanvien') {
+                if (response?.user?.role === 'nhanvien') {
                     message.success('Đăng nhập thành công nhân viên')
-                    navigate('/admin')
+                    navigate('/admin/products')
                 }
-                if (response?.data?.user?.role === 'member') {
+                if (response?.user?.role === 'member') {
                     message.success('Đăng nhập thành công !')
 
                     // if (Auth !== null) {

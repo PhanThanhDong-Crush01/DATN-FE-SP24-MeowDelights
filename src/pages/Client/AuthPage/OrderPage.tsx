@@ -193,9 +193,7 @@ const OrderPage: React.FC = () => {
             setUserID(storedUserID)
         }
     }, [])
-    console.log(userID)
     const { data } = useBillQuery(userID || '')
-    console.log(data)
     const filteredData = data?.bill?.filter((item: DataType) => {
         switch (selectedTab) {
             case '1':
@@ -203,13 +201,16 @@ const OrderPage: React.FC = () => {
             case '2':
                 return item.orderstatus === 'Chờ xác nhận'
             case '3':
-                return item.orderstatus === 'Chuẩn bị hàng'
+                return (
+                    item.orderstatus === 'Đang chuẩn bị hàng' ||
+                    item.orderstatus === 'Đã giao hàng cho đơn vị vận chuyển'
+                )
             case '4':
-                return item.orderstatus === 'Đang giao'
+                return item.orderstatus === 'Đang giao hàng'
             case '5':
-                return item.orderstatus === 'Giao hàng thành công'
+                return item.orderstatus === 'Đã giao hàng thành công'
             case '6':
-                return item.orderstatus === 'Hủy đơn hàng'
+                return item.orderstatus === 'Đã hủy hàng'
             default:
                 return true
         }
@@ -230,7 +231,6 @@ const OrderPage: React.FC = () => {
         setSelectedProductId(productId)
         setSelectedProductTypeId(productTypeId)
         // setIsReviewDialogVisible(true)
-        console.log(` idProduct: ${productId}, idProductType: ${productTypeId}`)
     }
 
     const handleAddComment = () => {

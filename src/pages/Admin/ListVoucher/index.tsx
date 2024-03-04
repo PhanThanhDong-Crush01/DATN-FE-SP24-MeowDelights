@@ -21,13 +21,14 @@ interface DataType {
     expiry: string
     conditions: string
     idTypeVoucher: string
+    type_voucher: any
 }
 
 type DataIndex = keyof DataType
 
 const Voucher = () => {
     const { data }: any = useVoucherQuery()
-    console.log(data)
+
     const { onRemove } = useVoucherMutation({
         action: 'DELETE',
         onSuccess: () => {
@@ -142,9 +143,14 @@ const Voucher = () => {
             title: 'Tên voucher',
             dataIndex: 'name',
             key: 'name',
-            width: '10%',
+            width: '20%',
             ...getColumnSearchProps('name'),
-            render: (_, record) => record.name
+            render: (_, record) => (
+                <div>
+                    <h1 style={{ fontSize: '18px' }}>{record.name}</h1>
+                    <p style={{ fontSize: '12px' }}>Mã: {record._id}</p>
+                </div>
+            )
         },
         {
             title: 'Giảm',
@@ -182,9 +188,16 @@ const Voucher = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            width: '20%',
+            width: '10% ',
             render: (_, record) => getStatusLabel(record.status)
             // <option value='record.status'></option>
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: '10% ',
+            render: (_, record) => record.quantity
         },
 
         {
@@ -203,7 +216,7 @@ const Voucher = () => {
             dataIndex: 'idTypeVoucher',
             key: 'idTypeVoucher',
             width: '20%',
-            render: (_, record) => record.idTypeVoucher
+            render: (_, record) => record.type_voucher.name
         },
 
         {

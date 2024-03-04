@@ -31,7 +31,7 @@ const EditVoucher = () => {
     })
 
     // Hàm xử lý khi giá trị của Input thay đổi
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: any) => {
         const { name, value } = e.target
         setVoucherData({ ...voucherData, [name]: value })
     }

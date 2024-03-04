@@ -1,7 +1,6 @@
 import { Layout, Menu } from 'antd'
-import MenuClientComponent from '@/components/component/MenuClientComponent'
 import FooterTemplate from '@/components/component/Footer'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AiOutlineAccountBook, AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import NameForm from '../../../components/User/Name'
@@ -11,7 +10,6 @@ import PhoneForm from '@/components/User/Phone'
 import AddressForm from '@/components/User/Address'
 import AgeForm from '@/components/User/Age'
 import GenderForm from '@/components/User/Gender'
-import SigninPage from './SigninPage'
 import { useEffect, useState } from 'react'
 const { Content, Sider } = Layout
 type Props = {}

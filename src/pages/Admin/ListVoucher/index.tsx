@@ -9,6 +9,7 @@ import { toast } from '@/components/ui/use-toast'
 import AddVoucher from './AddVoucher'
 import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 type InputRef = GetRef<typeof Input>
 
 interface DataType {
@@ -18,7 +19,7 @@ interface DataType {
     status: boolean
     quantity: number
     decrease: number
-    expiry: string
+    expiry: Date
     conditions: string
     idTypeVoucher: string
     type_voucher: any
@@ -153,6 +154,13 @@ const Voucher = () => {
             )
         },
         {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: '10%',
+            render: (_, record) => record.quantity
+        },
+        {
             title: 'Giảm',
             dataIndex: 'decrease',
             key: 'decrease',
@@ -175,14 +183,7 @@ const Voucher = () => {
             // ...getColumnSearchProps('conditions'),
             // sorter: (a, b) => a.conditions - b.conditions,
             // sortDirections: ['descend', 'ascend'],
-            render: (_, record) => (
-                <p
-                    className='text-base '
-                    dangerouslySetInnerHTML={{
-                        __html: formatPrice(record?.conditions)
-                    }}
-                ></p>
-            )
+            render: (_, record) => record?.conditions
         },
         {
             title: 'Trạng thái',
@@ -205,10 +206,10 @@ const Voucher = () => {
             dataIndex: 'expiry',
             key: 'expiry',
             width: '20%',
-            ...getColumnSearchProps('expiry'),
-            sorter: (a, b) => a.expiry.length - b.expiry.length,
-            sortDirections: ['descend', 'ascend'],
-            render: (_, record) => record.expiry
+            // ...getColumnSearchProps('expiry'),
+            // sorter: (a, b) => a.expiry.length - b.expiry.length,
+            // sortDirections: ['descend', 'ascend'],
+            render: (_, record) => moment(record.expiry).format('YYYY-MM-DD')
         },
 
         {

@@ -44,10 +44,17 @@ const OrderDetailPage = (_props: Props) => {
             const statusToStep: Record<string, number> = {
                 'Chờ xác nhận': 0,
                 'Đang chuẩn bị hàng': 1,
-                'Đang giao hàng': 2,
-                'Giao hàng thành công': 3
+                'Đã giao hàng cho đơn vị vận chuyển': 2,
+                'Đang giao hàng': 3,
+                'Đã giao hàng thành công': 4,
+                'Đã hủy hàng': 5
             }
             setCurrentStep(statusToStep[data.bill.orderstatus] || 0)
+            if (data.bill.orderstatus === 'Đã hủy hàng' && (currentStep === 0 || currentStep === 1)) {
+                // Thực hiện các hành động bạn muốn khi đơn hàng bị hủy ở trạng thái này,
+                // ví dụ: hiển thị thông báo cho người dùng
+                console.log("Đơn hàng đã bị hủy khi đang ở trạng thái 'Chờ xác nhận' hoặc 'Đang chuẩn bị hàng'.")
+            }
         }
     }, [data])
 
@@ -79,14 +86,30 @@ const OrderDetailPage = (_props: Props) => {
                                     title: 'Đang chuẩn bị hàng',
                                     description: 'This is a description.'
                                 },
-                                {
-                                    title: 'Đang giao hàng',
-                                    description: 'This is a description. This is a description.'
-                                },
-                                {
-                                    title: 'Giao hàng thành công',
-                                    description: 'This is a description. This is a description.'
-                                }
+                                ...(data?.bill?.orderstatus !== 'Đã hủy hàng'
+                                    ? [
+                                          {
+                                              title: 'Đã giao hàng cho đơn vị vận chuyển',
+                                              description: 'This is a description. This is a description.'
+                                          },
+                                          {
+                                              title: 'Đang giao hàng',
+                                              description: 'This is a description. This is a description.'
+                                          },
+                                          {
+                                              title: 'Giao hàng thành công',
+                                              description: 'This is a description. This is a description.'
+                                          }
+                                      ]
+                                    : []),
+                                ...(data?.bill?.orderstatus !== 'Đã giao hàng thành công'
+                                    ? [
+                                          {
+                                              title: 'Đã hủy đơn hàng',
+                                              description: 'This is a description. This is a description.'
+                                          }
+                                      ]
+                                    : [])
                             ]}
                         />
                     </div>

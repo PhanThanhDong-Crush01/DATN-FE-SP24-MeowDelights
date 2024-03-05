@@ -4,30 +4,20 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
-
-const formSchema = Joi.object({
-    codeVc: Joi.string(),
-    status: Joi.boolean(),
-    decrease: Joi.string().min(0),
-    expiry: Joi.string(), //hạn sử dụng
-    conditions: Joi.string(), /// điều kiện
-    idTypeVoucher: Joi.string()
-})
-
 type useVoucherMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'
     defaultValues?: IVoucher
     onSuccess?: () => void
 }
-
 export const useVoucherMutation = ({
     action,
     defaultValues = {
-        codeVc: '',
+        name: '',
         status: true,
-        expiry: '',
-        conditions: '',
+        quantity: 0,
         decrease: 0,
+        expiry: new Date('dd/mm/yyyy'),
+        conditions: 0,
         idTypeVoucher: ''
     },
     onSuccess
@@ -55,7 +45,7 @@ export const useVoucherMutation = ({
         }
     })
     const form = useForm({
-        resolver: joiResolver(formSchema),
+        // resolver: joiResolver(formSchema),
         defaultValues
     })
     const onSubmit: SubmitHandler<any> = (values) => {

@@ -1,10 +1,11 @@
 export interface IVoucher {
     _id?: string
-    codeVc: string
+    name: string
     status: boolean
+    quantity: number
     decrease: number
-    expiry: string //hạn sử dụng
-    conditions: string
+    expiry: Date //hạn sử dụng
+    conditions: number
     idTypeVoucher: string
 }
 //mẫu

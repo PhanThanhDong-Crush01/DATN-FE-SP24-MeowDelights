@@ -198,14 +198,14 @@ const ListUserPage = () => {
             ],
             filteredValue: filteredInfo.role || null,
             onFilter: (value: string, record) => record.role.includes(value),
-            render: (_, record) => record?.role,
-            fixed: 'left'
+            fixed: 'left',
+            render: (_, record) => record?.role
         },
         {
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: '10%',
+            width: '20%',
 
             render: (_, record) => record?.address
         },
@@ -218,7 +218,7 @@ const ListUserPage = () => {
             // <option value='record.status'></option>
         },
         {
-            title: 'Gioi tính',
+            title: 'Giới tính',
             dataIndex: 'gender',
             key: 'gender',
             width: '15% ',
@@ -264,64 +264,49 @@ const ListUserPage = () => {
             dataIndex: ' totalBillCount',
             key: ' totalBillCount',
             width: '20%',
-            render: (_, record) => record.totalBillCount,
-            fixed: 'right'
+            render: (_, record) => record.totalBillCount
+            // fixed: 'right'
         },
         {
             title: 'Tổng tiền',
             dataIndex: ' totalAmount',
             key: ' totalAmount',
             width: '20%',
-            render: (_, record) => record.totalAmount,
-            fixed: 'right'
+            render: (_, record) => record.totalAmount
+            // fixed: 'right'
+        },
+        {
+            title: 'Hành động',
+            dataIndex: '',
+            key: 'x',
+            width: '15%',
+            fixed: 'right',
+            render: (_, record) => (
+                <Space size='middle'>
+                    {record.role !== 'member' && (
+                        <Link to={`/admin/user/edit/${record?._id}`} type='primary' ghost>
+                            <EditOutlined style={{ display: 'inline-flex' }} />
+                        </Link>
+                    )}
+                </Space>
+            )
         }
-        // {
-        //     title: 'Hành động',
-        //     dataIndex: '',
-        //     key: 'x',
-        //     width: '15%',
-        //     render: (_, record) => (
-        //         <Space size='middle'>
-        //             <Link to={`edit/${record._id}`} type='primary' ghost>
-        //                 <EditOutlined style={{ display: 'inline-flex' }} />
-        //             </Link>
-
-        //             {/* <Popconfirm
-        //                 placement='topRight'
-        //                 title='Xóa mã khuyến mại?'
-        //                 description='Bạn có chắc chắn xóa mã khuyến mại này không?'
-        //                 onConfirm={() => onRemove(record)}
-        //                 onCancel={cancel}
-        //                 okText='Đồng ý'
-        //                 cancelText='Không'
-        //             >
-        //                 <Button type='primary' danger>
-        //                     <DeleteOutlined style={{ display: 'inline-flex' }} />
-        //                 </Button>
-        //             </Popconfirm> */}
-        //         </Space>
-        //     )
-        // }
     ]
     const cancel = () => {
         message.error('Đã hủy!')
     }
     return (
         <div>
-            <div className='flex justify-between items-center mx-[50px]'>
-                <div>
-                    <p className='text-[20px]'>Danh sách tài khoản </p>
-                </div>
-                <div className='flex justify-end mb-2'>
-                    <Button
-                        type='primary'
-                        icon={<PlusCircleOutlined />}
-                        size={'large'}
-                        className='bg-[#1677ff]'
-                        onClick={showModal}
-                    ></Button>
-                </div>
-                //{' '}
+            <div className='flex justify-between items-center '>
+                <p className='text-[30px] pb-4'>Danh sách tài khoản </p>
+
+                <Button
+                    className='flex justify-center mb-2 bg-[#1677ff]'
+                    type='primary'
+                    icon={<PlusCircleOutlined />}
+                    size={'large'}
+                    onClick={showModal}
+                ></Button>
             </div>
             <Table columns={columns} dataSource={dataUser} scroll={{ x: 1300 }} onChange={handleChange} />
             {/* form */}

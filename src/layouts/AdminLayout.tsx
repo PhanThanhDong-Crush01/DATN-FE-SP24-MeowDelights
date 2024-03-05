@@ -88,7 +88,7 @@ const AdminLayout = () => {
                         <Link to='/admin/contact'>Liên hệ</Link>
                     </Menu.Item>
                     <Menu.Item key='8' icon={<MdOutlineAccountCircle />}>
-                        <Link to='/admin/'>Tài khoản</Link>
+                        <Link to='/admin/user'>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key='9' icon={<VscAccount />}>
                         <Link to='/admin/'>Thông tin của tôi</Link>

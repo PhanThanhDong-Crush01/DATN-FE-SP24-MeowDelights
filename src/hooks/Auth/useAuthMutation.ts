@@ -1,5 +1,5 @@
 import { IAuth } from '@/interface/IAuth'
-import { updateUserProfile } from '@/services/auth'
+import { updateUserProfile, updateUserRole } from '@/services/auth'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -15,7 +15,7 @@ const formSchema = Joi.object({
 })
 
 type useAuthMutationProps = {
-    action: 'UPDATE'
+    action: 'UPDATE' | 'UPDATEROLE'
     defaultValues?: IAuth
     onSuccess?: () => void
 }
@@ -29,7 +29,8 @@ export const useAuthMutation = ({
         imgUser: '',
         age: 0,
         gender: true,
-        datas: undefined
+        jobPosition: '',
+        employee: ''
     },
     onSuccess
 }: useAuthMutationProps) => {
@@ -38,6 +39,8 @@ export const useAuthMutation = ({
     const { mutate, ...rest } = useMutation({
         mutationFn: async (user: IAuth) => {
             switch (action) {
+                case 'UPDATEROLE':
+                    return await updateUserRole(user)
                 case 'UPDATE':
                     return await updateUserProfile(user)
                 default:

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Input, Menu, Rate, Space, Table, Tabs } from 'antd'
+import { Button, Form, Input, Menu, Rate, Space, Table, Tabs } from 'antd'
 import type { InputRef, TableColumnType, TableProps, TabsProps } from 'antd'
 import Layout, { Content } from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
@@ -23,7 +23,8 @@ import { useCommentMutation } from '@/hooks/Comment/useCommentMutation'
 import { toast } from '@/components/ui/use-toast'
 import ProductReviews from '../ProductDetailPage/ProductReviews'
 import { formatPrice, formatPriceBootstrap } from '@/lib/utils'
-
+import { useWhyCancelOrder } from '@/hooks/Bill/useWhyCancelOrder'
+import { useForm } from 'react-hook-form'
 interface DataType {
     key: string
     products: {
@@ -40,14 +41,10 @@ interface DataType {
     paymentstatus: string
     orderstatus: string
 }
-
-// const onChange = (key: string) => {
-//     console.log(key)
-// }
 type DataIndex = keyof DataType
-const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra)
-}
+// const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
+//     console.log('params', pagination, filters, sorter, extra)
+// }
 
 const items: TabsProps['items'] = [
     {
@@ -73,13 +70,22 @@ const items: TabsProps['items'] = [
         key: '3',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Đang chuẩn bị hàng
+                Đã giao cho đơn vị vận chuyển
             </span>
         )
         // children: 'Content of Tab Pane 3'
     },
     {
         key: '4',
+        label: (
+            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
+                Đang chuẩn bị hàng
+            </span>
+        )
+        // children: 'Content of Tab Pane 3'
+    },
+    {
+        key: '5',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Đang giao hàng
@@ -89,7 +95,7 @@ const items: TabsProps['items'] = [
     },
 
     {
-        key: '5',
+        key: '6',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Giao hàng thành công
@@ -98,7 +104,7 @@ const items: TabsProps['items'] = [
         // children: 'Content of Tab Pane 3'
     },
     {
-        key: '6',
+        key: '7',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Hủy đơn hàng
@@ -193,9 +199,7 @@ const OrderPage: React.FC = () => {
             setUserID(storedUserID)
         }
     }, [])
-    console.log(userID)
     const { data } = useBillQuery(userID || '')
-    console.log(data)
     const filteredData = data?.bill?.filter((item: DataType) => {
         switch (selectedTab) {
             case '1':
@@ -203,13 +207,16 @@ const OrderPage: React.FC = () => {
             case '2':
                 return item.orderstatus === 'Chờ xác nhận'
             case '3':
-                return item.orderstatus === 'Chuẩn bị hàng'
+                return (
+                    item.orderstatus === 'Đang chuẩn bị hàng' ||
+                    item.orderstatus === 'Đã giao hàng cho đơn vị vận chuyển'
+                )
             case '4':
-                return item.orderstatus === 'Đang giao'
+                return item.orderstatus === 'Đang giao hàng'
             case '5':
-                return item.orderstatus === 'Giao hàng thành công'
+                return item.orderstatus === 'Đã giao hàng thành công'
             case '6':
-                return item.orderstatus === 'Hủy đơn hàng'
+                return item.orderstatus === 'Đã hủy hàng'
             default:
                 return true
         }
@@ -221,6 +228,11 @@ const OrderPage: React.FC = () => {
     // const [isReviewDialogVisible, setIsReviewDialogVisible] = useState(false)
     const [selectedProductId, setSelectedProductId] = useState<string>('')
     const [selectedProductTypeId, setSelectedProductTypeId] = useState<string>('')
+    const [selectedIdBill, setSelectedIdBill] = useState<string>('')
+    const [selectedIdPro, setSelectedIdPro] = useState<string>('')
+    const [selectedIdProTye, setSelectedIdProTye] = useState<string>('')
+
+    const [newWhy, setNewWhy] = useState('')
     const [newImg, setNewImg] = useState('')
     const [newTitle, setNewTitle] = useState('')
     const [newStar, setNewStar] = useState(0)
@@ -230,9 +242,13 @@ const OrderPage: React.FC = () => {
         setSelectedProductId(productId)
         setSelectedProductTypeId(productTypeId)
         // setIsReviewDialogVisible(true)
-        console.log(` idProduct: ${productId}, idProductType: ${productTypeId}`)
     }
-
+    const handleWhyCancelButtonClick = (idbill: string, idpro: string, idprotype: string) => {
+        setSelectedIdBill(idbill)
+        setSelectedIdPro(idpro)
+        setSelectedIdProTye(idprotype)
+        console.log(` idProduct: ${idpro}, idProductType: ${idprotype} ,idbill: ${idbill}`)
+    }
     const handleAddComment = () => {
         const dataComment = {
             userId: userID || '', // Thêm ID của người dùng vào dữ liệu đánh giá
@@ -254,13 +270,55 @@ const OrderPage: React.FC = () => {
                 title: ' Thành công!!',
                 description: 'Đã hoàn thanh đánh giá sản phẩm'
             })
-            navigate('')
-            setNewImg('')
-            setNewTitle('')
-            setNewStar(0)
-            setNewComment('')
         }
     })
+    const handleAddWhy = () => {
+        const dataWhy = {
+            idbill: selectedIdBill,
+
+            iduser: userID || '', // Thêm ID của người dùng vào dữ liệu đánh giá
+            idpro: selectedIdPro,
+            idprotype: selectedIdProTye,
+            message: newWhy
+        }
+        onSubmitWhy(dataWhy)
+        console.log(dataWhy)
+    }
+
+    const { onSubmitWhy } = useWhyCancelOrder({
+        action: 'ADD',
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                title: ' Thành công!!',
+                description: 'Đã gửi lí do hủy đơn hàng thành công'
+            })
+            // navigate('/order')
+            const updatedData = filteredData.map((item: DataType) => {
+                if (item._id === selectedIdBill) {
+                    return {
+                        ...item,
+                        orderstatus: 'Đã hủy hàng' // Cập nhật trạng thái của đơn hàng thành hủy hàng
+                    }
+                }
+                return item
+            })
+
+            // Lọc ra các đơn hàng cần di chuyển sang tab "Hủy đơn hàng"
+            const canceledOrders = updatedData.filter((item: DataType) => item.orderstatus === 'Đã hủy hàng')
+
+            // Xác định tab hiện tại và loại bỏ các đơn hàng hủy khỏi filteredData của tab đó
+            const updatedFilteredData = filteredData.filter((item: DataType) => item.orderstatus !== 'Đã hủy hàng')
+
+            // Thêm các đơn hàng hủy vào filteredData của tab "Hủy đơn hàng"
+            filteredData(updatedFilteredData.concat(canceledOrders))
+        }
+    })
+    // const { register, handleSubmit, errors }: any = useForm()
+
+    // const onSubmitHanled = (data: any) => {
+    //     onSubmitWhy({ ...data })
+    // }
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -317,93 +375,159 @@ const OrderPage: React.FC = () => {
             // title: 'Hành động',
             dataIndex: '',
             key: '',
-            render: (_, record: DataType) => {
-                if (record.orderstatus === 'Giao hàng thành công' && selectedTab === '5') {
-                    // Không hiển thị nút đánh giá nếu đơn hàng không ở trạng thái hoàn thành
-                    return (
-                        <Space>
-                            {record.products.map((product) => (
-                                <Dialog key={product?.product?._id && product?.productType?._id}>
-                                    <DialogTrigger asChild>
-                                        <Button
-                                            variant='outline'
-                                            onClick={() =>
-                                                handleReviewButtonClick(
-                                                    product?.product?._id,
-                                                    product?.productType?._id
-                                                )
-                                            }
-                                        >
-                                            Đánh giá
+            render: (_, record: DataType) => (
+                <Space>
+                    {/* Nút "Xem chi tiết" hiển thị luôn */}
+                    <Link to={`order_detail/${record._id}`}>
+                        <Button>Xem chi tiết</Button>
+                    </Link>
+
+                    {/* Nút "Hủy đơn hàng" hiển thị khi trạng thái là "Chờ xác nhận" hoặc "Đang chuẩn bị hàng" */}
+                    {(record.orderstatus === 'Chờ xác nhận' || record.orderstatus === 'Đang chuẩn bị hàng') && (
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button
+                                    variant='outline'
+                                    onClick={() =>
+                                        handleWhyCancelButtonClick(
+                                            record?._id,
+                                            record?.products[0]?.product?._id,
+                                            record?.products[0]?.productType?._id
+                                        )
+                                    }
+                                >
+                                    Hủy đơn hàng
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className='sm:max-w-[425px]'>
+                                <DialogHeader>
+                                    <DialogTitle>Hủy đơn</DialogTitle>
+                                    <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
+                                </DialogHeader>
+                                <form action=''>
+                                    <div className='grid gap-4 py-5'>
+                                        <div className='grid grid-cols-4 items-center gap-4'>
+                                            <Label htmlFor='message' className='text-right'>
+                                                Lí do
+                                            </Label>
+                                            <Input className='col-span-3' onChange={(e) => setNewWhy(e.target.value)} />
+                                            {/* {errors?.message && (
+                                                <span className='error'>Vui lòng viết lí do hủy đơn hàng</span>
+                                            )} */}
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button type='submit' onClick={handleAddWhy}>
+                                            Lưu
                                         </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className='sm:max-w-[425px]'>
-                                        <DialogHeader>
-                                            <DialogTitle>Đánh giá</DialogTitle>
-                                            <DialogDescription>
-                                                Mời bạn đánh giá và góp ý cho sản phẩm này
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        <form action=''>
-                                            <div className='grid gap-4 py-5'>
-                                                <div className='grid grid-cols-4 items-center gap-4'>
-                                                    <Label htmlFor='img' className='text-right'>
-                                                        Hình ảnh
-                                                    </Label>
-                                                    <Input
-                                                        onChange={(e) => setNewImg(e.target.value)}
-                                                        id='img'
-                                                        className='col-span-3'
-                                                        type='text'
-                                                    />
-                                                </div>
-                                                <div className='grid grid-cols-4 items-center gap-4'>
-                                                    <Label htmlFor='title' className='text-right'>
-                                                        Tiêu đề
-                                                    </Label>
-                                                    <Input
-                                                        onChange={(e) => setNewTitle(e.target.value)}
-                                                        id='title'
-                                                        className='col-span-3'
-                                                    />
-                                                </div>
-                                                <div className='grid grid-cols-4 items-center gap-4'>
-                                                    <Label htmlFor='star' className='text-right'>
-                                                        Chọn sao
-                                                    </Label>
-                                                    <Rate
-                                                        onChange={(value) => setNewStar(value)}
-                                                        allowHalf
-                                                        // value={rating}
-                                                        className='col-span-3'
-                                                    />
-                                                </div>
-                                                <div className='grid grid-cols-4 items-center gap-4'>
-                                                    <Label htmlFor='comment' className='text-right'>
-                                                        Nhận xét
-                                                    </Label>
-                                                    <Input
-                                                        onChange={(e) => setNewComment(e.target.value)}
-                                                        id='comment'
-                                                        className='col-span-3'
-                                                    />
-                                                </div>
-                                            </div>
-                                            <DialogFooter>
-                                                <Button type='submit' onClick={handleAddComment}>
-                                                    Lưu
-                                                </Button>
-                                            </DialogFooter>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
-                            ))}
-                        </Space>
-                    )
-                } else {
-                    return <Button>Xem chi tiết</Button>
-                }
-            }
+                                    </DialogFooter>
+                                </form>
+                                {/* <Form
+                                    name='basic'
+                                    labelCol={{ span: 8 }}
+                                    wrapperCol={{ span: 16 }}
+                                    style={{ maxWidth: 400 }}
+                                    initialValues={{ remember: true }}
+                                    onFinish={onFinish}
+                                    onFinishFailed={onFinishFailed}
+                                    autoComplete='off'
+                                >
+                                    <Form.Item<FieldType>
+                                        label='Lí do'
+                                        name='why'
+                                        id='why'
+                                        rules={[{ required: true, message: 'mời viết lí do hủy đơn hàng!' }]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                                        <Button type='primary' htmlType='submit' onClick={handleAddWhy}>
+                                            Submit
+                                        </Button>
+                                    </Form.Item>
+                                </Form> */}
+                            </DialogContent>
+                        </Dialog>
+                    )}
+
+                    {/* Nút "Đánh giá" hiển thị khi trạng thái là "Giao hàng thành công" */}
+                    {record.orderstatus === 'Đã giao hàng thành công' && (
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button
+                                    variant='outline'
+                                    onClick={() =>
+                                        handleReviewButtonClick(
+                                            record?.products[0]?.product?._id,
+                                            record?.products[0]?.productType?._id
+                                        )
+                                    }
+                                >
+                                    Đánh giá
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className='sm:max-w-[425px]'>
+                                <DialogHeader>
+                                    <DialogTitle>Đánh giá</DialogTitle>
+                                    <DialogDescription>Mời bạn đánh giá và góp ý cho sản phẩm này</DialogDescription>
+                                </DialogHeader>
+                                <form action=''>
+                                    <div className='grid gap-4 py-5'>
+                                        <div className='grid grid-cols-4 items-center gap-4'>
+                                            <Label htmlFor='img' className='text-right'>
+                                                Hình ảnh
+                                            </Label>
+                                            <Input
+                                                onChange={(e) => setNewImg(e.target.value)}
+                                                id='img'
+                                                className='col-span-3'
+                                                type='text'
+                                            />
+                                        </div>
+                                        <div className='grid grid-cols-4 items-center gap-4'>
+                                            <Label htmlFor='title' className='text-right'>
+                                                Tiêu đề
+                                            </Label>
+                                            <Input
+                                                onChange={(e) => setNewTitle(e.target.value)}
+                                                id='title'
+                                                className='col-span-3'
+                                            />
+                                        </div>
+                                        <div className='grid grid-cols-4 items-center gap-4'>
+                                            <Label htmlFor='star' className='text-right'>
+                                                Chọn sao
+                                            </Label>
+                                            <Rate
+                                                onChange={(value) => setNewStar(value)}
+                                                allowHalf
+                                                // value={rating}
+                                                className='col-span-3'
+                                            />
+                                        </div>
+                                        <div className='grid grid-cols-4 items-center gap-4'>
+                                            <Label htmlFor='comment' className='text-right'>
+                                                Nhận xét
+                                            </Label>
+                                            <Input
+                                                onChange={(e) => setNewComment(e.target.value)}
+                                                id='comment'
+                                                className='col-span-3'
+                                            />
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button type='submit' onClick={handleAddComment}>
+                                            Lưu
+                                        </Button>
+                                    </DialogFooter>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
+                    )}
+                </Space>
+            )
         }
     ]
     return (

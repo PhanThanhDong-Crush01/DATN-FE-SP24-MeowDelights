@@ -9,6 +9,7 @@ import { toast } from '@/components/ui/use-toast'
 import AddVoucher from './AddVoucher'
 import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 type InputRef = GetRef<typeof Input>
 
 interface DataType {
@@ -18,16 +19,17 @@ interface DataType {
     status: boolean
     quantity: number
     decrease: number
-    expiry: string
+    expiry: Date
     conditions: string
     idTypeVoucher: string
+    type_voucher: any
 }
 
 type DataIndex = keyof DataType
 
 const Voucher = () => {
     const { data }: any = useVoucherQuery()
-    console.log(data)
+
     const { onRemove } = useVoucherMutation({
         action: 'DELETE',
         onSuccess: () => {
@@ -142,9 +144,21 @@ const Voucher = () => {
             title: 'Tên voucher',
             dataIndex: 'name',
             key: 'name',
-            width: '10%',
+            width: '20%',
             ...getColumnSearchProps('name'),
-            render: (_, record) => record.name
+            render: (_, record) => (
+                <div>
+                    <h1 style={{ fontSize: '18px' }}>{record.name}</h1>
+                    <p style={{ fontSize: '12px' }}>Mã: {record._id}</p>
+                </div>
+            )
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: '10%',
+            render: (_, record) => record.quantity
         },
         {
             title: 'Giảm',
@@ -169,22 +183,22 @@ const Voucher = () => {
             // ...getColumnSearchProps('conditions'),
             // sorter: (a, b) => a.conditions - b.conditions,
             // sortDirections: ['descend', 'ascend'],
-            render: (_, record: any) => (
-                <p
-                    className='text-base '
-                    dangerouslySetInnerHTML={{
-                        __html: formatPrice(record?.conditions)
-                    }}
-                ></p>
-            )
+            render: (_, record) => record?.conditions
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            width: '20%',
+            width: '10% ',
             render: (_, record) => getStatusLabel(record.status)
             // <option value='record.status'></option>
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: '10% ',
+            render: (_, record) => record.quantity
         },
 
         {
@@ -192,10 +206,10 @@ const Voucher = () => {
             dataIndex: 'expiry',
             key: 'expiry',
             width: '20%',
-            ...getColumnSearchProps('expiry'),
-            sorter: (a, b) => a.expiry.length - b.expiry.length,
-            sortDirections: ['descend', 'ascend'],
-            render: (_, record) => record.expiry
+            // ...getColumnSearchProps('expiry'),
+            // sorter: (a, b) => a.expiry.length - b.expiry.length,
+            // sortDirections: ['descend', 'ascend'],
+            render: (_, record) => moment(record.expiry).format('YYYY-MM-DD')
         },
 
         {
@@ -203,7 +217,7 @@ const Voucher = () => {
             dataIndex: 'idTypeVoucher',
             key: 'idTypeVoucher',
             width: '20%',
-            render: (_, record) => record.idTypeVoucher
+            render: (_, record) => record.type_voucher.name
         },
 
         {

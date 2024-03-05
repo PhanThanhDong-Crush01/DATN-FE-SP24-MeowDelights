@@ -28,48 +28,60 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
         }
     })
 
-    const onFinish = async (values: any) => {
-        const typeProduct = []
+    const onFinish = (values: any) => {
+        const typeProduct: any[] = []
 
-        for (const key in values) {
-            if (Object.hasOwnProperty.call(values, key)) {
-                const [color, id, size] = key.split('_')
+        Object.keys(values).forEach((key) => {
+            const [color, id, size] = key.split('_')
 
-                if (size === 'image') return
+            if (size === 'image') return
 
-                let product: any = typeProduct.find((item) => item.color === color && item.size === size)
-                if (!product) {
-                    product = {
-                        color: color,
-                        size: size,
-                        price: values[`${color}_${id}_${size}_price`],
-                        quantity: values[`${color}_${id}_${size}_quantity`],
-                        weight: values[`${color}_${id}_${size}_weight`],
-                        image: values[`${color}_${id}_image`]
-                    }
-                    typeProduct.push(product)
+            let product = typeProduct.find((item) => item.color === color && item.size === size)
+            if (!product) {
+                product = {
+                    color: color,
+                    size: size,
+                    price: values[`${color}_${id}_${size}_price`],
+                    quantity: values[`${color}_${id}_${size}_quantity`],
+                    weight: values[`${color}_${id}_${size}_weight`],
+                    image: values[`${color}_${id}_image`]
                 }
+                typeProduct.push(product)
             }
-            localStorage.setItem('typeProduct', JSON.stringify(typeProduct))
-            toast({
-                variant: 'success',
-                title: 'Thêm thông tin phân loại phẩm thành công!!'
-            })
-            onClose(true)
-        }
+        })
+        localStorage.setItem('typeProduct', JSON.stringify(typeProduct))
+        toast({
+            variant: 'success',
+            title: 'Thêm thông tin phân loại phẩm thành công!!'
+        })
+        onClose(true)
     }
+
     return (
         <Form {...layout} name='control-hooks' onFinish={onFinish}>
             {colorAndSizes.map((item: any) => (
                 <React.Fragment key={item.id}>
-                    <div
-                        className='flex'
-                        style={{ justifyContent: 'space-around', alignItems: 'self-start', height: '50px' }}
-                    >
+                    <div className='flex'>
                         <h3 style={{ fontSize: '30px', marginRight: '20px' }}>{item.color.toUpperCase()}</h3>
-                        <Form.Item name={`${item.color}_${item.id}_image`}>
-                            <Input type='text' placeholder='link ảnh' />
+                        <Form.Item
+                            name={`${item.color}_${item.id}_image`}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: `Vui lòng nhập ảnh của màu ${item.color}!`
+                                }
+                            ]}
+                        >
+                            <Input style={{ height: '30px', width: 'auto' }} placeholder='Nhập link ảnh ở đây' />
                         </Form.Item>
+                        {/* <Form.Item
+                            name={['products', item.id, 'image']}
+                            rules={[{ required: true, message: `Vui lòng nhập ảnh của màu ${item.color}!` }]}
+                        >
+                            <Upload>
+                                <Button icon={<UploadOutlined />}>Tải file ảnh</Button>
+                            </Upload>
+                        </Form.Item> */}
                     </div>
                     <table style={{ textAlign: 'center', marginBottom: '20px' }}>
                         <thead>
@@ -126,6 +138,7 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
                     </table>
                 </React.Fragment>
             ))}
+
             <Form.Item {...tailLayout}>
                 <Button type='primary' htmlType='submit' style={{ color: 'blue', borderColor: 'blue' }}>
                     Submit

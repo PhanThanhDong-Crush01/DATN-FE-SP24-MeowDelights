@@ -66,17 +66,17 @@ const items: TabsProps['items'] = [
         )
         // children: 'Content of Tab Pane 2'
     },
+    // {
+    //     key: '3',
+    //     label: (
+    //         <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
+    //             Đã giao cho đơn vị vận chuyển
+    //         </span>
+    //     )
+    //     // children: 'Content of Tab Pane 3'
+    // },
     {
         key: '3',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Đã giao cho đơn vị vận chuyển
-            </span>
-        )
-        // children: 'Content of Tab Pane 3'
-    },
-    {
-        key: '4',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Đang chuẩn bị hàng
@@ -85,7 +85,7 @@ const items: TabsProps['items'] = [
         // children: 'Content of Tab Pane 3'
     },
     {
-        key: '5',
+        key: '4',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Đang giao hàng
@@ -95,7 +95,7 @@ const items: TabsProps['items'] = [
     },
 
     {
-        key: '6',
+        key: '5',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Giao hàng thành công
@@ -104,7 +104,7 @@ const items: TabsProps['items'] = [
         // children: 'Content of Tab Pane 3'
     },
     {
-        key: '7',
+        key: '6',
         label: (
             <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
                 Hủy đơn hàng

@@ -31,8 +31,9 @@ import ListContact from '@/pages/Admin/Contact'
 import LayoutUserPage from '@/components/component/LayoutUser'
 import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 import EditVoucher from '@/pages/Admin/ListVoucher/EditVoucher'
-import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
+
 import { SendOTP } from '@/components/component/SendOtp'
+import ListUserPage from '@/pages/Admin/ListUser'
 
 const Routers = () => {
     return (
@@ -62,6 +63,7 @@ const Routers = () => {
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
+                <Route path='user' element={<ListUserPage />} />
                 {/* <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} /> */}
                 {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='products/add' element={<AddProduct />} />

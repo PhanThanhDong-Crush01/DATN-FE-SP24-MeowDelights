@@ -29,12 +29,12 @@ import OrderPage from '@/pages/Client/AuthPage/OrderPage'
 // import Sales_at_the_counter from '@/pages/Admin/Sales-at-the-counter'
 import ListContact from '@/pages/Admin/Contact'
 import LayoutUserPage from '@/components/component/LayoutUser'
-import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 import EditVoucher from '@/pages/Admin/ListVoucher/EditVoucher'
 
 import { SendOTP } from '@/components/component/SendOtp'
 import ListUserPage from '@/pages/Admin/ListUser'
 import EditUser from '@/pages/Admin/ListUser/EditUser'
+import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 
 const Routers = () => {
     return (

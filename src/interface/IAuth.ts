@@ -1,5 +1,4 @@
 export interface IAuth {
-    datas: any
     _id?: string
     name: string
     email: string
@@ -8,4 +7,6 @@ export interface IAuth {
     address: string
     gender: boolean
     imgUser: string
+    jobPosition: string
+    employee: string
 }

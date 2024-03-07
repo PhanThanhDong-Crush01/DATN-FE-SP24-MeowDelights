@@ -1,6 +1,13 @@
 export interface IBill {
-    id?: number
-    name: string
-    price: number
+    _id: string
+    iduser: string
+    money: number
+    date: string
+    adress: string
+    tel: string
+    idvc: string
+    paymentmethods: string
+    paymentstatus: string
+    orderstatus: string
 }
 //mẫu

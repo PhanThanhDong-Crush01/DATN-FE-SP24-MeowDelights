@@ -56,15 +56,39 @@ export const add = async (bill: IBill) => {
 export const remove = async (bill: IBill) => {}
 //mẫu product
 
-export const apiChangeStatusOrder = async (data: any) => {
+export const apiChangeStatusOrder = async (bill: IBill) => {
     try {
-        const response = await instance.patch(`/bill/${data.idBill}/changeOrderStatus`, data)
+        const response = await instance.patch(`/bill/changeOrderStatus/${bill._id}`, bill)
         return response.data
     } catch (error: any) {
         toast({
             variant: 'destructive',
             title: error?.response?.data?.message + '!'
         })
-        console.log(`['ADD_BILL_ERROR']`, error)
+        console.log(`['CHANGE_STATUS_ORDER_ERROR']`, error)
+    }
+}
+export const apiChangePaymentStatus = async (bill: IBill) => {
+    try {
+        const response = await instance.patch(`/bill/changePaymentStatus/${bill._id}`, bill)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['CHANGE_PAYMENT_STATUS_ERROR']`, error)
+    }
+}
+export const apiCancelOrder = async (bill: IBill) => {
+    try {
+        const response = await instance.patch(`/bill/cancelOrder/${bill._id}`, bill)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['CHANGE_PAYMENT_STATUS_ERROR']`, error)
     }
 }

@@ -1,4 +1,5 @@
 import { IBillDetail } from '@/interface/IBillDetail'
+import { apiCancelOrder, apiChangePaymentStatus, apiChangeStatusOrder } from '@/services/bill'
 import { add, remove, update } from '@/services/billDetail'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
@@ -11,14 +12,25 @@ const formSchema = Joi.object({
 })
 
 type useBillDetailMutationProps = {
-    action: 'ADD' | 'UPDATE' | 'DELETE'
+    action: 'UPDATE_PAYMENT_STATUS' | 'CANCEL_ORDER'
     defaultValues?: IBillDetail
     onSuccess?: () => void
 }
 
 export const useBillDetailMutation = ({
     action,
-    defaultValues = { name: '', price: 0 },
+    defaultValues = {
+        _id: '',
+        iduser: '',
+        money: 0,
+        date: '',
+        adress: '',
+        tel: '',
+        idvc: '',
+        paymentmethods: '',
+        paymentstatus: '',
+        orderstatus: ''
+    },
     onSuccess
 }: useBillDetailMutationProps) => {
     const queryClient = useQueryClient()
@@ -26,12 +38,16 @@ export const useBillDetailMutation = ({
     const { mutate, ...rest } = useMutation({
         mutationFn: async (billDetail: IBillDetail) => {
             switch (action) {
-                case 'ADD':
-                    return await add(billDetail)
-                case 'UPDATE':
-                    return await update(billDetail)
-                case 'DELETE':
-                    return await remove(billDetail)
+                // case 'ADD':
+                //     return await add(billDetail)
+
+                case 'UPDATE_PAYMENT_STATUS':
+                    return await apiChangePaymentStatus(billDetail)
+                case 'CANCEL_ORDER':
+                    return await apiCancelOrder(billDetail)
+
+                // case 'DELETE':
+                //     return await remove(billDetail)
                 default:
                     return null
             }

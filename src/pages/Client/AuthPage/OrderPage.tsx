@@ -377,155 +377,179 @@ const OrderPage: React.FC = () => {
             key: '',
             render: (_, record: DataType) => (
                 <Space>
-                    {/* Nút "Xem chi tiết" hiển thị luôn */}
-                    <Link to={`order_detail/${record._id}`}>
-                        <Button>Xem chi tiết</Button>
-                    </Link>
+                    <div className=' flex flex-col gap-3'>
+                        {/* Nút "Xem chi tiết" hiển thị luôn */}
+                        <Link to={`order_detail/${record._id}`}>
+                            <Button>Xem chi tiết</Button>
+                        </Link>
 
-                    {/* Nút "Hủy đơn hàng" hiển thị khi trạng thái là "Chờ xác nhận" hoặc "Đang chuẩn bị hàng" */}
-                    {(record.orderstatus === 'Chờ xác nhận' || record.orderstatus === 'Đang chuẩn bị hàng') && (
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button
-                                    variant='outline'
-                                    onClick={() =>
-                                        handleWhyCancelButtonClick(
-                                            record?._id,
-                                            record?.products[0]?.product?._id,
-                                            record?.products[0]?.productType?._id
-                                        )
-                                    }
-                                >
-                                    Hủy đơn hàng
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className='sm:max-w-[425px]'>
-                                <DialogHeader>
-                                    <DialogTitle>Hủy đơn</DialogTitle>
-                                    <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
-                                </DialogHeader>
-                                <form action=''>
-                                    <div className='grid gap-4 py-5'>
-                                        <div className='grid grid-cols-4 items-center gap-4'>
-                                            <Label htmlFor='message' className='text-right'>
-                                                Lí do
-                                            </Label>
-                                            <Input className='col-span-3' onChange={(e) => setNewWhy(e.target.value)} />
-                                            {/* {errors?.message && (
+                        {/* Nút "Hủy đơn hàng" hiển thị khi trạng thái là "Chờ xác nhận" hoặc "Đang chuẩn bị hàng" */}
+                        {(record.orderstatus === 'Chờ xác nhận' || record.orderstatus === 'Đang chuẩn bị hàng') && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant='outline'
+                                        onClick={() =>
+                                            handleWhyCancelButtonClick(
+                                                record?._id,
+                                                record?.products[0]?.product?._id,
+                                                record?.products[0]?.productType?._id
+                                            )
+                                        }
+                                    >
+                                        Hủy đơn hàng
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className='sm:max-w-[425px]'>
+                                    <DialogHeader>
+                                        <DialogTitle>Hủy đơn</DialogTitle>
+                                        <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
+                                    </DialogHeader>
+                                    <form action=''>
+                                        <div className='grid gap-4 py-5'>
+                                            <div className='grid grid-cols-4 items-center gap-4'>
+                                                <Label htmlFor='message' className='text-right'>
+                                                    Lí do
+                                                </Label>
+                                                <Input
+                                                    className='col-span-3'
+                                                    onChange={(e) => setNewWhy(e.target.value)}
+                                                />
+                                                {/* {errors?.message && (
                                                 <span className='error'>Vui lòng viết lí do hủy đơn hàng</span>
                                             )} */}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <DialogFooter>
-                                        <Button type='submit' onClick={handleAddWhy}>
-                                            Lưu
-                                        </Button>
-                                    </DialogFooter>
-                                </form>
-                                {/* <Form
-                                    name='basic'
-                                    labelCol={{ span: 8 }}
-                                    wrapperCol={{ span: 16 }}
-                                    style={{ maxWidth: 400 }}
-                                    initialValues={{ remember: true }}
-                                    onFinish={onFinish}
-                                    onFinishFailed={onFinishFailed}
-                                    autoComplete='off'
-                                >
-                                    <Form.Item<FieldType>
-                                        label='Lí do'
-                                        name='why'
-                                        id='why'
-                                        rules={[{ required: true, message: 'mời viết lí do hủy đơn hàng!' }]}
+                                        <DialogFooter>
+                                            <Button type='submit' onClick={handleAddWhy}>
+                                                Lưu
+                                            </Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+
+                        {/* Nút "Đánh giá" hiển thị khi trạng thái là "Giao hàng thành công" */}
+                        {record.orderstatus === 'Đã giao hàng thành công' && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant='outline'
+                                        onClick={() =>
+                                            handleReviewButtonClick(
+                                                record?.products[0]?.product?._id,
+                                                record?.products[0]?.productType?._id
+                                            )
+                                        }
                                     >
-                                        <Input />
-                                    </Form.Item>
-
-                                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                        <Button type='primary' htmlType='submit' onClick={handleAddWhy}>
-                                            Submit
-                                        </Button>
-                                    </Form.Item>
-                                </Form> */}
-                            </DialogContent>
-                        </Dialog>
-                    )}
-
-                    {/* Nút "Đánh giá" hiển thị khi trạng thái là "Giao hàng thành công" */}
-                    {record.orderstatus === 'Đã giao hàng thành công' && (
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button
-                                    variant='outline'
-                                    onClick={() =>
-                                        handleReviewButtonClick(
-                                            record?.products[0]?.product?._id,
-                                            record?.products[0]?.productType?._id
-                                        )
-                                    }
-                                >
-                                    Đánh giá
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className='sm:max-w-[425px]'>
-                                <DialogHeader>
-                                    <DialogTitle>Đánh giá</DialogTitle>
-                                    <DialogDescription>Mời bạn đánh giá và góp ý cho sản phẩm này</DialogDescription>
-                                </DialogHeader>
-                                <form action=''>
-                                    <div className='grid gap-4 py-5'>
-                                        <div className='grid grid-cols-4 items-center gap-4'>
-                                            <Label htmlFor='img' className='text-right'>
-                                                Hình ảnh
-                                            </Label>
-                                            <Input
-                                                onChange={(e) => setNewImg(e.target.value)}
-                                                id='img'
-                                                className='col-span-3'
-                                                type='text'
-                                            />
+                                        Đánh giá
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className='sm:max-w-[425px]'>
+                                    <DialogHeader>
+                                        <DialogTitle>Đánh giá</DialogTitle>
+                                        <DialogDescription>
+                                            Mời bạn đánh giá và góp ý cho sản phẩm này
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <form action=''>
+                                        <div className='grid gap-4 py-5'>
+                                            <div className='grid grid-cols-4 items-center gap-4'>
+                                                <Label htmlFor='img' className='text-right'>
+                                                    Hình ảnh
+                                                </Label>
+                                                <Input
+                                                    onChange={(e) => setNewImg(e.target.value)}
+                                                    id='img'
+                                                    className='col-span-3'
+                                                    type='text'
+                                                />
+                                            </div>
+                                            <div className='grid grid-cols-4 items-center gap-4'>
+                                                <Label htmlFor='title' className='text-right'>
+                                                    Tiêu đề
+                                                </Label>
+                                                <Input
+                                                    onChange={(e) => setNewTitle(e.target.value)}
+                                                    id='title'
+                                                    className='col-span-3'
+                                                />
+                                            </div>
+                                            <div className='grid grid-cols-4 items-center gap-4'>
+                                                <Label htmlFor='star' className='text-right'>
+                                                    Chọn sao
+                                                </Label>
+                                                <Rate
+                                                    onChange={(value) => setNewStar(value)}
+                                                    allowHalf
+                                                    // value={rating}
+                                                    className='col-span-3'
+                                                />
+                                            </div>
+                                            <div className='grid grid-cols-4 items-center gap-4'>
+                                                <Label htmlFor='comment' className='text-right'>
+                                                    Nhận xét
+                                                </Label>
+                                                <Input
+                                                    onChange={(e) => setNewComment(e.target.value)}
+                                                    id='comment'
+                                                    className='col-span-3'
+                                                />
+                                            </div>
                                         </div>
-                                        <div className='grid grid-cols-4 items-center gap-4'>
-                                            <Label htmlFor='title' className='text-right'>
-                                                Tiêu đề
-                                            </Label>
-                                            <Input
-                                                onChange={(e) => setNewTitle(e.target.value)}
-                                                id='title'
-                                                className='col-span-3'
-                                            />
+                                        <DialogFooter>
+                                            <Button type='submit' onClick={handleAddComment}>
+                                                Lưu
+                                            </Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                        {record.paymentmethods === 'Thanh toán MoMo' && record.paymentstatus === 'Chờ thanh toán' && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant='outline'
+                                        onClick={() =>
+                                            handleWhyCancelButtonClick(
+                                                record?._id,
+                                                record?.products[0]?.product?._id,
+                                                record?.products[0]?.productType?._id
+                                            )
+                                        }
+                                    >
+                                        Thanh toán ngay
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className='sm:max-w-[425px]'>
+                                    <DialogHeader>
+                                        <DialogTitle>Hủy đơn</DialogTitle>
+                                        <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
+                                    </DialogHeader>
+                                    <form action=''>
+                                        <div className='grid gap-4 py-5'>
+                                            <div className='grid grid-cols-4 items-center gap-4'>
+                                                <Label htmlFor='message' className='text-right'>
+                                                    Lí do
+                                                </Label>
+                                                <Input
+                                                    className='col-span-3'
+                                                    onChange={(e) => setNewWhy(e.target.value)}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className='grid grid-cols-4 items-center gap-4'>
-                                            <Label htmlFor='star' className='text-right'>
-                                                Chọn sao
-                                            </Label>
-                                            <Rate
-                                                onChange={(value) => setNewStar(value)}
-                                                allowHalf
-                                                // value={rating}
-                                                className='col-span-3'
-                                            />
-                                        </div>
-                                        <div className='grid grid-cols-4 items-center gap-4'>
-                                            <Label htmlFor='comment' className='text-right'>
-                                                Nhận xét
-                                            </Label>
-                                            <Input
-                                                onChange={(e) => setNewComment(e.target.value)}
-                                                id='comment'
-                                                className='col-span-3'
-                                            />
-                                        </div>
-                                    </div>
-                                    <DialogFooter>
-                                        <Button type='submit' onClick={handleAddComment}>
-                                            Lưu
-                                        </Button>
-                                    </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
-                    )}
+                                        <DialogFooter>
+                                            <Button type='submit' onClick={handleAddWhy}>
+                                                Lưu
+                                            </Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                    </div>
                 </Space>
             )
         }

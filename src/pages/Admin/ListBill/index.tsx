@@ -229,31 +229,63 @@ const ListBill = () => {
             width: 120,
             render: (_, record) => (
                 <div>
-                    {record?.paymentstatus == 'Chưa thanh toán' ? (
-                        <p
-                            style={{
-                                color: 'white',
-                                backgroundColor: 'red',
-                                padding: '5px',
-                                borderRadius: '10px',
-                                textAlign: 'center'
-                            }}
-                        >
-                            Chưa thanh toán
-                        </p>
-                    ) : (
-                        <p
-                            style={{
-                                color: 'white',
-                                backgroundColor: 'green',
-                                padding: '5px',
-                                borderRadius: '10px',
-                                textAlign: 'center'
-                            }}
-                        >
-                            Đã thanh toán
-                        </p>
-                    )}
+                    {record?.paymentmethods === 'Thanh toán khi nhận hàng' ? (
+                        <>
+                            {record?.paymentstatus === 'Chưa thanh toán' ? (
+                                <p
+                                    style={{
+                                        color: 'white',
+                                        backgroundColor: 'red',
+                                        padding: '5px',
+                                        borderRadius: '10px',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    Chưa thanh toán
+                                </p>
+                            ) : (
+                                <p
+                                    style={{
+                                        color: 'white',
+                                        backgroundColor: 'green',
+                                        padding: '5px',
+                                        borderRadius: '10px',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    Thanh toán thành công
+                                </p>
+                            )}
+                        </>
+                    ) : record?.paymentmethods === 'Thanh toán MoMo' ? (
+                        <>
+                            {record?.paymentstatus === 'Chờ thanh toán' ? (
+                                <p
+                                    style={{
+                                        color: 'white',
+                                        backgroundColor: 'blue',
+                                        padding: '5px',
+                                        borderRadius: '10px',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    Chờ thanh toán
+                                </p>
+                            ) : (
+                                <p
+                                    style={{
+                                        color: 'white',
+                                        backgroundColor: 'green',
+                                        padding: '5px',
+                                        borderRadius: '10px',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    Thanh toán thành công
+                                </p>
+                            )}
+                        </>
+                    ) : null}
                 </div>
             )
         },

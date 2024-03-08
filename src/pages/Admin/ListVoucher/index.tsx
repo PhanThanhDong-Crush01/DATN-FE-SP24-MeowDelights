@@ -29,6 +29,7 @@ type DataIndex = keyof DataType
 
 const Voucher = () => {
     const { data }: any = useVoucherQuery()
+    console.log('🚀 ~ Voucher ~ data:', data)
 
     const { onRemove } = useVoucherMutation({
         action: 'DELETE',
@@ -45,6 +46,7 @@ const Voucher = () => {
         ...item,
         key: index + 1
     }))
+    console.log('🚀 ~ dataVoucher ~ dataVoucher:', dataVoucher)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const showModal = () => {
@@ -217,7 +219,7 @@ const Voucher = () => {
             dataIndex: 'idTypeVoucher',
             key: 'idTypeVoucher',
             width: '20%',
-            render: (_, record) => record.type_voucher.name
+            render: (_, record) => record?.type_voucher?.name
         },
 
         {
@@ -225,9 +227,9 @@ const Voucher = () => {
             dataIndex: '',
             key: 'x',
             width: '15%',
-            render: (_, record) => (
+            render: (_, record: any) => (
                 <Space size='middle'>
-                    <Link to={`edit/${record._id}`} type='primary' ghost>
+                    <Link to={`edit/${record._id}`} type='primary'>
                         <EditOutlined style={{ display: 'inline-flex' }} />
                     </Link>
 

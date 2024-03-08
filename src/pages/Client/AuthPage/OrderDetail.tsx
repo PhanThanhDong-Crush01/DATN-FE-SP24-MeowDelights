@@ -11,33 +11,8 @@ type Props = {}
 const OrderDetailPage = (_props: Props) => {
     const { id } = useParams()
     console.log(id)
-
     const { data } = useBillDetailQuery(id || '')
     console.log(data)
-
-    const idUser = data?.bill?.iduser
-    const user = useAuthQuery(idUser || '')
-    console.log(user)
-
-    const idVC = data?.bill?.idvc
-    const voucher = useVoucherQuery(idVC || '')
-    console.log(voucher)
-    const idproduct = data?.billDetails?.[0]?.idpro
-    console.log(idproduct)
-    const product = useProductQuery(idproduct || '')
-    console.log(product)
-
-    const idTypePro = data?.billDetails?.[0]?.idprotype
-    console.log(idTypePro)
-    const typeProduct = product?.data?.typeProduct
-    console.log(typeProduct)
-    // Lọc mảng typeProduct dựa vào idTypePro
-    const filteredTypeProduct = typeProduct
-        ? typeProduct.filter((item: any) => {
-              return item._id === idTypePro
-          })
-        : []
-
     const [currentStep, setCurrentStep] = useState(0)
     useEffect(() => {
         if (data?.bill?.orderstatus) {
@@ -66,9 +41,9 @@ const OrderDetailPage = (_props: Props) => {
                     <div className='pt-1'>
                         <h2 className='text-2xl'>Địa chỉ nhận hàng</h2>
                         <div className='pt-2 px-4'>
-                            <p className='font-mono text-lg'>{user?.data?.datas?.name}</p>
-                            <p>(+84){data?.bill?.tel}</p>
-                            <p>{data?.bill?.adress}</p>
+                            <p className='font-mono text-lg'>{data?.user?.name}</p>
+                            <p>(+84){data?.user?.phone}</p>
+                            <p>{data?.user?.adress}</p>
                         </div>
                     </div>
                     <div className='pt-1'>
@@ -115,30 +90,32 @@ const OrderDetailPage = (_props: Props) => {
                     </div>
                 </div>
                 <Divider />
-                <div className='flex flex-row gap-10 bg-white p-5 rounded-lg'>
-                    <img src={product?.data?.data?.image} alt='Product' style={{ width: 120 }} />
-                    <div className='flex flex-row gap-24 '>
-                        <div className='flex flex-col gap-5  '>
-                            <p className='text-base'>{product?.data?.data?.name}</p>
-                            <p className='text-gray-400'>
-                                Phân loại:{filteredTypeProduct?.[0]?.color} - {filteredTypeProduct?.[0]?.size}
-                                <p className='text-sm pt-2'>Số lượng: {data?.billDetails?.[0]?.quantity}</p>
-                            </p>
+                {data?.billDetails?.map((item: any) => (
+                    <div className='flex flex-row gap-10 bg-white p-5 rounded-lg' key={item._id}>
+                        <img src={item.product.image} alt='Product' style={{ width: 120 }} />
+                        <div className='flex flex-row gap-24 '>
+                            <div className='flex flex-col gap-5  '>
+                                <p className='text-base'>{item.product.name}</p>
+                                <p className='text-gray-400'>
+                                    Phân loại: {item.type_product.size} - {item.type_product.color}
+                                    <p className='text-sm pt-2'>Số lượng: {item?.quantity}</p>
+                                </p>
+                                <p
+                                    className='text-base '
+                                    dangerouslySetInnerHTML={{
+                                        __html: formatPriceBootstrap(item.type_product.price)
+                                    }}
+                                ></p>
+                            </div>
                             <p
-                                className='text-base '
+                                className='text-xl pt-20'
                                 dangerouslySetInnerHTML={{
-                                    __html: formatPriceBootstrap(filteredTypeProduct?.[0]?.price)
+                                    __html: formatPrice(item?.money)
                                 }}
                             ></p>
                         </div>
-                        <p
-                            className='text-xl pt-20'
-                            dangerouslySetInnerHTML={{
-                                __html: formatPrice(data?.bill?.money)
-                            }}
-                        ></p>
                     </div>
-                </div>
+                ))}
 
                 {/* <Table columns={columns} dataSource={data} /> */}
                 <div className=' pt-5 flex flex-col gap-1 text-base'>
@@ -153,9 +130,9 @@ const OrderDetailPage = (_props: Props) => {
                         ></span>
                     </div>
                     <Divider />
-                    <p className='pl-96'>
+                    {/* <p className='pl-96'>
                         Mã khuyến mãi : <span className='pl-24'>{voucher?.data?.datas?.name}</span>
-                    </p>
+                    </p> */}
                     <Divider />
                     <p className='pl-96'>
                         Phương thức thanh toán : <span className='pl-10'>{data?.bill?.paymentmethods}</span>{' '}

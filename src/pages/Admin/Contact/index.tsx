@@ -29,6 +29,7 @@ interface DataType {
 
 const ListContact = () => {
     const { data, refetch } = useContactQuery()
+    console.log('🚀 ~ ListContact ~ data:', data)
     const staff = 2
     const { dataAuthWithRole }: any = useAuthQuery('', staff)
     const selectAuth = dataAuthWithRole?.user.map((auth: any) => {

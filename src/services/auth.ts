@@ -78,3 +78,17 @@ export const updateUserProfile = async (user: IAuth) => {
         console.log(`['UPDATEUSERPROFILE_AUTH_ERROR']`, error)
     }
 }
+export const updateUserRole = async (user: IAuth) => {
+    try {
+        console.log(user?._id)
+        console.log(user)
+        const response = await instance.patch(`/auth/roleUser/${user._id}`, user)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['UPDATEUSERROLE_AUTH_ERROR']`, error)
+    }
+}

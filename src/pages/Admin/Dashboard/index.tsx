@@ -4,348 +4,607 @@ type Props = {}
 
 const Dashboard = (props: Props) => {
     return (
-        <main>
-            <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
-                    <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
-                        <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
-                            <svg
-                                className='fill-primary dark:fill-white'
-                                width='22'
-                                height='16'
-                                viewBox='0 0 22 16'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                            >
-                                <path
-                                    d='M11 15.1156C4.19376 15.1156 0.825012 8.61876 0.687512 8.34376C0.584387 8.13751 0.584387 7.86251 0.687512 7.65626C0.825012 7.38126 4.19376 0.918762 11 0.918762C17.8063 0.918762 21.175 7.38126 21.3125 7.65626C21.4156 7.86251 21.4156 8.13751 21.3125 8.34376C21.175 8.61876 17.8063 15.1156 11 15.1156ZM2.26876 8.00001C3.02501 9.27189 5.98126 13.5688 11 13.5688C16.0188 13.5688 18.975 9.27189 19.7313 8.00001C18.975 6.72814 16.0188 2.43126 11 2.43126C5.98126 2.43126 3.02501 6.72814 2.26876 8.00001Z'
-                                    fill=''
-                                />
-                                <path
-                                    d='M11 10.9219C9.38438 10.9219 8.07812 9.61562 8.07812 8C8.07812 6.38438 9.38438 5.07812 11 5.07812C12.6156 5.07812 13.9219 6.38438 13.9219 8C13.9219 9.61562 12.6156 10.9219 11 10.9219ZM11 6.625C10.2437 6.625 9.625 7.24375 9.625 8C9.625 8.75625 10.2437 9.375 11 9.375C11.7563 9.375 12.375 8.75625 12.375 8C12.375 7.24375 11.7563 6.625 11 6.625Z'
-                                    fill=''
-                                />
-                            </svg>
-                        </div>
-
-                        <div className='mt-4 flex items-end justify-between'>
-                            <div>
-                                <h4 className='text-title-md font-bold text-black dark:text-white'>$3.456K</h4>
-                                <span className='text-sm font-medium'>Total views</span>
-                            </div>
-
-                            <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
-                                0.43%
-                                <svg
-                                    className='fill-meta-3'
-                                    width='10'
-                                    height='11'
-                                    viewBox='0 0 10 11'
-                                    fill='none'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                >
-                                    <path
-                                        d='M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z'
-                                        fill=''
-                                    />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
-                        <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
-                            <svg
-                                className='fill-primary dark:fill-white'
-                                width='20'
-                                height='22'
-                                viewBox='0 0 20 22'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                            >
-                                <path
-                                    d='M11.7531 16.4312C10.3781 16.4312 9.27808 17.5312 9.27808 18.9062C9.27808 20.2812 10.3781 21.3812 11.7531 21.3812C13.1281 21.3812 14.2281 20.2812 14.2281 18.9062C14.2281 17.5656 13.0937 16.4312 11.7531 16.4312ZM11.7531 19.8687C11.2375 19.8687 10.825 19.4562 10.825 18.9406C10.825 18.425 11.2375 18.0125 11.7531 18.0125C12.2687 18.0125 12.6812 18.425 12.6812 18.9406C12.6812 19.4219 12.2343 19.8687 11.7531 19.8687Z'
-                                    fill=''
-                                />
-                                <path
-                                    d='M5.22183 16.4312C3.84683 16.4312 2.74683 17.5312 2.74683 18.9062C2.74683 20.2812 3.84683 21.3812 5.22183 21.3812C6.59683 21.3812 7.69683 20.2812 7.69683 18.9062C7.69683 17.5656 6.56245 16.4312 5.22183 16.4312ZM5.22183 19.8687C4.7062 19.8687 4.2937 19.4562 4.2937 18.9406C4.2937 18.425 4.7062 18.0125 5.22183 18.0125C5.73745 18.0125 6.14995 18.425 6.14995 18.9406C6.14995 19.4219 5.73745 19.8687 5.22183 19.8687Z'
-                                    fill=''
-                                />
-                                <path
-                                    d='M19.0062 0.618744H17.15C16.325 0.618744 15.6031 1.23749 15.5 2.06249L14.95 6.01562H1.37185C1.0281 6.01562 0.684353 6.18749 0.443728 6.46249C0.237478 6.73749 0.134353 7.11562 0.237478 7.45937C0.237478 7.49374 0.237478 7.49374 0.237478 7.52812L2.36873 13.9562C2.50623 14.4375 2.9531 14.7812 3.46873 14.7812H12.9562C14.2281 14.7812 15.3281 13.8187 15.5 12.5469L16.9437 2.26874C16.9437 2.19999 17.0125 2.16562 17.0812 2.16562H18.9375C19.35 2.16562 19.7281 1.82187 19.7281 1.37499C19.7281 0.928119 19.4187 0.618744 19.0062 0.618744ZM14.0219 12.3062C13.9531 12.8219 13.5062 13.2 12.9906 13.2H3.7781L1.92185 7.56249H14.7094L14.0219 12.3062Z'
-                                    fill=''
-                                />
-                            </svg>
-                        </div>
-
-                        <div className='mt-4 flex items-end justify-between'>
-                            <div>
-                                <h4 className='text-title-md font-bold text-black dark:text-white'>$45,2K</h4>
-                                <span className='text-sm font-medium'>Total Profit</span>
-                            </div>
-
-                            <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
-                                4.35%
-                                <svg
-                                    className='fill-meta-3'
-                                    width='10'
-                                    height='11'
-                                    viewBox='0 0 10 11'
-                                    fill='none'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                >
-                                    <path
-                                        d='M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z'
-                                        fill=''
-                                    />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
-                        <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
-                            <svg
-                                className='fill-primary dark:fill-white'
-                                width='22'
-                                height='22'
-                                viewBox='0 0 22 22'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                            >
-                                <path
-                                    d='M21.1063 18.0469L19.3875 3.23126C19.2157 1.71876 17.9438 0.584381 16.3969 0.584381H5.56878C4.05628 0.584381 2.78441 1.71876 2.57816 3.23126L0.859406 18.0469C0.756281 18.9063 1.03128 19.7313 1.61566 20.3844C2.20003 21.0375 2.99066 21.3813 3.85003 21.3813H18.1157C18.975 21.3813 19.8 21.0031 20.35 20.3844C20.9 19.7656 21.2094 18.9063 21.1063 18.0469ZM19.2157 19.3531C18.9407 19.6625 18.5625 19.8344 18.15 19.8344H3.85003C3.43753 19.8344 3.05941 19.6625 2.78441 19.3531C2.50941 19.0438 2.37191 18.6313 2.44066 18.2188L4.12503 3.43751C4.19378 2.71563 4.81253 2.16563 5.56878 2.16563H16.4313C17.1532 2.16563 17.7719 2.71563 17.875 3.43751L19.5938 18.2531C19.6282 18.6656 19.4907 19.0438 19.2157 19.3531Z'
-                                    fill=''
-                                />
-                                <path
-                                    d='M14.3345 5.29375C13.922 5.39688 13.647 5.80938 13.7501 6.22188C13.7845 6.42813 13.8189 6.63438 13.8189 6.80625C13.8189 8.35313 12.547 9.625 11.0001 9.625C9.45327 9.625 8.1814 8.35313 8.1814 6.80625C8.1814 6.6 8.21577 6.42813 8.25015 6.22188C8.35327 5.80938 8.07827 5.39688 7.66577 5.29375C7.25327 5.19063 6.84077 5.46563 6.73765 5.87813C6.6689 6.1875 6.63452 6.49688 6.63452 6.80625C6.63452 9.2125 8.5939 11.1719 11.0001 11.1719C13.4064 11.1719 15.3658 9.2125 15.3658 6.80625C15.3658 6.49688 15.3314 6.1875 15.2626 5.87813C15.1595 5.46563 14.747 5.225 14.3345 5.29375Z'
-                                    fill=''
-                                />
-                            </svg>
-                        </div>
-
-                        <div className='mt-4 flex items-end justify-between'>
-                            <div>
-                                <h4 className='text-title-md font-bold text-black dark:text-white'>2.450</h4>
-                                <span className='text-sm font-medium'>Total Product</span>
-                            </div>
-
-                            <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
-                                2.59%
-                                <svg
-                                    className='fill-meta-3'
-                                    width='10'
-                                    height='11'
-                                    viewBox='0 0 10 11'
-                                    fill='none'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                >
-                                    <path
-                                        d='M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z'
-                                        fill=''
-                                    />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
-                        <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
-                            <svg
-                                className='fill-primary dark:fill-white'
-                                width='22'
-                                height='18'
-                                viewBox='0 0 22 18'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                            >
-                                <path
-                                    d='M7.18418 8.03751C9.31543 8.03751 11.0686 6.35313 11.0686 4.25626C11.0686 2.15938 9.31543 0.475006 7.18418 0.475006C5.05293 0.475006 3.2998 2.15938 3.2998 4.25626C3.2998 6.35313 5.05293 8.03751 7.18418 8.03751ZM7.18418 2.05626C8.45605 2.05626 9.52168 3.05313 9.52168 4.29063C9.52168 5.52813 8.49043 6.52501 7.18418 6.52501C5.87793 6.52501 4.84668 5.52813 4.84668 4.29063C4.84668 3.05313 5.9123 2.05626 7.18418 2.05626Z'
-                                    fill=''
-                                />
-                                <path
-                                    d='M15.8124 9.6875C17.6687 9.6875 19.1468 8.24375 19.1468 6.42188C19.1468 4.6 17.6343 3.15625 15.8124 3.15625C13.9905 3.15625 12.478 4.6 12.478 6.42188C12.478 8.24375 13.9905 9.6875 15.8124 9.6875ZM15.8124 4.7375C16.8093 4.7375 17.5999 5.49375 17.5999 6.45625C17.5999 7.41875 16.8093 8.175 15.8124 8.175C14.8155 8.175 14.0249 7.41875 14.0249 6.45625C14.0249 5.49375 14.8155 4.7375 15.8124 4.7375Z'
-                                    fill=''
-                                />
-                                <path
-                                    d='M15.9843 10.0313H15.6749C14.6437 10.0313 13.6468 10.3406 12.7874 10.8563C11.8593 9.61876 10.3812 8.79376 8.73115 8.79376H5.67178C2.85303 8.82814 0.618652 11.0625 0.618652 13.8469V16.3219C0.618652 16.975 1.13428 17.4906 1.7874 17.4906H20.2468C20.8999 17.4906 21.4499 16.9406 21.4499 16.2875V15.4625C21.4155 12.4719 18.9749 10.0313 15.9843 10.0313ZM2.16553 15.9438V13.8469C2.16553 11.9219 3.74678 10.3406 5.67178 10.3406H8.73115C10.6562 10.3406 12.2374 11.9219 12.2374 13.8469V15.9438H2.16553V15.9438ZM19.8687 15.9438H13.7499V13.8469C13.7499 13.2969 13.6468 12.7469 13.4749 12.2313C14.0937 11.7844 14.8499 11.5781 15.6405 11.5781H15.9499C18.0812 11.5781 19.8343 13.3313 19.8343 15.4625V15.9438H19.8687Z'
-                                    fill=''
-                                />
-                            </svg>
-                        </div>
-
-                        <div className='mt-4 flex items-end justify-between'>
-                            <div>
-                                <h4 className='text-title-md font-bold text-black dark:text-white'>3.456</h4>
-                                <span className='text-sm font-medium'>Total Users</span>
-                            </div>
-
-                            <span className='flex items-center gap-1 text-sm font-medium text-meta-5'>
-                                0.95%
-                                <svg
-                                    className='fill-meta-5'
-                                    width='10'
-                                    height='11'
-                                    viewBox='0 0 10 11'
-                                    fill='none'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                >
-                                    <path
-                                        d='M5.64284 7.69237L9.09102 4.33987L10 5.22362L5 10.0849L-8.98488e-07 5.22362L0.908973 4.33987L4.35716 7.69237L4.35716 0.0848701L5.64284 0.0848704L5.64284 7.69237Z'
-                                        fill=''
-                                    />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'>
-                    {/* <include src="./partials/chart-01.html" />
-
-            <include src="./partials/chart-02.html" />
-
-            <include src="./partials/chart-03.html" />
-
-            <include src="./partials/map-01.html" />
-
-            <div className="col-span-12 xl:col-span-8">
-              <include src="./partials/table-01.html" />
-            </div> */}
-
-                    <div className='col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4'>
-                        <h4 className='mb-6 px-7.5 text-xl font-bold text-black dark:text-white'>Chats</h4>
-
-                        <div>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    <img src='./images/user/user-03.png' alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-3'></span>
-                                </div>
-
-                                <div className='flex flex-1 items-center justify-between'>
-                                    <div>
-                                        <h5 className='font-medium text-black dark:text-white'>Devid Heilo</h5>
-                                        <p>
-                                            <span className='text-sm font-medium text-black dark:text-white'>
-                                                Hello, how are you?
-                                            </span>
-                                            <span className='text-xs'> . 12 min</span>
-                                        </p>
-                                    </div>
-                                    <div className='flex h-6 w-6 items-center justify-center rounded-full bg-primary'>
-                                        <span className='text-sm font-medium text-white'>3</span>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    <img src='./images/user/user-04.png' alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-3'></span>
-                                </div>
-
-                                <div className='flex flex-1 items-center justify-between'>
-                                    <div>
-                                        <h5 className='font-medium'>Henry Fisher</h5>
-                                        <p>
-                                            <span className='text-sm font-medium'>I am waiting for you</span>
-                                            <span className='text-xs'> . 5:54 PM</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    <img src='./images/user/user-05.png' alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
-                                </div>
-
-                                <div className='flex flex-1 items-center justify-between'>
-                                    <div>
-                                        <h5 className='font-medium'>Wilium Smith</h5>
-                                        <p>
-                                            <span className='text-sm font-medium'>Where are you now?</span>
-                                            <span className='text-xs'> . 10:12 PM</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    <img src='./images/user/user-01.png' alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-3'></span>
-                                </div>
-
-                                <div className='flex flex-1 items-center justify-between'>
-                                    <div>
-                                        <h5 className='font-medium text-black dark:text-white'>Henry Deco</h5>
-                                        <p>
-                                            <span className='text-sm font-medium text-black dark:text-white'>
-                                                Thank you so much!
-                                            </span>
-                                            <span className='text-xs'> . Sun</span>
-                                        </p>
-                                    </div>
-                                    <div className='flex h-6 w-6 items-center justify-center rounded-full bg-primary'>
-                                        <span className='text-sm font-medium text-white'>2</span>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    <img src='./images/user/user-02.png' alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-7'></span>
-                                </div>
-
-                                <div className='flex flex-1 items-center justify-between'>
-                                    <div>
-                                        <h5 className='font-medium'>Jubin Jack</h5>
-                                        <p>
-                                            <span className='text-sm font-medium'>I really love that!</span>
-                                            <span className='text-xs'> . Oct 23</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    <img src='./images/user/user-05.png' alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
-                                </div>
-
-                                <div className='flex flex-1 items-center justify-between'>
-                                    <div>
-                                        <h5 className='font-medium'>Wilium Smith</h5>
-                                        <p>
-                                            <span className='text-sm font-medium'>Where are you now?</span>
-                                            <span className='text-xs'> . Sep 20</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+        <h1>Dashboard</h1>
+        // <div id='layoutSidenav_content'>
+        //     <main>
+        //         <div className='container-fluid px-4'>
+        //             <h1 className='mt-4'>Thống kê</h1>
+        //             <ol className='breadcrumb mb-4'>
+        //                 <li className='breadcrumb-item active'>Thống kê chi tiết</li>
+        //             </ol>
+        //             <div className='row'>
+        //                 <div className='col-xl-3 col-md-6'>
+        //                     <div className='card bg-primary text-white mb-4'>
+        //                         <div className='card-body'>Primary Card</div>
+        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
+        //                             <a className='small text-white stretched-link' href='#'>
+        //                                 View Details
+        //                             </a>
+        //                             <div className='small text-white'>
+        //                                 <i className='fas fa-angle-right'></i>
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //                 <div className='col-xl-3 col-md-6'>
+        //                     <div className='card bg-warning text-white mb-4'>
+        //                         <div className='card-body'>Warning Card</div>
+        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
+        //                             <a className='small text-white stretched-link' href='#'>
+        //                                 View Details
+        //                             </a>
+        //                             <div className='small text-white'>
+        //                                 <i className='fas fa-angle-right'></i>
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //                 <div className='col-xl-3 col-md-6'>
+        //                     <div className='card bg-success text-white mb-4'>
+        //                         <div className='card-body'>Success Card</div>
+        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
+        //                             <a className='small text-white stretched-link' href='#'>
+        //                                 View Details
+        //                             </a>
+        //                             <div className='small text-white'>
+        //                                 <i className='fas fa-angle-right'></i>
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //                 <div className='col-xl-3 col-md-6'>
+        //                     <div className='card bg-danger text-white mb-4'>
+        //                         <div className='card-body'>Danger Card</div>
+        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
+        //                             <a className='small text-white stretched-link' href='#'>
+        //                                 View Details
+        //                             </a>
+        //                             <div className='small text-white'>
+        //                                 <i className='fas fa-angle-right'></i>
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div className='row'>
+        //                 <div className='col-xl-6'>
+        //                     <div className='card mb-4'>
+        //                         <div className='card-header'>
+        //                             <i className='fas fa-chart-area me-1'></i>
+        //                             Area Chart Example
+        //                         </div>
+        //                         <div className='card-body'>
+        //                             <img
+        //                                 src='https://res.cloudinary.com/dyq6gbngv/image/upload/v1709884510/z5229518643885_a71fff591c2b97cd949f3ec33dccea8d_zgazab.jpg'
+        //                                 alt=''
+        //                                 width='100%'
+        //                                 height='40'
+        //                             />
+        //                             {/* <canvas id='myAreaChart' width='100%' height='40'></canvas> */}
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //                 <div className='col-xl-6'>
+        //                     <div className='card mb-4'>
+        //                         <div className='card-header'>
+        //                             <i className='fas fa-chart-bar me-1'></i>
+        //                             Bar Chart Example
+        //                         </div>
+        //                         <div className='card-body'>
+        //                             <img
+        //                                 src='https://res.cloudinary.com/dyq6gbngv/image/upload/v1709884512/z5229518135930_355e63aee40a647a05094d68e70b0ff7_adiqhs.jpg'
+        //                                 alt=''
+        //                                 width='100%'
+        //                                 height='40'
+        //                             />
+        //                             {/* <canvas id='myBarChart' width='100%' height='40'></canvas> */}
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div className='card mb-4'>
+        //                 <div className='card-header'>
+        //                     <i className='fas fa-table me-1'></i>
+        //                     DataTable Example
+        //                 </div>
+        //                 <div className='card-body'>
+        //                     <table id='datatablesSimple'>
+        //                         <thead>
+        //                             <tr>
+        //                                 <th>Name</th>
+        //                                 <th>Position</th>
+        //                                 <th>Office</th>
+        //                                 <th>Age</th>
+        //                                 <th>Start date</th>
+        //                                 <th>Salary</th>
+        //                             </tr>
+        //                         </thead>
+        //                         <tfoot>
+        //                             <tr>
+        //                                 <th>Name</th>
+        //                                 <th>Position</th>
+        //                                 <th>Office</th>
+        //                                 <th>Age</th>
+        //                                 <th>Start date</th>
+        //                                 <th>Salary</th>
+        //                             </tr>
+        //                         </tfoot>
+        //                         <tbody>
+        //                             <tr>
+        //                                 <td>Tiger Nixon</td>
+        //                                 <td>System Architect</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>61</td>
+        //                                 <td>2011/04/25</td>
+        //                                 <td>$320,800</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Garrett Winters</td>
+        //                                 <td>Accountant</td>
+        //                                 <td>Tokyo</td>
+        //                                 <td>63</td>
+        //                                 <td>2011/07/25</td>
+        //                                 <td>$170,750</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Ashton Cox</td>
+        //                                 <td>Junior Technical Author</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>66</td>
+        //                                 <td>2009/01/12</td>
+        //                                 <td>$86,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Cedric Kelly</td>
+        //                                 <td>Senior Javascript Developer</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>22</td>
+        //                                 <td>2012/03/29</td>
+        //                                 <td>$433,060</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Airi Satou</td>
+        //                                 <td>Accountant</td>
+        //                                 <td>Tokyo</td>
+        //                                 <td>33</td>
+        //                                 <td>2008/11/28</td>
+        //                                 <td>$162,700</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Brielle Williamson</td>
+        //                                 <td>Integration Specialist</td>
+        //                                 <td>New York</td>
+        //                                 <td>61</td>
+        //                                 <td>2012/12/02</td>
+        //                                 <td>$372,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Herrod Chandler</td>
+        //                                 <td>Sales Assistant</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>59</td>
+        //                                 <td>2012/08/06</td>
+        //                                 <td>$137,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Rhona Davidson</td>
+        //                                 <td>Integration Specialist</td>
+        //                                 <td>Tokyo</td>
+        //                                 <td>55</td>
+        //                                 <td>2010/10/14</td>
+        //                                 <td>$327,900</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Colleen Hurst</td>
+        //                                 <td>Javascript Developer</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>39</td>
+        //                                 <td>2009/09/15</td>
+        //                                 <td>$205,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Sonya Frost</td>
+        //                                 <td>Software Engineer</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>23</td>
+        //                                 <td>2008/12/13</td>
+        //                                 <td>$103,600</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Jena Gaines</td>
+        //                                 <td>Office Manager</td>
+        //                                 <td>London</td>
+        //                                 <td>30</td>
+        //                                 <td>2008/12/19</td>
+        //                                 <td>$90,560</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Quinn Flynn</td>
+        //                                 <td>Support Lead</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>22</td>
+        //                                 <td>2013/03/03</td>
+        //                                 <td>$342,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Charde Marshall</td>
+        //                                 <td>Regional Director</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>36</td>
+        //                                 <td>2008/10/16</td>
+        //                                 <td>$470,600</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Haley Kennedy</td>
+        //                                 <td>Senior Marketing Designer</td>
+        //                                 <td>London</td>
+        //                                 <td>43</td>
+        //                                 <td>2012/12/18</td>
+        //                                 <td>$313,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Tatyana Fitzpatrick</td>
+        //                                 <td>Regional Director</td>
+        //                                 <td>London</td>
+        //                                 <td>19</td>
+        //                                 <td>2010/03/17</td>
+        //                                 <td>$385,750</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Michael Silva</td>
+        //                                 <td>Marketing Designer</td>
+        //                                 <td>London</td>
+        //                                 <td>66</td>
+        //                                 <td>2012/11/27</td>
+        //                                 <td>$198,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Paul Byrd</td>
+        //                                 <td>Chief Financial Officer (CFO)</td>
+        //                                 <td>New York</td>
+        //                                 <td>64</td>
+        //                                 <td>2010/06/09</td>
+        //                                 <td>$725,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Gloria Little</td>
+        //                                 <td>Systems Administrator</td>
+        //                                 <td>New York</td>
+        //                                 <td>59</td>
+        //                                 <td>2009/04/10</td>
+        //                                 <td>$237,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Bradley Greer</td>
+        //                                 <td>Software Engineer</td>
+        //                                 <td>London</td>
+        //                                 <td>41</td>
+        //                                 <td>2012/10/13</td>
+        //                                 <td>$132,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Dai Rios</td>
+        //                                 <td>Personnel Lead</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>35</td>
+        //                                 <td>2012/09/26</td>
+        //                                 <td>$217,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Jenette Caldwell</td>
+        //                                 <td>Development Lead</td>
+        //                                 <td>New York</td>
+        //                                 <td>30</td>
+        //                                 <td>2011/09/03</td>
+        //                                 <td>$345,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Yuri Berry</td>
+        //                                 <td>Chief Marketing Officer (CMO)</td>
+        //                                 <td>New York</td>
+        //                                 <td>40</td>
+        //                                 <td>2009/06/25</td>
+        //                                 <td>$675,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Caesar Vance</td>
+        //                                 <td>Pre-Sales Support</td>
+        //                                 <td>New York</td>
+        //                                 <td>21</td>
+        //                                 <td>2011/12/12</td>
+        //                                 <td>$106,450</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Doris Wilder</td>
+        //                                 <td>Sales Assistant</td>
+        //                                 <td>Sidney</td>
+        //                                 <td>23</td>
+        //                                 <td>2010/09/20</td>
+        //                                 <td>$85,600</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Angelica Ramos</td>
+        //                                 <td>Chief Executive Officer (CEO)</td>
+        //                                 <td>London</td>
+        //                                 <td>47</td>
+        //                                 <td>2009/10/09</td>
+        //                                 <td>$1,200,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Gavin Joyce</td>
+        //                                 <td>Developer</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>42</td>
+        //                                 <td>2010/12/22</td>
+        //                                 <td>$92,575</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Jennifer Chang</td>
+        //                                 <td>Regional Director</td>
+        //                                 <td>Singapore</td>
+        //                                 <td>28</td>
+        //                                 <td>2010/11/14</td>
+        //                                 <td>$357,650</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Brenden Wagner</td>
+        //                                 <td>Software Engineer</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>28</td>
+        //                                 <td>2011/06/07</td>
+        //                                 <td>$206,850</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Fiona Green</td>
+        //                                 <td>Chief Operating Officer (COO)</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>48</td>
+        //                                 <td>2010/03/11</td>
+        //                                 <td>$850,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Shou Itou</td>
+        //                                 <td>Regional Marketing</td>
+        //                                 <td>Tokyo</td>
+        //                                 <td>20</td>
+        //                                 <td>2011/08/14</td>
+        //                                 <td>$163,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Michelle House</td>
+        //                                 <td>Integration Specialist</td>
+        //                                 <td>Sidney</td>
+        //                                 <td>37</td>
+        //                                 <td>2011/06/02</td>
+        //                                 <td>$95,400</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Suki Burks</td>
+        //                                 <td>Developer</td>
+        //                                 <td>London</td>
+        //                                 <td>53</td>
+        //                                 <td>2009/10/22</td>
+        //                                 <td>$114,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Prescott Bartlett</td>
+        //                                 <td>Technical Author</td>
+        //                                 <td>London</td>
+        //                                 <td>27</td>
+        //                                 <td>2011/05/07</td>
+        //                                 <td>$145,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Gavin Cortez</td>
+        //                                 <td>Team Leader</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>22</td>
+        //                                 <td>2008/10/26</td>
+        //                                 <td>$235,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Martena Mccray</td>
+        //                                 <td>Post-Sales support</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>46</td>
+        //                                 <td>2011/03/09</td>
+        //                                 <td>$324,050</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Unity Butler</td>
+        //                                 <td>Marketing Designer</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>47</td>
+        //                                 <td>2009/12/09</td>
+        //                                 <td>$85,675</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Howard Hatfield</td>
+        //                                 <td>Office Manager</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>51</td>
+        //                                 <td>2008/12/16</td>
+        //                                 <td>$164,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Hope Fuentes</td>
+        //                                 <td>Secretary</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>41</td>
+        //                                 <td>2010/02/12</td>
+        //                                 <td>$109,850</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Vivian Harrell</td>
+        //                                 <td>Financial Controller</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>62</td>
+        //                                 <td>2009/02/14</td>
+        //                                 <td>$452,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Timothy Mooney</td>
+        //                                 <td>Office Manager</td>
+        //                                 <td>London</td>
+        //                                 <td>37</td>
+        //                                 <td>2008/12/11</td>
+        //                                 <td>$136,200</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Jackson Bradshaw</td>
+        //                                 <td>Director</td>
+        //                                 <td>New York</td>
+        //                                 <td>65</td>
+        //                                 <td>2008/09/26</td>
+        //                                 <td>$645,750</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Olivia Liang</td>
+        //                                 <td>Support Engineer</td>
+        //                                 <td>Singapore</td>
+        //                                 <td>64</td>
+        //                                 <td>2011/02/03</td>
+        //                                 <td>$234,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Bruno Nash</td>
+        //                                 <td>Software Engineer</td>
+        //                                 <td>London</td>
+        //                                 <td>38</td>
+        //                                 <td>2011/05/03</td>
+        //                                 <td>$163,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Sakura Yamamoto</td>
+        //                                 <td>Support Engineer</td>
+        //                                 <td>Tokyo</td>
+        //                                 <td>37</td>
+        //                                 <td>2009/08/19</td>
+        //                                 <td>$139,575</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Thor Walton</td>
+        //                                 <td>Developer</td>
+        //                                 <td>New York</td>
+        //                                 <td>61</td>
+        //                                 <td>2013/08/11</td>
+        //                                 <td>$98,540</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Finn Camacho</td>
+        //                                 <td>Support Engineer</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>47</td>
+        //                                 <td>2009/07/07</td>
+        //                                 <td>$87,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Serge Baldwin</td>
+        //                                 <td>Data Coordinator</td>
+        //                                 <td>Singapore</td>
+        //                                 <td>64</td>
+        //                                 <td>2012/04/09</td>
+        //                                 <td>$138,575</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Zenaida Frank</td>
+        //                                 <td>Software Engineer</td>
+        //                                 <td>New York</td>
+        //                                 <td>63</td>
+        //                                 <td>2010/01/04</td>
+        //                                 <td>$125,250</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Zorita Serrano</td>
+        //                                 <td>Software Engineer</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>56</td>
+        //                                 <td>2012/06/01</td>
+        //                                 <td>$115,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Jennifer Acosta</td>
+        //                                 <td>Junior Javascript Developer</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>43</td>
+        //                                 <td>2013/02/01</td>
+        //                                 <td>$75,650</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Cara Stevens</td>
+        //                                 <td>Sales Assistant</td>
+        //                                 <td>New York</td>
+        //                                 <td>46</td>
+        //                                 <td>2011/12/06</td>
+        //                                 <td>$145,600</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Hermione Butler</td>
+        //                                 <td>Regional Director</td>
+        //                                 <td>London</td>
+        //                                 <td>47</td>
+        //                                 <td>2011/03/21</td>
+        //                                 <td>$356,250</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Lael Greer</td>
+        //                                 <td>Systems Administrator</td>
+        //                                 <td>London</td>
+        //                                 <td>21</td>
+        //                                 <td>2009/02/27</td>
+        //                                 <td>$103,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Jonas Alexander</td>
+        //                                 <td>Developer</td>
+        //                                 <td>San Francisco</td>
+        //                                 <td>30</td>
+        //                                 <td>2010/07/14</td>
+        //                                 <td>$86,500</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Shad Decker</td>
+        //                                 <td>Regional Director</td>
+        //                                 <td>Edinburgh</td>
+        //                                 <td>51</td>
+        //                                 <td>2008/11/13</td>
+        //                                 <td>$183,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Michael Bruce</td>
+        //                                 <td>Javascript Developer</td>
+        //                                 <td>Singapore</td>
+        //                                 <td>29</td>
+        //                                 <td>2011/06/27</td>
+        //                                 <td>$183,000</td>
+        //                             </tr>
+        //                             <tr>
+        //                                 <td>Donna Snider</td>
+        //                                 <td>Customer Support</td>
+        //                                 <td>New York</td>
+        //                                 <td>27</td>
+        //                                 <td>2011/01/25</td>
+        //                                 <td>$112,000</td>
+        //                             </tr>
+        //                         </tbody>
+        //                     </table>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </main>
+        //     <footer className='py-4 bg-light mt-auto'>
+        //         <div className='container-fluid px-4'>
+        //             <div className='d-flex align-items-center justify-content-between small'>
+        //                 <div className='text-muted'>Copyright &copy; Your Website 2023</div>
+        //                 <div>
+        //                     <a href='#'>Privacy Policy</a>
+        //                     &middot;
+        //                     <a href='#'>Terms &amp; Conditions</a>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </footer>
+        // </div>
     )
 }
 

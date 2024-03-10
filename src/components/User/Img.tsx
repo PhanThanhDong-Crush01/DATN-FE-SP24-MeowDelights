@@ -16,7 +16,6 @@ type FormControlType = {
     imgUser: string
 }
 const ImgUserForm = ({ data }: ImgUserFormProps) => {
-    console.log(data)
     const [editAuth, setEditAuth] = useState(false)
     const { form, onSubmit } = useAuthMutation({
         action: 'UPDATE', // Specify the action as 'UPDATE'

@@ -1,19 +1,41 @@
 import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
-import { toast } from '@/components/ui/use-toast'
-import { useBillMutation } from '@/hooks/Bill/useBillMutation'
-import React, { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 // import moment from 'moment' // Import Moment.js
 import 'moment/locale/vi'
 import moment from 'moment'
-
-const ID_USER = '65b9451b0bbb2b6e014e5588'
+import instance from '@/services/core/api'
 
 moment.locale('vi')
 const PaymentMoMo = () => {
     const navigate = useNavigate()
 
+    const [paymentStatus, setPaymentStatus] = useState('')
+
+    const initiatePayment = async () => {
+        try {
+            // Gửi yêu cầu thanh toán đến máy chủ Node.js
+            const response = await instance.post('/api/payment/initiate', {
+                // Bao gồm các chi tiết thanh toán ở đây
+            })
+
+            // Cập nhật trạng thái thanh toán từ phản hồi của máy chủ Node.js
+            setPaymentStatus(response.data.status)
+        } catch (error) {
+            console.error('Lỗi khi khởi tạo thanh toán:', error)
+            setPaymentStatus('Thất bại')
+        }
+    }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            navigate('/payment_success')
+        }, 3000)
+
+        // Clear the timeout when the component unmounts to avoid memory leaks
+        return () => clearTimeout(timer)
+    }, [navigate])
     return (
         <>
             <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-9'>
@@ -54,8 +76,9 @@ const PaymentMoMo = () => {
                 </div>
 
                 <div className='section section-padding'>
-                    <div className='container'>
-                        <h1 style={{ fontSize: '50px' }}>Chức năng đang phát tiển</h1>
+                    <div>
+                        <button onClick={initiatePayment}>Khởi tạo thanh toán</button>
+                        {paymentStatus && <p>Trạng thái thanh toán: {paymentStatus}</p>}
                     </div>
                 </div>
 

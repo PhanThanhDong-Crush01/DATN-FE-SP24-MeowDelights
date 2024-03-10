@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Popconfirm, Select, Table } from 'antd'
 import type { TableColumnsType } from 'antd'
 import { useContactQuery } from '@/hooks/Contact/useContactQuery'
@@ -28,35 +28,49 @@ interface DataType {
 }
 
 const ListContact = () => {
-    const { data, refetch } = useContactQuery()
-    console.log('🚀 ~ ListContact ~ data:', data)
+    const { data, refetch }: any = useContactQuery()
     const staff = 2
     const { dataAuthWithRole }: any = useAuthQuery('', staff)
-    const selectAuth = dataAuthWithRole?.user.map((auth: any) => {
-        return {
-            value: auth._id,
-            label: auth.employee + ' - ' + auth.name
+    const [selectAuth, setselectAuth] = useState<any>()
+    useEffect(() => {
+        if (dataAuthWithRole?.user) {
+            setselectAuth(
+                dataAuthWithRole?.user.map((auth: any) => {
+                    return {
+                        value: auth._id,
+                        label: auth.employee + ' - ' + auth.name
+                    }
+                })
+            )
         }
-    })
-    const dataContact = data?.datas.map((item: any) => {
-        // Tạo một đối tượng Date từ createdAt của mỗi item
-        const createdAtDate = new Date(item.createdAt)
+    }, [dataAuthWithRole])
 
-        // Lấy ngày, tháng, năm từ đối tượng Date
-        const day = createdAtDate.getDate().toString().padStart(2, '0')
-        const month = (createdAtDate.getMonth() + 1).toString().padStart(2, '0')
-        const year = createdAtDate.getFullYear().toString().slice(-2)
+    const [dataContact, setDataContact] = useState<any>()
+    useEffect(() => {
+        if (data) {
+            setDataContact(
+                data?.datas.map((item: any) => {
+                    // Tạo một đối tượng Date từ createdAt của mỗi item
+                    const createdAtDate = new Date(item.createdAt)
 
-        // Định dạng lại chuỗi ngày tháng
-        const formattedDate = `${day}/${month}/${year}`
+                    // Lấy ngày, tháng, năm từ đối tượng Date
+                    const day = createdAtDate.getDate().toString().padStart(2, '0')
+                    const month = (createdAtDate.getMonth() + 1).toString().padStart(2, '0')
+                    const year = createdAtDate.getFullYear().toString().slice(-2)
 
-        return {
-            ...item,
-            key: item._id,
-            date: formattedDate, // Thêm biến date vào dataContact
-            time: createdAtDate.toLocaleTimeString('en-GB', { hour12: false }) // Thêm biến time vào dataContact
+                    // Định dạng lại chuỗi ngày tháng
+                    const formattedDate = `${day}/${month}/${year}`
+
+                    return {
+                        ...item,
+                        key: item._id,
+                        date: formattedDate, // Thêm biến date vào dataContact
+                        time: createdAtDate.toLocaleTimeString('en-GB', { hour12: false }) // Thêm biến time vào dataContact
+                    }
+                })
+            )
         }
-    })
+    }, [data])
 
     const { onSubmit } = useContactMutation({
         action: 'SetStaff',

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
 import { Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
@@ -35,33 +35,27 @@ type DataIndex = keyof DataType
 
 const ListUserPage = () => {
     const { data }: any = useAuthQuery()
-    console.log(data)
+    const [dataUser, setDataUser] = useState<any>()
+    useEffect(() => {
+        if (data?.users) {
+            setDataUser(
+                data?.users.map((item: any, index: any) => ({
+                    ...item,
+                    key: index + 1
+                }))
+            )
+        }
+    }, [data])
 
-    // const { onRemove } = useVoucherMutation({
-    //     action: 'DELETE',
-    //     onSuccess: () => {
-    //         toast({
-    //             variant: 'success',
-    //             title: 'Xoá thành công!!',
-    //             description: 'Danh mục khuyến mại đã bị xóa'
-    //         })
-    //     }
-    // })
-
-    const dataUser = data?.users.map((item: any, index: any) => ({
-        ...item,
-        key: index + 1
-    }))
-    console.log(dataUser)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const showModal = () => {
         setIsModalOpen(true)
     }
     const [filteredInfo, setFilteredInfo] = useState<Filters>({})
-    const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+    const [sortedInfo, setSortedInfo] = useState<Sorts>()
 
-    const handleChange: OnChange = (pagination, filters, sorter) => {
+    const handleChange: OnChange = (pagination: any, filters: any, sorter: any) => {
         console.log('Various parameters', pagination, filters, sorter)
         setFilteredInfo(filters)
         setSortedInfo(sorter as Sorts)
@@ -197,7 +191,7 @@ const ListUserPage = () => {
                 { text: 'member', value: 'member' }
             ],
             filteredValue: filteredInfo.role || null,
-            onFilter: (value: string, record) => record.role.includes(value),
+            onFilter: (value: string, record: any) => record.role.includes(value),
             fixed: 'left',
             render: (_, record) => record?.role
         },

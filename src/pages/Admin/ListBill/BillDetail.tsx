@@ -111,7 +111,7 @@ const BillDetail = () => {
     const navigate = useNavigate()
 
     const handleSubmitOrder = async (data: any) => {
-        const CancelOrder = {
+        const CancelOrder: any = {
             _id: id,
             idStaff: userID,
             orderstatus: data?.status

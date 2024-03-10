@@ -9,8 +9,6 @@ import '@/styles/Cart.css'
 import { Card, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Select } from 'antd'
-import instance from '@/services/core/api'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
@@ -55,27 +53,15 @@ const CartPage = () => {
     }
 
     const [idVoucher, setIdVoucher] = useState('')
-    console.log('🚀 ~ CartPage ~ idVoucher:', idVoucher)
-
-    const handleChange = async (value: any) => {
+    const HandleChane = (value: any) => {
         const idVC = value.target.value
-        console.log('🚀 ~ handleChange ~ idVC:', idVC)
-
-        // Assume 'instance' is properly configured for making HTTP requests
-        const response = await instance.get('/voucher/' + idVC)
-        const dataPro = response.data?.datas || []
-        setDataVoucherOne(dataPro)
         setIdVoucher(idVC.toLowerCase())
     }
-
-    const [data, setDataVoucherOne] = useState<any>() // Fix variable name
-
-    console.log('🚀 ~ CartPage ~ data:', data)
-
+    const { data } = useVoucherQuery(idVoucher)
     const xetIdVoucher = () => {
         if (data && idVoucher !== '') {
             return true
-        } else if (data === undefined && idVoucher === '') {
+        } else if (data == undefined && idVoucher == '') {
             return false
         }
     }
@@ -117,46 +103,6 @@ const CartPage = () => {
         localStorage.setItem('thongtindonhang', JSON.stringify(thongtindonhang))
         navigate('/payment_information')
     }
-
-    const onSearch = (value: string) => {
-        console.log('search:', value)
-    }
-
-    // Filter `option.label` match the user type `input`
-    const filterOption = (input: string, option?: { label: string; value: string }) =>
-        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-
-    const [userID, setUserID] = useState<any>()
-    useEffect(() => {
-        const storedUserID = localStorage.getItem('userID')
-        if (storedUserID) {
-            setUserID(storedUserID)
-        }
-    }, [])
-    const [dataMyVoucher, setdataMyVoucher] = useState<any[]>([])
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get('/my_voucher/user/' + userID)
-                const dataPro = response.data?.datas || []
-
-                // Sort products by createdAt (newest to oldest)
-                dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-                const formattedData = dataPro.map((item: any, index: any) => {
-                    return {
-                        value: item?.voucher?._id,
-                        label: item?.voucher?.name
-                    }
-                })
-                setdataMyVoucher(formattedData)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
-
-        fetchData()
-    }, [userID])
 
     return (
         <>
@@ -291,22 +237,13 @@ const CartPage = () => {
                     <div className='row' style={{ width: '50%' }}>
                         <div className='form-group mb-0'>
                             <div className='input-group mb-0'>
-                                <Select
-                                    style={{ width: '200px', height: '40px' }}
-                                    showSearch
-                                    placeholder='Chọn mã giảm giá'
-                                    optionFilterProp='children'
-                                    onChange={handleChange}
-                                    onSearch={onSearch}
-                                    filterOption={filterOption}
-                                    options={dataMyVoucher}
-                                />
-                                {/* <input
+                                <input
                                     type='text'
                                     className='form-control'
                                     placeholder='Nhập mã giảm giá'
                                     aria-label='Coupon Code'
-                                /> */}
+                                    onChange={HandleChane}
+                                />
                                 <div className='input-group-append'>
                                     <button
                                         className='sigma_btn-custom shadow-none  btn'

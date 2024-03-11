@@ -1,5 +1,6 @@
 import { IAuth } from '@/interface/IAuth'
-import { updateUserProfile, updateUserRole } from '@/services/auth'
+import AddAuth from '@/pages/Admin/ListUser/AddAuth'
+import { createAuth, editAuth, updateUserProfile, updateUserRole } from '@/services/auth'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -15,7 +16,7 @@ const formSchema = Joi.object({
 })
 
 type useAuthMutationProps = {
-    action: 'UPDATE' | 'UPDATEROLE'
+    action: 'UPDATE' | 'UPDATEROLE' | 'ADD' | 'UPDATEAUTH'
     defaultValues?: IAuth
     onSuccess?: () => void
 }
@@ -43,6 +44,10 @@ export const useAuthMutation = ({
                     return await updateUserRole(user)
                 case 'UPDATE':
                     return await updateUserProfile(user)
+                case 'ADD':
+                    return await createAuth(user)
+                case 'UPDATEAUTH':
+                    return await editAuth(user)
                 default:
                     return null
             }

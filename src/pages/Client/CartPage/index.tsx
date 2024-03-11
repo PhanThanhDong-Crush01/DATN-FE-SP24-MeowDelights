@@ -3,7 +3,6 @@ import MenuClientComponent from '@/components/component/MenuClientComponent'
 import { toast } from '@/components/ui/use-toast'
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useCartQuery } from '@/hooks/Cart/useCartQuery'
-import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
 import '@/styles/Cart.css'
 import { Card, Popconfirm } from 'antd'
@@ -14,6 +13,7 @@ import instance from '@/services/core/api'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
+    console.log('🚀 ~ CartPage ~ dataCart:', dataCart)
 
     const { onRemove } = useCartMutation({
         action: 'DELETE',

@@ -4,8 +4,50 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from '../ui/use-toast'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { useEffect, useState } from 'react'
+import instance from '@/services/core/api'
 const MenuClientComponent = () => {
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
+
     const { dataCart } = useCartQuery()
+
+    const [dataCarts, setDataCart] = useState<any>()
+    const localStorageDataCart = JSON.parse(localStorage.getItem('Cart_virtual_users') || '[]')
+    useEffect(() => {
+        const fetchData = async () => {
+            if (localStorageDataCart.length > 0) {
+                let totalAmount = 0
+                const datanew = await Promise.all(
+                    localStorageDataCart.map(async (item: any) => {
+                        const idpro = item.idpro
+                        const idprotype = item.idprotype
+                        const product = await instance.get('/products/' + idpro)
+                        const type_product = await instance.get('/type_product/' + idprotype)
+                        const money = item.quantity * type_product?.data?.data?.price
+                        totalAmount += money
+                        return {
+                            ...item,
+                            product: product?.data?.data,
+                            typeProduct: type_product?.data?.data,
+                            money: money
+                        }
+                    })
+                )
+                setDataCart({ data: datanew, totalAmount })
+            }
+        }
+        if (userID) {
+            setDataCart(dataCart)
+        } else {
+            fetchData()
+        }
+    }, [localStorageDataCart])
+
     const { onRemove } = useCartMutation({
         action: 'DELETE',
         onSuccess: () => {
@@ -16,14 +58,6 @@ const MenuClientComponent = () => {
             })
         }
     })
-
-    const [userID, setUserID] = useState<any>()
-    useEffect(() => {
-        const storedUserID = localStorage.getItem('userID')
-        if (storedUserID) {
-            setUserID(storedUserID)
-        }
-    }, [])
 
     const { data }: any = useAuthQuery(userID)
 
@@ -211,9 +245,7 @@ const MenuClientComponent = () => {
                                                     <li>
                                                         <div className='sigma_cart-product-body'>
                                                             <h6>
-                                                                <Link to={'/updateProfile/123624879238108765    '}>
-                                                                    Tài khoản của tôi
-                                                                </Link>
+                                                                <Link to={'/updateProfile'}>Tài khoản của tôi</Link>
                                                             </h6>
                                                         </div>
                                                     </li>
@@ -258,7 +290,7 @@ const MenuClientComponent = () => {
                                             <i className='far fa-shopping-basket' />
                                         </Link>
                                         <ul className='sigma_cart-dropdown'>
-                                            {dataCart?.data.map((cart: any) => (
+                                            {dataCarts?.data.map((cart: any) => (
                                                 <li key={cart?.product?.name + cart?._id}>
                                                     <div className='sigma_cart-product-wrapper'>
                                                         <div className='d-flex'>
@@ -280,14 +312,16 @@ const MenuClientComponent = () => {
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <button
-                                                            type='button'
-                                                            className='sigma_close remove-from-cart'
-                                                            onClick={() => onRemove(cart)}
-                                                        >
-                                                            <span></span>
-                                                            <span></span>
-                                                        </button>
+                                                        {userID && (
+                                                            <button
+                                                                type='button'
+                                                                className='sigma_close remove-from-cart'
+                                                                onClick={() => onRemove(cart)}
+                                                            >
+                                                                <span></span>
+                                                                <span></span>
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 </li>
                                             ))}
@@ -295,7 +329,7 @@ const MenuClientComponent = () => {
                                     </li>
                                     <li className='d-none d-sm-block'>
                                         <a href='shop-grid.html' className='sigma_btn btn-sm'>
-                                            <Link to={'/products'}>
+                                            <Link to={'/order'}>
                                                 Đơn mua
                                                 <i className='fal fa-plus ml-3' />
                                             </Link>

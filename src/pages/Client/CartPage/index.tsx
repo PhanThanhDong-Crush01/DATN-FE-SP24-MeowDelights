@@ -9,6 +9,8 @@ import '@/styles/Cart.css'
 import { Card, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Select } from 'antd'
+import instance from '@/services/core/api'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
@@ -53,20 +55,26 @@ const CartPage = () => {
     }
 
     const [idVoucher, setIdVoucher] = useState('')
-    const HandleChane = (value: any) => {
-        const idVC = value.target.value
+
+    const handleChange = async (value: any) => {
+        const idVC = value
+        const response = await instance.get('/voucher/' + idVC)
+        const dataPro = response.data?.datas || []
+        setDataVoucherOne(dataPro)
         setIdVoucher(idVC.toLowerCase())
     }
-    const { data } = useVoucherQuery(idVoucher)
+
+    const [data, setDataVoucherOne] = useState<any>() // Fix variable name
+
     const xetIdVoucher = () => {
         if (data && idVoucher !== '') {
             return true
-        } else if (data == undefined && idVoucher == '') {
+        } else if (data === undefined && idVoucher === '') {
             return false
         }
     }
     const XetDieuKienDungVoucher = () => {
-        if (data && dataCart?.totalAmount >= data?.datas.conditions) {
+        if (data && dataCart?.totalAmount >= data?.conditions) {
             return true
         } else if (!data) {
             return false
@@ -83,7 +91,7 @@ const CartPage = () => {
     }, [dataCart, voucherGiamGia])
     const apDungVoucher = () => {
         if (xetIdVoucher() && XetDieuKienDungVoucher()) {
-            setVoucherGiamGia(data!.datas.decrease)
+            setVoucherGiamGia(data?.decrease)
             alert('Áp  dụng thành công')
         } else {
             alert('Mã voucher hoặc điều kiệu áp dụng không hợp lệ !!!')
@@ -95,7 +103,7 @@ const CartPage = () => {
             order: dataCart?.data,
             phiVanChuyen: phiVanChuyen,
             voucher: {
-                idVc: data?.datas?._id || '',
+                idVc: data?._id || '',
                 soTienGiam: voucherGiamGia || 0
             },
             tongTien: tongTienCanThanhToan
@@ -103,6 +111,56 @@ const CartPage = () => {
         localStorage.setItem('thongtindonhang', JSON.stringify(thongtindonhang))
         navigate('/payment_information')
     }
+
+    const onSearch = (value: string) => {
+        console.log('search:', value)
+    }
+
+    // Filter `option.label` match the user type `input`
+    const filterOption = (input: string, option?: { label: string; value: string }) =>
+        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
+    const [dataMyVoucher, setdataMyVoucher] = useState<any[]>([])
+    const [MyVoucher, setMyVoucher] = useState<any[]>([])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await instance.get('/my_voucher/user/' + userID)
+                const dataPro = response.data?.datas || []
+
+                // Sort products by createdAt (newest to oldest)
+                dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+                const formattedData = dataPro.map((item: any) => {
+                    return {
+                        value: item?.voucher?._id,
+                        label: item?.voucher?.name
+                    }
+                })
+                setMyVoucher(dataPro)
+                setdataMyVoucher(formattedData)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetchData()
+    }, [userID])
+
+    const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
+    useEffect(() => {
+        if (MyVoucher !== undefined && data !== undefined) {
+            const voucherDuocChon = MyVoucher.filter((item: any) => item.idVoucher === data?._id)
+            setvoucherDuocChon(voucherDuocChon)
+        }
+    }, [MyVoucher, data])
 
     return (
         <>
@@ -237,13 +295,22 @@ const CartPage = () => {
                     <div className='row' style={{ width: '50%' }}>
                         <div className='form-group mb-0'>
                             <div className='input-group mb-0'>
-                                <input
+                                <Select
+                                    style={{ width: '200px', height: '40px' }}
+                                    showSearch
+                                    placeholder='Chọn mã giảm giá'
+                                    optionFilterProp='children'
+                                    onChange={handleChange}
+                                    onSearch={onSearch}
+                                    filterOption={filterOption}
+                                    options={dataMyVoucher}
+                                />
+                                {/* <input
                                     type='text'
                                     className='form-control'
                                     placeholder='Nhập mã giảm giá'
                                     aria-label='Coupon Code'
-                                    onChange={HandleChane}
-                                />
+                                /> */}
                                 <div className='input-group-append'>
                                     <button
                                         className='sigma_btn-custom shadow-none  btn'
@@ -260,7 +327,7 @@ const CartPage = () => {
                                     <Card
                                         headStyle={{ color: 'white  ', backgroundColor: 'red', marginTop: '20px' }}
                                         bodyStyle={{ padding: '5px 20px' }}
-                                        title={data?.datas.name}
+                                        title={voucherDuocChon?.[0]?.voucher?.name}
                                         bordered={false}
                                         style={{
                                             width: '100%'
@@ -270,17 +337,19 @@ const CartPage = () => {
                                             Số tiền bạn được giảm: &nbsp;
                                             <span
                                                 dangerouslySetInnerHTML={{
-                                                    __html: formatPriceBootstrap(data?.datas.decrease)
+                                                    __html: formatPriceBootstrap(
+                                                        voucherDuocChon?.[0]?.voucher?.decrease
+                                                    )
                                                 }}
                                             ></span>
                                         </h2>
                                         <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
                                             Số lần sử dụng voucher: &nbsp;
-                                            <span style={{ color: 'red' }}>1/5</span>
+                                            <span style={{ color: 'red' }}>{voucherDuocChon?.[0]?.quantity}</span>
                                         </h2>
                                         HSD: &nbsp;
                                         <span style={{ color: 'gray', fontSize: '15px', marginTop: '50px' }}>
-                                            {data?.datas.expiry}
+                                            {voucherDuocChon?.[0]?.voucher?.expiry}
                                         </span>
                                     </Card>
                                 ) : (
@@ -293,7 +362,7 @@ const CartPage = () => {
                                         }}
                                         title={
                                             'Bạn cần mua thêm ' +
-                                            (data?.datas.conditions - dataCart?.totalAmount) +
+                                            (data.conditions - dataCart?.totalAmount) +
                                             ' để sử dụng voucher này'
                                         }
                                         bordered={false}

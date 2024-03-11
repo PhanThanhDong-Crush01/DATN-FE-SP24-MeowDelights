@@ -2,7 +2,6 @@ import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
 import { toast } from '@/components/ui/use-toast'
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
-import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
 import instance from '@/services/core/api'
 import { useEffect, useState } from 'react'
@@ -19,7 +18,6 @@ const ProductDetailPage = () => {
             try {
                 const { data } = await instance.get(`/products/${id}`)
                 setProductData(data)
-                console.log('🚀 ~ fetchData ~ data:', data)
             } catch (error) {
                 console.error('Error fetching product data:', error)
             }
@@ -44,7 +42,7 @@ const ProductDetailPage = () => {
 
     const [selectedColor, setSelectedColor] = useState('')
     const [selectedSize, setSelectedSize] = useState('')
-    const [selectedQuantity, setSelectedQuantity] = useState<number>(0)
+    const [selectedQuantity, setSelectedQuantity] = useState<number>(1)
     const [selectedPrice, setSelectedPrice] = useState<number | null>(0)
     const [TypeProductID, setTypeProductID] = useState<string | null>(null)
     const [imageChinh, setImageChinh] = useState<any>('')
@@ -75,12 +73,14 @@ const ProductDetailPage = () => {
             setSelectedPrice(null)
         }
     }
+    const [selectedTypeProductDaChon, setSelectedTypeProductDaChon] = useState<any>()
     const updateQuantily = (color: string, size: string) => {
         const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
 
         if (selectedTypeProduct) {
             setSelectedQuantity(selectedTypeProduct.quantity)
             setTypeProductID(selectedTypeProduct._id)
+            setSelectedTypeProductDaChon(selectedTypeProduct)
         } else {
             setSelectedQuantity(0)
         }
@@ -100,26 +100,73 @@ const ProductDetailPage = () => {
     const storedUserID = localStorage.getItem('userID')
 
     const onHandleSubmit = (data: any) => {
-        if (data.quantity > selectedQuantity) {
+        if (selectedColor == '') {
+            toast({
+                variant: 'destructive',
+                title: 'Mời bạn chọn màu!!',
+                description: 'Bạn phải chọn 1 màu để thêm vào giỏ hàng !'
+            })
+        } else if (selectedSize == '') {
+            toast({
+                variant: 'destructive',
+                title: 'Mời bạn chọn kích cỡ!!',
+                description: 'Bạn phải chọn 1 size để thêm vào giỏ hàng !'
+            })
+        } else if (data.quantity > selectedQuantity) {
             toast({
                 variant: 'destructive',
                 title: 'Mời bạn chọn số lượng ít hơn!',
                 description: 'Tồn kho không đủ số lượng bạn chọn!'
             })
-        } else if (selectedColor == '' || selectedSize == '') {
-            toast({
-                variant: 'destructive',
-                title: 'Mời bạn chọn màu và kích cỡ!!',
-                description: 'Bạn phải chọn 1 màu và 1 size để thêm vào giỏ hàng !'
-            })
         } else {
             const cart = {
-                iduser: storedUserID,
+                iduser: storedUserID || '',
                 idpro: productId,
                 idprotype: TypeProductID,
                 quantity: data.quantity
             }
-            onSubmit(cart)
+
+            if (storedUserID) {
+                onSubmit(cart)
+            } else {
+                // Lấy danh sách sản phẩm từ localStorage
+                let cartItems = JSON.parse(localStorage.getItem('Cart_virtual_users') || '[]')
+
+                // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+                const existingCartItemIndex = cartItems.findIndex(
+                    (item: any) => item.idpro === productId && item.idprotype === TypeProductID
+                )
+
+                if (existingCartItemIndex !== -1) {
+                    // Nếu sản phẩm đã tồn tại trong giỏ hàng
+                    const updatedQuantity = Number(cartItems[existingCartItemIndex].quantity) + Number(data.quantity)
+
+                    // Kiểm tra xem số lượng mới có vượt quá số lượng tối đa cho phép hay không
+                    if (updatedQuantity <= selectedTypeProductDaChon.quantity) {
+                        // Nếu không vượt quá, cập nhật số lượng
+                        cartItems[existingCartItemIndex].quantity = updatedQuantity
+                    } else {
+                        // Nếu vượt quá, thông báo lỗi và không thực hiện thêm sản phẩm vào giỏ hàng
+                        toast({
+                            variant: 'destructive',
+                            title: 'Số lượng vượt quá giới hạn!!',
+                            description: `Vì trong giỏ hàng bạn, loại sản phẩm này đã có ${cartItems[existingCartItemIndex].quantity} số sản phẩm`
+                        })
+                        return // Return early to prevent further execution
+                    }
+                } else {
+                    // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm sản phẩm mới vào danh sách
+                    cartItems.push(cart)
+                }
+
+                // Lưu danh sách sản phẩm mới vào localStorage
+                localStorage.setItem('Cart_virtual_users', JSON.stringify(cartItems))
+                toast({
+                    variant: 'success',
+                    title: 'Thêm sản phẩm vào giỏ hàng thành công!!',
+                    description: 'Hãy kiểm tra giỏ hàng và đi đến trang thanh toán để mang đồ về cho boss nào!'
+                })
+            }
         }
     }
     return (
@@ -328,6 +375,7 @@ const ProductDetailPage = () => {
                                                             name='quantity'
                                                             type='number'
                                                             min={1}
+                                                            defaultValue={1}
                                                         />
                                                     </div>
                                                     <div className='px-5 pt-2 flex flex-row'>

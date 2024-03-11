@@ -37,7 +37,6 @@ const HomePage = () => {
     const productFour = dataProductTrue.slice(0, 4)
 
     const [productEight, setProductEight] = useState<any>()
-    console.log('🚀 ~ HomePage ~ productEight:', productEight)
     useEffect(() => {
         setProductEight(dataProductTrue.slice(0, 8))
     }, [dataProduct])

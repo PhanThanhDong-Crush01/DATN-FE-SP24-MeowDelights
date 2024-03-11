@@ -11,7 +11,6 @@ const SigninPage = () => {
     const { register, handleSubmit } = useForm()
 
     const onSubmit = async (data: any) => {
-        console.log(data)
         const values = {
             email: data.email,
             password: data.password
@@ -24,13 +23,9 @@ const SigninPage = () => {
                 // Lưu thông tin người dùng vào Local Storage
                 localStorage.setItem('user', user)
                 localStorage.setItem('userID', response?.user?._id)
-                if (response?.user?.role === 'admin') {
+                if (response?.user?.role !== 'member') {
                     message.success('Đăng nhập thành công admin')
-                    navigate('/admin/products')
-                }
-                if (response?.user?.role === 'nhanvien') {
-                    message.success('Đăng nhập thành công nhân viên')
-                    navigate('/admin/products')
+                    navigate('/admin')
                 }
                 if (response?.user?.role === 'member') {
                     message.success('Đăng nhập thành công !')

@@ -52,6 +52,7 @@ const PaymentInformationPage = () => {
         const currentDate = moment().format('YYYY/MM/DD HH:mm:ss') // Sử dụng Moment.js
         const billdetails: any = Order?.thongTinDonHang?.order.map((item: any) => {
             return {
+                iduser: undefined,
                 idpro: item?.idpro,
                 idprotype: item?.idprotype,
                 quantity: item?.quantity,
@@ -73,6 +74,7 @@ const PaymentInformationPage = () => {
             },
             billdetails: billdetails
         }
+        console.log('🚀 ~ onHanldeSubmit ~ addNew:', addNew)
 
         localStorage.setItem('donhang', JSON.stringify(addNew))
         navigate('/check_order')

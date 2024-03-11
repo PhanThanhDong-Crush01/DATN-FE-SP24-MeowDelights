@@ -19,7 +19,6 @@ interface DataType {
 
 const ListCategory = () => {
     const { data }: any = useCategoryQuery()
-    console.log('ListCategory', data)
     const { onRemove } = useCategoryMutation({
         action: 'DELETE',
         onSuccess: () => {

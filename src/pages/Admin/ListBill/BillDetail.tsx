@@ -33,9 +33,7 @@ const BillDetail = () => {
     const [open, setOpen] = useState(false)
     const { id } = useParams()
     const { data } = useBillDetailQuery(id)
-    console.log(data)
     const [bill, setBill] = useState<any>()
-    console.log('🚀 ~ BillDetail ~ bill:', bill?.billChangeStatusOrderHistory)
     useEffect(() => {
         if (data) {
             setBill(data)
@@ -100,6 +98,7 @@ const BillDetail = () => {
                 idStaff: userID,
                 orderstatus: data?.status
             }
+            console.log('🚀 ~ handleSubmitForm ~ changeStatusOrder:', changeStatusOrder)
             const change = await apiChangeStatusOrder(changeStatusOrder)
             setBill({ ...bill?.billChangeStatusOrderHistory, ...change.changeOrder })
             setOpen(false)
@@ -112,7 +111,7 @@ const BillDetail = () => {
     const navigate = useNavigate()
 
     const handleSubmitOrder = async (data: any) => {
-        const CancelOrder = {
+        const CancelOrder: any = {
             _id: id,
             idStaff: userID,
             orderstatus: data?.status

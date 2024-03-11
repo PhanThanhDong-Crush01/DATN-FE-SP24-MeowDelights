@@ -21,11 +21,7 @@ const UpdateProfile = (_props: Props) => {
             setUserID(storedUserID)
         }
     }, [])
-    console.log(userID)
-    // const { id } = useParams()
-    // console.log(id)
     const { data }: any = useAuthQuery(userID)
-    console.log(data)
     return (
         <>
             <div>
@@ -38,27 +34,25 @@ const UpdateProfile = (_props: Props) => {
                                         <p className='text-2xl font-sans pb-3'>Hồ sơ của tôi</p>
                                     </div>
 
-                                    <div className='flex flex-col gap-20 py-5'>
-                                        <div>
+                                    <div
+                                        className='flex'
+                                        style={{ justifyContent: 'space-evenly', alignItems: 'center' }}
+                                    >
+                                        <div style={{ width: '45%' }}>
                                             <ImgUserForm data={data} />
-                                        </div>
-                                        <div>
+
                                             <NameForm data={data} />
-                                        </div>
-                                        <div>
+
+                                            <PhoneForm data={data} />
+
                                             <EmailForm data={data} />
                                         </div>
-                                        <div>
-                                            <PhoneForm data={data} />
-                                        </div>
-                                        <div>
-                                            <AddressForm data={data} />
-                                        </div>
-                                        <div>
+                                        <div style={{ width: '45%' }}>
+                                            <EmailForm data={data} />
                                             <AgeForm data={data} />
-                                        </div>
-                                        <div>
                                             <GenderForm data={data} />
+                                            <AddressForm data={data} />
+                                            {/* <AddressForm data={data} /> đổi mật khẩu */}
                                         </div>
                                     </div>
                                 </div>

@@ -44,7 +44,10 @@ const MenuClientComponent = () => {
                 </div>
                 <div className='sigma_logo-wrapper'>
                     <a className='sigma_logo' href='index.html'>
-                        <img src='/src/assets/img/logo.png' alt='logo' />
+                        <img
+                            src='https://res.cloudinary.com/drwpkuqxv/image/upload/v1709051842/logo_meowdelights.jpg'
+                            alt=''
+                        />
                     </a>
                 </div>
                 <ul className='navbar-nav'>

@@ -15,9 +15,7 @@ const LayoutUserPage = () => {
             setUser(storedUserID)
         }
     }, [])
-    console.log(user)
     const { data } = useAuthQuery(user || '')
-    console.log(data)
     return (
         <Content style={{ padding: '10px 0px' }}>
             <Layout style={{ padding: '0px 0' }}>
@@ -75,7 +73,7 @@ const LayoutUserPage = () => {
                             {
                                 key: '3',
                                 icon: <AiOutlineAim />,
-                                label: <Link to='/admin/product'>Kho voucher</Link>
+                                label: <Link to='/my_voucher'>Kho voucher</Link>
                             },
                             {
                                 key: '4',

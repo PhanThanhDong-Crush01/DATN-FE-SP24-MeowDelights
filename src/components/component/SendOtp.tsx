@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom'
 export const SendOTP = () => {
     const [otpxacnhan, setOTPXN] = useState<any>()
     const [otpguidiTrue, setotpguidi] = useState<any>()
-    console.log('🚀 ~ SendOTP ~ otpguidiTrue:', otpguidiTrue)
     const [phone, setPhone] = useState<any>()
 
     const [donhang, setDonHang] = useState<any>()
@@ -33,7 +32,6 @@ export const SendOTP = () => {
     const sendOtp = async () => {
         try {
             const otpguidi = getRandomNumber()
-            console.log('🚀 ~ sendOtp ~ otpguidi:', otpguidi)
             setotpguidi(otpguidi)
             await instance.post('/send-otp', { otp: otpguidi, phoneNumber: phone })
             toast({
@@ -51,7 +49,6 @@ export const SendOTP = () => {
     const navigate = useNavigate()
 
     const onSubmitOtp = () => {
-        console.log('🚀 ~ onSubmitOtp ~ otpxacnhan:', otpxacnhan)
         if (otpxacnhan == ' ') {
             toast({
                 variant: 'destructive',
@@ -68,11 +65,16 @@ export const SendOTP = () => {
                 title: 'OTP chính xác!'
             })
             onSubmit(donhang)
+            localStorage.removeItem('donhang')
             const pttt = donhang?.bill?.paymentmethods
-            if (pttt == 'Thanh toán khi nhận hàng') {
-                navigate('/payment_success')
+            if (pttt === 'Thanh toán khi nhận hàng') {
+                setTimeout(() => {
+                    navigate('/payment_success')
+                }, 2000) // 2 seconds delay
             } else {
-                navigate('/payment_method_momo')
+                setTimeout(() => {
+                    navigate('/payment_method_momo')
+                }, 2000) // 2 seconds delay
             }
         }
     }
@@ -146,7 +148,7 @@ export const SendOTP = () => {
                                 <Label htmlFor='username'>OTP</Label>
                                 <Input
                                     id='otpxacnhan'
-                                    defaultValue='123456'
+                                    placeholder='123456'
                                     onChange={(e: any) => handleOTPChange(e.target.value)}
                                 />
                                 <Button

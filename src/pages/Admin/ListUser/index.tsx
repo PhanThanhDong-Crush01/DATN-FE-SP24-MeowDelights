@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, HighlightOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
-import { Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
+import { Avatar, Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { formatPrice } from '@/lib/utils'
@@ -163,7 +163,7 @@ const ListUserPage = () => {
             title: 'Tên tài khoản',
             dataIndex: 'name',
             key: 'name',
-            width: '20%',
+            width: '40%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
                 <div>
@@ -177,7 +177,7 @@ const ListUserPage = () => {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
-            width: '15%',
+            width: '25%',
             render: (_, record) => record.email,
             fixed: 'left'
         },
@@ -185,7 +185,7 @@ const ListUserPage = () => {
             title: 'Vai trò',
             dataIndex: 'role',
             key: 'role',
-            width: '15%',
+            width: '20%',
             filters: [
                 { text: 'admin', value: 'admin' },
                 { text: 'member', value: 'member' }
@@ -193,7 +193,29 @@ const ListUserPage = () => {
             filteredValue: filteredInfo.role || null,
             onFilter: (value: string, record: any) => record.role.includes(value),
             fixed: 'left',
-            render: (_, record) => record?.role
+            render: (_, record) => {
+                // Thay thế giá trị "member" bằng "Khách hàng" khi hiển thị
+                switch (record?.role) {
+                    case 'member':
+                        return 'Khách hàng'
+                    case 'adminProduct':
+                        return 'Nhân viên quản lí sản phẩm'
+                    case 'adminVoucher':
+                        return 'Nhân viên quản lí Voucher '
+                    case 'adminOrder':
+                        return 'Nhân viên quản lí hóa đơn'
+                    case 'adminContact':
+                        return 'Nhân viên quản lí liên hệ'
+                    case 'adminMember':
+                        return 'Nhân viên quản lí bình luận, đánh giá'
+                    case 'adminComment':
+                        return 'Nhân viên quản lí sản phẩm'
+                    case 'adminWeb':
+                        return 'Quản lí cấp cao'
+                    default:
+                        return record?.role
+                }
+            }
         },
         {
             title: 'Địa chỉ',
@@ -207,7 +229,7 @@ const ListUserPage = () => {
             title: 'Tuổi',
             dataIndex: 'age',
             key: 'age',
-            width: '12% ',
+            width: '15% ',
             render: (_, record) => record.age
             // <option value='record.status'></option>
         },
@@ -216,7 +238,16 @@ const ListUserPage = () => {
             dataIndex: 'gender',
             key: 'gender',
             width: '15% ',
-            render: (_, record) => (record.gender ? 'Nam' : 'Nữ')
+            render: (_, record) => {
+                switch (record?.gender) {
+                    case false:
+                        return 'Nam'
+                    case true:
+                        return 'Nữ'
+                    default:
+                        return record?.gender
+                }
+            }
         },
 
         {
@@ -227,7 +258,7 @@ const ListUserPage = () => {
             // ...getColumnSearchProps('expiry'),
             // sorter: (a, b) => a.expiry.length - b.expiry.length,
             // sortDirections: ['descend', 'ascend'],
-            render: (_, record) => <img src={record.imgUser} alt='' />
+            render: (_, record) => <Avatar src={record.imgUser} alt='' />
         },
 
         {
@@ -273,15 +304,18 @@ const ListUserPage = () => {
             title: 'Hành động',
             dataIndex: '',
             key: 'x',
-            width: '15%',
+            width: '20%',
             fixed: 'right',
             render: (_, record) => (
                 <Space size='middle'>
                     {record.role !== 'member' && (
-                        <Link to={`/admin/user/edit/${record?._id}`} type='primary' ghost>
+                        <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
                             <EditOutlined style={{ display: 'inline-flex' }} />
                         </Link>
                     )}
+                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+                        <HighlightOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
                 </Space>
             )
         }
@@ -293,14 +327,15 @@ const ListUserPage = () => {
         <div>
             <div className='flex justify-between items-center '>
                 <p className='text-[30px] pb-4'>Danh sách tài khoản </p>
-
-                <Button
-                    className='flex justify-center mb-2 bg-[#1677ff]'
-                    type='primary'
-                    icon={<PlusCircleOutlined />}
-                    size={'large'}
-                    onClick={showModal}
-                ></Button>
+                <Link to={'/admin/user/add'}>
+                    <Button
+                        className='flex justify-center mb-2 bg-[#1677ff]'
+                        type='primary'
+                        icon={<PlusCircleOutlined />}
+                        size={'large'}
+                        onClick={showModal}
+                    ></Button>
+                </Link>
             </div>
             <Table columns={columns} dataSource={dataUser} scroll={{ x: 1300 }} onChange={handleChange} />
             {/* form */}

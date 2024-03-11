@@ -35,7 +35,8 @@ import ListUserPage from '@/pages/Admin/ListUser'
 import EditUser from '@/pages/Admin/ListUser/EditUser'
 import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 import MyVoucher from '@/pages/Client/AuthPage/MyVoucher'
-
+import AddAuth from '@/pages/Admin/ListUser/AddAuth'
+import EditAuth from '@/pages/Admin/ListUser/EditAuth'
 const Routers = () => {
     return (
         <Routes>
@@ -66,6 +67,8 @@ const Routers = () => {
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
                 <Route path='user' element={<ListUserPage />} />
+                <Route path='user/add' element={<AddAuth />} />
+                <Route path='user/editAuth/:id' element={<EditAuth />} />
                 <Route path='user/edit/:id' element={<EditUser />} />
                 {/* <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} /> */}
                 {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}

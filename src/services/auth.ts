@@ -92,3 +92,27 @@ export const updateUserRole = async (user: IAuth) => {
         console.log(`['UPDATEUSERROLE_AUTH_ERROR']`, error)
     }
 }
+export const createAuth = async (user: any) => {
+    try {
+        const response = await instance.post('/auth/createAuth', user)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['CREATE_AUTH_ERROR']`, error)
+    }
+}
+export const editAuth = async (user: any) => {
+    try {
+        const response = await instance.patch(`/auth/editAuth/${user._id}`, user)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['_AUTH_ERROR']`, error)
+    }
+}

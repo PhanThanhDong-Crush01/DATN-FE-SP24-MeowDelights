@@ -55,13 +55,9 @@ const CartPage = () => {
     }
 
     const [idVoucher, setIdVoucher] = useState('')
-    console.log('🚀 ~ CartPage ~ idVoucher:', idVoucher)
 
     const handleChange = async (value: any) => {
-        const idVC = value.target.value
-        console.log('🚀 ~ handleChange ~ idVC:', idVC)
-
-        // Assume 'instance' is properly configured for making HTTP requests
+        const idVC = value
         const response = await instance.get('/voucher/' + idVC)
         const dataPro = response.data?.datas || []
         setDataVoucherOne(dataPro)
@@ -69,8 +65,6 @@ const CartPage = () => {
     }
 
     const [data, setDataVoucherOne] = useState<any>() // Fix variable name
-
-    console.log('🚀 ~ CartPage ~ data:', data)
 
     const xetIdVoucher = () => {
         if (data && idVoucher !== '') {
@@ -80,7 +74,7 @@ const CartPage = () => {
         }
     }
     const XetDieuKienDungVoucher = () => {
-        if (data && dataCart?.totalAmount >= data?.datas.conditions) {
+        if (data && dataCart?.totalAmount >= data?.conditions) {
             return true
         } else if (!data) {
             return false
@@ -97,7 +91,7 @@ const CartPage = () => {
     }, [dataCart, voucherGiamGia])
     const apDungVoucher = () => {
         if (xetIdVoucher() && XetDieuKienDungVoucher()) {
-            setVoucherGiamGia(data!.datas.decrease)
+            setVoucherGiamGia(data?.decrease)
             alert('Áp  dụng thành công')
         } else {
             alert('Mã voucher hoặc điều kiệu áp dụng không hợp lệ !!!')
@@ -109,7 +103,7 @@ const CartPage = () => {
             order: dataCart?.data,
             phiVanChuyen: phiVanChuyen,
             voucher: {
-                idVc: data?.datas?._id || '',
+                idVc: data?._id || '',
                 soTienGiam: voucherGiamGia || 0
             },
             tongTien: tongTienCanThanhToan
@@ -134,6 +128,7 @@ const CartPage = () => {
         }
     }, [])
     const [dataMyVoucher, setdataMyVoucher] = useState<any[]>([])
+    const [MyVoucher, setMyVoucher] = useState<any[]>([])
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -143,12 +138,13 @@ const CartPage = () => {
                 // Sort products by createdAt (newest to oldest)
                 dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-                const formattedData = dataPro.map((item: any, index: any) => {
+                const formattedData = dataPro.map((item: any) => {
                     return {
                         value: item?.voucher?._id,
                         label: item?.voucher?.name
                     }
                 })
+                setMyVoucher(dataPro)
                 setdataMyVoucher(formattedData)
             } catch (error) {
                 console.error('Error fetching data:', error)
@@ -157,6 +153,14 @@ const CartPage = () => {
 
         fetchData()
     }, [userID])
+
+    const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
+    useEffect(() => {
+        if (MyVoucher !== undefined && data !== undefined) {
+            const voucherDuocChon = MyVoucher.filter((item: any) => item.idVoucher === data?._id)
+            setvoucherDuocChon(voucherDuocChon)
+        }
+    }, [MyVoucher, data])
 
     return (
         <>
@@ -323,7 +327,7 @@ const CartPage = () => {
                                     <Card
                                         headStyle={{ color: 'white  ', backgroundColor: 'red', marginTop: '20px' }}
                                         bodyStyle={{ padding: '5px 20px' }}
-                                        title={data?.datas.name}
+                                        title={voucherDuocChon?.[0]?.voucher?.name}
                                         bordered={false}
                                         style={{
                                             width: '100%'
@@ -333,17 +337,19 @@ const CartPage = () => {
                                             Số tiền bạn được giảm: &nbsp;
                                             <span
                                                 dangerouslySetInnerHTML={{
-                                                    __html: formatPriceBootstrap(data?.datas.decrease)
+                                                    __html: formatPriceBootstrap(
+                                                        voucherDuocChon?.[0]?.voucher?.decrease
+                                                    )
                                                 }}
                                             ></span>
                                         </h2>
                                         <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
                                             Số lần sử dụng voucher: &nbsp;
-                                            <span style={{ color: 'red' }}>1/5</span>
+                                            <span style={{ color: 'red' }}>{voucherDuocChon?.[0]?.quantity}</span>
                                         </h2>
                                         HSD: &nbsp;
                                         <span style={{ color: 'gray', fontSize: '15px', marginTop: '50px' }}>
-                                            {data?.datas.expiry}
+                                            {voucherDuocChon?.[0]?.voucher?.expiry}
                                         </span>
                                     </Card>
                                 ) : (
@@ -356,7 +362,7 @@ const CartPage = () => {
                                         }}
                                         title={
                                             'Bạn cần mua thêm ' +
-                                            (data?.datas.conditions - dataCart?.totalAmount) +
+                                            (data.conditions - dataCart?.totalAmount) +
                                             ' để sử dụng voucher này'
                                         }
                                         bordered={false}

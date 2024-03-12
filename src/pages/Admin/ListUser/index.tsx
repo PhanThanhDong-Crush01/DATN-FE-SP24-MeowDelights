@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { DeleteOutlined, EditOutlined, HighlightOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import {
+    DeleteOutlined,
+    EditOutlined,
+    FormOutlined,
+    HighlightOutlined,
+    PlusCircleOutlined,
+    SearchOutlined
+} from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
 import { Avatar, Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
@@ -26,6 +33,7 @@ interface DataType {
     imgUser: string
     phone: string
     employee: string
+    jobPosition: string
     discount_points: number
     totalBillCount: number
     totalAmount: number
@@ -269,11 +277,18 @@ const ListUserPage = () => {
             render: (_, record) => record.phone
         },
         {
-            title: 'Nhân viên',
+            title: 'Mã nhân viên',
             dataIndex: 'employee',
             key: 'employee',
             width: '20%',
             render: (_, record) => record.employee
+        },
+        {
+            title: 'Vị trí công việc',
+            dataIndex: 'jobPosition',
+            key: 'jobPosition',
+            width: '20%',
+            render: (_, record) => record.jobPosition
         },
         {
             title: 'Tích điểm',
@@ -308,13 +323,11 @@ const ListUserPage = () => {
             fixed: 'right',
             render: (_, record) => (
                 <Space size='middle'>
-                    {record.role !== 'member' && (
-                        <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
-                            <EditOutlined style={{ display: 'inline-flex' }} />
-                        </Link>
-                    )}
+                    <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
+                        <EditOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
                     <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
-                        <HighlightOutlined style={{ display: 'inline-flex' }} />
+                        <FormOutlined style={{ display: 'inline-flex' }} />
                     </Link>
                 </Space>
             )

@@ -1,13 +1,9 @@
-import MenuClientComponent from '@/components/component/MenuClientComponent'
 import { useCommentQuery } from '@/hooks/Comment/useCommentQuery'
-import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const ProductReviews = () => {
     const { id } = useParams()
-    console.log(id)
     const { data } = useCommentQuery(id)
-    console.log(data)
     // const idProductType = data.idProductType
     // console.log(idProductType)
 

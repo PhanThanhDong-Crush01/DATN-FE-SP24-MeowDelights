@@ -60,8 +60,8 @@ const EditAuth = () => {
             setValue('age', data.datas.age)
             setValue('role', data.datas.role)
             setValue('gender', data.datas.gender)
-            // setValue('jobPosition', data.datas.jobPosition)
-            // setValue('employee', data.datas.employee)
+            setValue('jobPosition', data.datas.jobPosition)
+            setValue('employee', data.datas.employee)
         }
     }, [data, setValue])
 
@@ -93,9 +93,9 @@ const EditAuth = () => {
             phone: data.phone,
             address: data.address,
             role: data.role,
-            gender: data.gender
-            // jobPosition: data.jobPosition,
-            // employee: mdValue
+            gender: data.gender,
+            jobPosition: data.jobPosition,
+            employee: mdValue
         }
         console.log('🚀 ~ onHandleSubmit ~ updatedCategory:', updatedUserRole)
         onSubmit(updatedUserRole)
@@ -108,7 +108,7 @@ const EditAuth = () => {
                 <div className='bg-slate-50 px-20 rounded-lg py-5'>
                     <form onSubmit={handleSubmit(onHandleSubmit)}>
                         <div className='flex flex-row gap-20'>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base '>Tên tài khoản</p>
                                 <Input
                                     style={{ borderStyle: 'dotted' }}
@@ -118,7 +118,7 @@ const EditAuth = () => {
                                     {...register('name')}
                                 />
                             </div>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base '>Email</p>
                                 <Input
                                     className='border-spacing-1 border-blue-400 border-gray-200  mb-4'
@@ -129,7 +129,7 @@ const EditAuth = () => {
                             </div>
                         </div>
                         <div className='flex flex-row gap-20'>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base'>Mật khẩu</p>
                                 <Input
                                     className='border-spacing-1 border-gray-200   pl-3 mb-1'
@@ -151,7 +151,7 @@ const EditAuth = () => {
                                 )}
                             </div>
 
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56 mb-4'>
                                 <p className='font-medium text-base'>Nhập lại mật khẩu</p>
                                 <Input
                                     className='border-spacing-1 border-gray-200  rounded-md h-14'
@@ -171,7 +171,7 @@ const EditAuth = () => {
                             </div>
                         </div>
                         <div className='flex flex-row gap-20'>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56 mb-4'>
                                 <p className='font-medium text-base '>Tuổi</p>
                                 <Input
                                     style={{ borderStyle: 'dotted' }}
@@ -187,7 +187,7 @@ const EditAuth = () => {
                                     <p className='text-red-500'>Tuổi phải lớn hơn 16</p>
                                 )}
                             </div>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base '>Hình ảnh cá nhân</p>
                                 <Input
                                     className='border-spacing-1 border-blue-400 border-gray-200'
@@ -200,14 +200,14 @@ const EditAuth = () => {
                                 )}
                             </div>
                         </div>
-                        <div className='flex flex-row gap-20'>
-                            <div className='flex flex-col gap-3 '>
+                        <div className='flex flex-row gap-20 mb-4'>
+                            <div className='flex flex-col gap-3  '>
                                 <p className='font-medium text-base '>Số điện thoại</p>
                                 <Input
                                     className='border-spacing-1 border-gray-200'
                                     style={{
                                         borderStyle: 'dotted',
-                                        width: '195px',
+                                        width: '210px',
                                         borderRadius: '8px',
                                         height: '42px'
                                     }}
@@ -230,9 +230,9 @@ const EditAuth = () => {
                             <div className='flex flex-col gap-3'>
                                 <p className='font-medium text-base '>Giới tính</p>
                                 <select
-                                    className='border-spacing-1 border-blue-400 border-gray-200'
+                                    className='border-spacing-1 border-blue-400 border-gray-200 pl-3'
                                     id='gender'
-                                    style={{ width: '220px', borderRadius: '8px', height: '42px' }}
+                                    style={{ width: '210px', borderRadius: '8px', height: '42px' }}
                                     placeholder='Mời chọn giới tính'
                                     {...register('gender', { required: true })}
                                 >
@@ -245,7 +245,7 @@ const EditAuth = () => {
                             </div>
                         </div>
                         <div className='flex flex-row gap-20 mb-4'>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base '>Địa chỉ</p>
                                 <Input
                                     style={{ borderStyle: 'dotted' }}
@@ -264,10 +264,10 @@ const EditAuth = () => {
                                     <p className='text-red-500'>Nhỏ hơn 50 kí tự</p>
                                 )}
                             </div>
-                            <div className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base '>Vai trò</p>
                                 <select
-                                    className='border-spacing-1 border-blue-400 border-gray-200 '
+                                    className='border-spacing-1 border-blue-400 border-gray-200 pl-3'
                                     id='role'
                                     style={{ borderRadius: '8px', height: '42px' }}
                                     placeholder='Mời chọn vai trò'
@@ -285,6 +285,29 @@ const EditAuth = () => {
                                 {errors.role && errors.role.type === 'required' && (
                                     <p className='text-red-500'>Chọn vai trò là bắt buộc là bắt buộc.</p>
                                 )}
+                            </div>
+                        </div>
+                        <div className='flex flex-row gap-20'>
+                            <div className='flex flex-col gap-3 w-56'>
+                                <p className='font-medium text-base '>Vị trí công việc</p>
+                                <Input
+                                    className='border-spacing-1 border-gray-200 rounded-md'
+                                    id='jobPosition'
+                                    placeholder='Vị trí công việc'
+                                    {...register('jobPosition', { required: true })}
+                                />
+                                {errors.jobPosition && errors.jobPosition.type === 'required' && (
+                                    <p className='text-red-500'>Điền địa chỉ là bắt buộc.</p>
+                                )}
+                            </div>
+                            <div className='flex flex-col gap-3 w-56'>
+                                <p className='font-medium text-base '>Mã nhân viên</p>
+                                <Input
+                                    className='border-spacing-1 border-gray-200 rounded-md  mb-4'
+                                    id='employee'
+                                    value={mdValue}
+                                    {...register('employee')}
+                                />
                             </div>
                         </div>
                         <div className='flex justify-center pr-16'>

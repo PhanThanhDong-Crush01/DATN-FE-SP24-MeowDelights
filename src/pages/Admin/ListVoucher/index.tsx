@@ -79,14 +79,7 @@ const Voucher = () => {
     }
 
     const { onRemove } = useVoucherMutation({
-        action: 'DELETE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Xoá thành công!!',
-                description: 'Danh mục khuyến mại đã bị xóa'
-            })
-        }
+        action: 'DELETE'
     })
 
     const [isModalOpen, setIsModalOpen] = useState(false)

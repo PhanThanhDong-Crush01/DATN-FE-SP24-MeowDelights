@@ -71,14 +71,7 @@ const Product = () => {
     })
 
     const { onStorage } = useProductMutation({
-        action: 'STORAGE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Xoá sản phẩm thành công!!',
-                description: 'Sẩn phẩm đã bị xóa'
-            })
-        }
+        action: 'STORAGE'
     })
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')

@@ -8,15 +8,7 @@ import { useForm } from 'react-hook-form'
 
 const ContactPage = () => {
     const { onSubmit } = useContactMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Gửi liên hệ thành công!!',
-                description:
-                    'Liên hệ của bạn đã được ghi nhận, nhân viên Meowdelights sẽ liên hệ với bạn trong thời gian sớm nhất!'
-            })
-        }
+        action: 'ADD'
     })
     const { register, handleSubmit, errors }: any = useForm()
 

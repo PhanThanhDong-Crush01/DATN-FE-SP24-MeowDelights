@@ -30,6 +30,13 @@ export const getOne = async (id: string) => {
 export const update = async (category: ICategory) => {
     try {
         const response = await instance.patch(`/categories/${category._id}`, category)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật thành công!!',
+                description: 'Cập nhật danh mục sản phẩm thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -42,6 +49,13 @@ export const update = async (category: ICategory) => {
 export const add = async (category: ICategory) => {
     try {
         const response = await instance.post('/categories/', category)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thêm thành công!!',
+                description: 'Thêm danh mục sản phẩm thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -54,6 +68,13 @@ export const add = async (category: ICategory) => {
 export const remove = async (category: ICategory) => {
     try {
         const response = await instance.delete(`/categories/${category._id}`)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Xóa thành công!!',
+                description: 'Xóa danh mục sản phẩm thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({

@@ -12,11 +12,6 @@ const AddAuth = () => {
     const { onSubmit } = useAuthMutation({
         action: 'ADD',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm thành công!!',
-                description: 'Thêm tài khoản nhân viên thành công!'
-            })
             navigate('/admin/user')
         }
     })

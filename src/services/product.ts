@@ -19,6 +19,13 @@ export const getAll = async () => {
 export const update = async (product: IProduct) => {
     try {
         const response = await instance.patch(`/products/${product._id}/update`, product)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật sản phẩm thành công!!',
+                description: 'Cập nhật sản phẩm thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -31,6 +38,13 @@ export const update = async (product: IProduct) => {
 export const add = async (product: IProduct) => {
     try {
         const response = await instance.post('/products/', product)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thêm sản phẩm thành công!!',
+                description: 'Thêm sản phẩm thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -43,6 +57,13 @@ export const add = async (product: IProduct) => {
 export const storage = async (product: IProduct) => {
     try {
         const response = await instance.patch(`/products/storage/${product._id}`, product.status)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Lưu trữ sản phẩm thành công!!',
+                description: 'Lưu trữ sản phẩm thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({

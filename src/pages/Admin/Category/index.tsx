@@ -20,14 +20,7 @@ interface DataType {
 const ListCategory = () => {
     const { data }: any = useCategoryQuery()
     const { onRemove } = useCategoryMutation({
-        action: 'DELETE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Xoá danh mục sản phẩm thành công!!',
-                description: 'Danh mục sản phẩm đã bị xóa'
-            })
-        }
+        action: 'DELETE'
     })
 
     const dataWithKeys = data?.data.map((item: any, index: any) => ({

@@ -18,14 +18,7 @@ import { toast } from '@/components/ui/use-toast'
 
 const AddCategory = () => {
     const { onSubmit } = useCategoryMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật thành công!!',
-                description: 'Cập nhật danh mục sản phẩm thành công!'
-            })
-        }
+        action: 'ADD'
     })
     const { register, handleSubmit, setValue } = useForm()
 

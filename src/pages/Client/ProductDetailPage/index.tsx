@@ -87,26 +87,19 @@ const ProductDetailPage = () => {
     }
 
     const { onSubmit } = useCartMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm sản phẩm vào giỏ hàng thành công!!',
-                description: 'Hãy kiểm tra giỏ hàng và đi đến trang thanh toán để mang đồ về cho boss nào!'
-            })
-        }
+        action: 'ADD'
     })
 
     const storedUserID = localStorage.getItem('userID')
 
     const onHandleSubmit = (data: any) => {
-        if (selectedColor == '') {
+        if (selectedColor === '') {
             toast({
                 variant: 'destructive',
                 title: 'Mời bạn chọn màu!!',
                 description: 'Bạn phải chọn 1 màu để thêm vào giỏ hàng !'
             })
-        } else if (selectedSize == '') {
+        } else if (selectedSize === '') {
             toast({
                 variant: 'destructive',
                 title: 'Mời bạn chọn kích cỡ!!',
@@ -123,7 +116,7 @@ const ProductDetailPage = () => {
                 iduser: storedUserID || '',
                 idpro: productId,
                 idprotype: TypeProductID,
-                quantity: data.quantity
+                quantity: Number(data.quantity)
             }
 
             if (storedUserID) {

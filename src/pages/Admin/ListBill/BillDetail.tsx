@@ -102,10 +102,6 @@ const BillDetail = () => {
             const change = await apiChangeStatusOrder(changeStatusOrder)
             setBill({ ...bill?.billChangeStatusOrderHistory, ...change.changeOrder })
             setOpen(false)
-            toast({
-                variant: 'success',
-                title: 'Cập nhật trạng thái cho đơn hàng thành công!!'
-            })
         }
     }
     const navigate = useNavigate()
@@ -119,21 +115,13 @@ const BillDetail = () => {
         const change = await apiCancelOrder(CancelOrder)
         setBill({ ...bill?.billChangeStatusOrderHistory, ...change.changeOrder })
         setOpen(false)
-        toast({
-            variant: 'success',
-            title: 'Hủy đơn hàng thành công!!'
-        })
+
         navigate('/admin/bill')
     }
     const { register, handleSubmit, setValue } = useForm()
     const { onSubmit } = useBillDetailMutation({
         action: 'UPDATE_PAYMENT_STATUS',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật thành công!!',
-                description: 'Cập nhật trạng thái thanh toán thành công!'
-            })
             navigate('/admin/bill')
         }
     })

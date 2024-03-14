@@ -64,6 +64,33 @@ const CartPage = () => {
         setIdVoucher(idVC.toLowerCase())
     }
 
+    const [diemTichLuy, setDiem] = useState(0)
+
+    const handleChangeDiamTichLuy = async (value: any) => {
+        setDiem(value.target.value)
+    }
+    const apDungDiem = async () => {
+        if (diemTichLuy > auth?.discount_points) {
+            toast({
+                variant: 'destructive',
+                title: 'Bạn làm gì có nhiều điểm thế, nhập lại đi!'
+            })
+        } else if (diemTichLuy < 0) {
+            toast({
+                variant: 'destructive',
+                title: 'Sao lại nhập âm, nhập lại đi, nhập số lớn hơn 0 ý!'
+            })
+        } else {
+            setTongTienCanThanhToan(tongTienCanThanhToan - diemTichLuy)
+            toast({
+                variant: 'success',
+                title: 'Sử dụng điểm tích lũy thành công!'
+            })
+            auth.discount_points = auth?.discount_points - diemTichLuy
+            await instance.patch(`/auth/${userID}`, auth)
+        }
+    }
+
     const [data, setDataVoucherOne] = useState<any>() // Fix variable name
 
     const xetIdVoucher = () => {
@@ -129,21 +156,25 @@ const CartPage = () => {
     }, [])
     const [dataMyVoucher, setdataMyVoucher] = useState<any[]>([])
     const [MyVoucher, setMyVoucher] = useState<any[]>([])
+    const [auth, setAuth] = useState<any>()
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await instance.get('/my_voucher/user/' + userID)
                 const dataPro = response.data?.datas || []
 
+                const user = await instance.get('/auth/' + userID)
+                setAuth(user.data.datas)
                 // Sort products by createdAt (newest to oldest)
                 dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-                const formattedData = dataPro.map((item: any) => {
-                    return {
+                const formattedData = dataPro
+                    .filter((item: any) => item?.voucher?.status === true)
+                    .map((item: any) => ({
                         value: item?.voucher?._id,
                         label: item?.voucher?.name
-                    }
-                })
+                    }))
+
                 setMyVoucher(dataPro)
                 setdataMyVoucher(formattedData)
             } catch (error) {
@@ -152,7 +183,7 @@ const CartPage = () => {
         }
 
         fetchData()
-    }, [userID])
+    }, [userID, tongTienCanThanhToan])
 
     const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
     useEffect(() => {
@@ -292,11 +323,49 @@ const CartPage = () => {
                         paddingLeft: '7%'
                     }}
                 >
-                    <div className='row' style={{ width: '50%' }}>
+                    <div className='row' style={{ width: '30%', display: 'flex', flexDirection: 'column' }}>
+                        {auth?.discount_points > 0 ? (
+                            <div className='form-group mb-3'>
+                                <h1 style={{ fontSize: '19px', marginBottom: '5px' }}>
+                                    Số điểm tích lũy của bạn:{' '}
+                                    <span style={{ color: 'gray' }}>{auth?.discount_points} VNĐ</span>
+                                </h1>
+                                <div className='input-group mb-0' style={{ display: 'flex' }}>
+                                    <input
+                                        style={{
+                                            width: '75%',
+                                            height: '40px',
+                                            border: '1px solid #d2d2d2',
+                                            borderRadius: '10px'
+                                        }}
+                                        type='mumber'
+                                        className='form-control'
+                                        aria-label='Coupon Code'
+                                        defaultValue={1}
+                                        min={1}
+                                        max={auth?.discount_points}
+                                        onChange={handleChangeDiamTichLuy}
+                                    />
+                                    <div className='input-group-append'>
+                                        <button
+                                            className='sigma_btn-custom shadow-none  btn'
+                                            type='button'
+                                            style={{ backgroundColor: '#FFCC01' }}
+                                            onClick={apDungDiem}
+                                        >
+                                            Áp dụng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            ''
+                        )}
+
                         <div className='form-group mb-0'>
-                            <div className='input-group mb-0'>
+                            <div className='input-group mb-0' style={{ display: 'flex' }}>
                                 <Select
-                                    style={{ width: '200px', height: '40px' }}
+                                    style={{ width: '77%', height: '40px' }}
                                     showSearch
                                     placeholder='Chọn mã giảm giá'
                                     optionFilterProp='children'
@@ -305,12 +374,6 @@ const CartPage = () => {
                                     filterOption={filterOption}
                                     options={dataMyVoucher}
                                 />
-                                {/* <input
-                                    type='text'
-                                    className='form-control'
-                                    placeholder='Nhập mã giảm giá'
-                                    aria-label='Coupon Code'
-                                /> */}
                                 <div className='input-group-append'>
                                     <button
                                         className='sigma_btn-custom shadow-none  btn'
@@ -391,9 +454,7 @@ const CartPage = () => {
                                 <td data-title='Product'>
                                     <div className='sigma_cart-product-wrapper'>
                                         <div className='sigma_cart-product-body'>
-                                            <h6>
-                                                <a href='#'>Tổng tiền giỏ hàng</a>
-                                            </h6>
+                                            <h6>Tổng tiền giỏ hàng</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -401,12 +462,11 @@ const CartPage = () => {
                                     <div className='sigma_cart-classify-wrapper'>
                                         <div className='sigma_cart-classify-body'>
                                             <h6>
-                                                <a
-                                                    href='#'
+                                                <p
                                                     dangerouslySetInnerHTML={{
                                                         __html: formatPriceBootstrap(dataCart?.totalAmount)
                                                     }}
-                                                ></a>
+                                                ></p>
                                             </h6>
                                         </div>
                                     </div>
@@ -417,9 +477,7 @@ const CartPage = () => {
                                 <td data-title='Product'>
                                     <div className='sigma_cart-product-wrapper'>
                                         <div className='sigma_cart-product-body'>
-                                            <h6>
-                                                <a href='#'>Phí vận chuyển</a>
-                                            </h6>
+                                            <h6>Phí vận chuyển</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -427,12 +485,11 @@ const CartPage = () => {
                                     <div className='sigma_cart-classify-wrapper'>
                                         <div className='sigma_cart-classify-body'>
                                             <h6>
-                                                <a
-                                                    href='#'
+                                                <p
                                                     dangerouslySetInnerHTML={{
                                                         __html: formatPriceBootstrap(phiVanChuyen)
                                                     }}
-                                                ></a>
+                                                ></p>
                                             </h6>
                                         </div>
                                     </div>
@@ -443,9 +500,7 @@ const CartPage = () => {
                                 <td data-title='Product'>
                                     <div className='sigma_cart-product-wrapper'>
                                         <div className='sigma_cart-product-body'>
-                                            <h6>
-                                                <a href='#'>Voucher giảm giá</a>
-                                            </h6>
+                                            <h6>Voucher giảm giá</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -453,12 +508,11 @@ const CartPage = () => {
                                     <div className='sigma_cart-classify-wrapper'>
                                         <div className='sigma_cart-classify-body'>
                                             <h6>
-                                                <a
-                                                    href='#'
+                                                <p
                                                     dangerouslySetInnerHTML={{
                                                         __html: formatPriceBootstrap(voucherGiamGia)
                                                     }}
-                                                ></a>
+                                                ></p>
                                             </h6>
                                         </div>
                                     </div>
@@ -469,9 +523,7 @@ const CartPage = () => {
                                 <td data-title='Product'>
                                     <div className='sigma_cart-product-wrapper'>
                                         <div className='sigma_cart-product-body'>
-                                            <h6>
-                                                <a href='#'>TỔNG TIỀN ĐƠN HÀNG</a>
-                                            </h6>
+                                            <h6>TỔNG TIỀN ĐƠN HÀNG</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -479,13 +531,12 @@ const CartPage = () => {
                                     <div className='sigma_cart-classify-wrapper'>
                                         <div className='sigma_cart-classify-body'>
                                             <h6>
-                                                <a
+                                                <p
                                                     style={{ fontWeight: 900, fontSize: '30px', color: 'red' }}
-                                                    href='#'
                                                     dangerouslySetInnerHTML={{
                                                         __html: formatPriceBootstrap(Number(tongTienCanThanhToan))
                                                     }}
-                                                ></a>
+                                                ></p>
                                             </h6>
                                         </div>
                                     </div>

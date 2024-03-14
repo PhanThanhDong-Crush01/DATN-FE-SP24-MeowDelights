@@ -99,6 +99,7 @@ const Routers = () => {
                 <Route path='bill/:id' element={<BillDetail />} />
                 <Route path='contact' element={<ListContact />} />
             </Route>
+            <Route path='*' element={'Page Not Found'} />
         </Routes>
     )
 }

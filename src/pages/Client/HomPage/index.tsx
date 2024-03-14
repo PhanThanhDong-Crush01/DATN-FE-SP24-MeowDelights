@@ -230,7 +230,7 @@ const HomePage = () => {
                                                 <div className='sigma_info style-15'>
                                                     <div className='sigma_info-description'>
                                                         <h5>
-                                                            <a href='#'>Nuôi mèo</a>
+                                                            <a>Nuôi mèo</a>
                                                         </h5>
                                                         <p>
                                                             Chúng tôi có nhiều lựa chọn về mèo như phụ kiện, đồ chơi,
@@ -243,7 +243,7 @@ const HomePage = () => {
                                                 <div className='sigma_info style-15'>
                                                     <div className='sigma_info-description'>
                                                         <h5>
-                                                            <a href='#'>Nuôi mèo</a>
+                                                            <a>Nuôi mèo</a>
                                                         </h5>
                                                         <p>
                                                             Chúng tôi có nhiều lựa chọn về mèo như phụ kiện, đồ chơi,
@@ -275,7 +275,11 @@ const HomePage = () => {
                                     <ul className='nav nav-tabs' id='myTab' role='tablist'>
                                         {data?.data &&
                                             data?.data.map((cate: any) => (
-                                                <li className='nav-item' onClick={() => locCate(cate._id)}>
+                                                <li
+                                                    className='nav-item'
+                                                    onClick={() => locCate(cate._id)}
+                                                    key={cate?._id}
+                                                >
                                                     <a
                                                         className='nav-link active'
                                                         id='photo-tab'
@@ -303,39 +307,35 @@ const HomePage = () => {
                                     <div className='row'>
                                         {productEight &&
                                             productEight.map((pro: any) => (
-                                                <div className='col-lg-3 col-md-6'>
+                                                <div className='col-lg-3 col-md-6' key={pro?._id}>
                                                     <div className='sigma_product style-8'>
                                                         <div className='sigma_product-thumb'>
                                                             <a href={'products/' + pro?._id}>
                                                                 <img src={pro?.image} alt='anh' />
                                                             </a>
                                                             <div className='sigma_product-controls'>
-                                                                <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                                    {' '}
-                                                                    <i className='far fa-heart' />{' '}
-                                                                </a>
+                                                                <p data-toggle='tooltip' title='Wishlist'>
+                                                                    <i className='far fa-heart' />
+                                                                </p>
                                                                 <a
                                                                     href='product-details.html'
                                                                     data-toggle='tooltip'
                                                                     title='Add To Cart'
                                                                 >
-                                                                    {' '}
-                                                                    <i className='far fa-shopping-basket' />{' '}
+                                                                    <i className='far fa-shopping-basket' />
                                                                 </a>
-                                                                <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                                    {' '}
+                                                                <p data-toggle='tooltip' title='Quick View'>
                                                                     <i
                                                                         data-toggle='modal'
                                                                         data-target='#quickViewModal'
                                                                         className='far fa-eye'
-                                                                    />{' '}
-                                                                </a>
+                                                                    />
+                                                                </p>
                                                             </div>
                                                         </div>
                                                         <div className='sigma_product-body'>
                                                             <h5 className='sigma_product-title'>
-                                                                {' '}
-                                                                <a href={'products/' + pro?._id}>{pro?.name}</a>{' '}
+                                                                <a href={'products/' + pro?._id}>{pro?.name}</a>
                                                             </h5>
                                                             <div className='sigma_rating'>
                                                                 <i className='fas fa-star' />
@@ -349,9 +349,7 @@ const HomePage = () => {
                                                                 <span>{pro?.maxPrice} </span>
                                                                 <i> VNĐ </i>
                                                             </div>
-                                                            <a href='#' className='sigma_btn btn-sm'>
-                                                                Thêm giỏ hàng
-                                                            </a>
+                                                            <p className='sigma_btn btn-sm'>Thêm giỏ hàng</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -367,32 +365,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/5.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Food Dispenser</a>{' '}
+                                                        <a href='product-details.html'>Food Dispenser</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -405,9 +399,7 @@ const HomePage = () => {
                                                         <span>29$</span>
                                                         <span>49$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -418,32 +410,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/6.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Leather Belts</a>{' '}
+                                                        <a href='product-details.html'>Leather Belts</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -456,9 +444,7 @@ const HomePage = () => {
                                                         <span>78$</span>
                                                         <span>99$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -469,32 +455,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/7.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Cat Play House</a>{' '}
+                                                        <a href='product-details.html'>Cat Play House</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -507,9 +489,7 @@ const HomePage = () => {
                                                         <span>36$</span>
                                                         <span>55$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -520,32 +500,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/8.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Pet Crate</a>{' '}
+                                                        <a href='product-details.html'>Pet Crate</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -558,9 +534,7 @@ const HomePage = () => {
                                                         <span>45$</span>
                                                         <span>87$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -580,32 +554,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/9.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Food Dispenser</a>{' '}
+                                                        <a href='product-details.html'>Food Dispenser</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -618,9 +588,7 @@ const HomePage = () => {
                                                         <span>29$</span>
                                                         <span>49$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -631,32 +599,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/10.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Leather Belts</a>{' '}
+                                                        <a href='product-details.html'>Leather Belts</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -669,9 +633,7 @@ const HomePage = () => {
                                                         <span>78$</span>
                                                         <span>99$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -682,32 +644,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/11.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Cat Play House</a>{' '}
+                                                        <a href='product-details.html'>Cat Play House</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -720,9 +678,7 @@ const HomePage = () => {
                                                         <span>36$</span>
                                                         <span>55$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -733,32 +689,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/12.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Pet Crate</a>{' '}
+                                                        <a href='product-details.html'>Pet Crate</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -771,9 +723,7 @@ const HomePage = () => {
                                                         <span>45$</span>
                                                         <span>87$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -793,32 +743,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/5.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Food Dispenser</a>{' '}
+                                                        <a href='product-details.html'>Food Dispenser</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -831,9 +777,7 @@ const HomePage = () => {
                                                         <span>29$</span>
                                                         <span>49$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -844,32 +788,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/9.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Leather Belts</a>{' '}
+                                                        <a href='product-details.html'>Leather Belts</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -882,9 +822,7 @@ const HomePage = () => {
                                                         <span>78$</span>
                                                         <span>99$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -895,32 +833,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/1.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Cat Play House</a>{' '}
+                                                        <a href='product-details.html'>Cat Play House</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -933,9 +867,7 @@ const HomePage = () => {
                                                         <span>36$</span>
                                                         <span>55$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -946,32 +878,28 @@ const HomePage = () => {
                                                         <img src='src/assets/img/shop/6.png' alt='product' />
                                                     </a>
                                                     <div className='sigma_product-controls'>
-                                                        <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                            {' '}
-                                                            <i className='far fa-heart' />{' '}
-                                                        </a>
+                                                        <p data-toggle='tooltip' title='Wishlist'>
+                                                            <i className='far fa-heart' />
+                                                        </p>
                                                         <a
                                                             href='product-details.html'
                                                             data-toggle='tooltip'
                                                             title='Add To Cart'
                                                         >
-                                                            {' '}
-                                                            <i className='far fa-shopping-basket' />{' '}
+                                                            <i className='far fa-shopping-basket' />
                                                         </a>
-                                                        <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                            {' '}
+                                                        <p data-toggle='tooltip' title='Quick View'>
                                                             <i
                                                                 data-toggle='modal'
                                                                 data-target='#quickViewModal'
                                                                 className='far fa-eye'
-                                                            />{' '}
-                                                        </a>
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className='sigma_product-body'>
                                                     <h5 className='sigma_product-title'>
-                                                        {' '}
-                                                        <a href='product-details.html'>Pet Crate</a>{' '}
+                                                        <a href='product-details.html'>Pet Crate</a>
                                                     </h5>
                                                     <div className='sigma_rating'>
                                                         <i className='fas fa-star' />
@@ -984,9 +912,7 @@ const HomePage = () => {
                                                         <span>45$</span>
                                                         <span>87$</span>
                                                     </div>
-                                                    <a href='#' className='sigma_btn btn-sm'>
-                                                        Add to Cart
-                                                    </a>
+                                                    <p className='sigma_btn btn-sm'>Add to Cart</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1012,26 +938,24 @@ const HomePage = () => {
                                     </div>
                                     <div className='sigma_team-body'>
                                         <h5>
-                                            <a href='#'>Peter Ronson</a>
+                                            <a>Peter Ronson</a>
                                         </h5>
                                         <div className='sigma_team-categories'>
-                                            <a href='#' className='sigma_team-category'>
-                                                Người sáng lập
-                                            </a>
+                                            <p className='sigma_team-category'>Người sáng lập</p>
                                         </div>
                                         <ul className='sigma_social-icons'>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-facebook-f' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-twitter' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-instagram' />
                                                 </a>
                                             </li>
@@ -1046,26 +970,24 @@ const HomePage = () => {
                                     </div>
                                     <div className='sigma_team-body'>
                                         <h5>
-                                            <a href='#'>Emilia Johnson</a>
+                                            <a>Emilia Johnson</a>
                                         </h5>
                                         <div className='sigma_team-categories'>
-                                            <a href='#' className='sigma_team-category'>
-                                                Người hướng dẫn thú cưng
-                                            </a>
+                                            <p className='sigma_team-category'>Người hướng dẫn thú cưng</p>
                                         </div>
                                         <ul className='sigma_social-icons'>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-facebook-f' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-twitter' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-instagram' />
                                                 </a>
                                             </li>
@@ -1080,26 +1002,24 @@ const HomePage = () => {
                                     </div>
                                     <div className='sigma_team-body'>
                                         <h5>
-                                            <a href='#'>Barbra Stevens</a>
+                                            <a>Barbra Stevens</a>
                                         </h5>
                                         <div className='sigma_team-categories'>
-                                            <a href='#' className='sigma_team-category'>
-                                                Trợ lý
-                                            </a>
+                                            <p className='sigma_team-category'>Trợ lý</p>
                                         </div>
                                         <ul className='sigma_social-icons'>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-facebook-f' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-twitter' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-instagram' />
                                                 </a>
                                             </li>
@@ -1114,26 +1034,24 @@ const HomePage = () => {
                                     </div>
                                     <div className='sigma_team-body'>
                                         <h5>
-                                            <a href='#'>Isabella</a>
+                                            <a>Isabella</a>
                                         </h5>
                                         <div className='sigma_team-categories'>
-                                            <a href='#' className='sigma_team-category'>
-                                                Bác sĩ thú cưng
-                                            </a>
+                                            <p className='sigma_team-category'>Bác sĩ thú cưng</p>
                                         </div>
                                         <ul className='sigma_social-icons'>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-facebook-f' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-twitter' />
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href='#'>
+                                                <a>
                                                     <i className='fab fa-instagram' />
                                                 </a>
                                             </li>
@@ -1162,8 +1080,7 @@ const HomePage = () => {
                                             </div>
                                             <div className='sigma_product-body'>
                                                 <h5 className='sigma_product-title'>
-                                                    {' '}
-                                                    <a href='product-details.html'>{item?.name}</a>{' '}
+                                                    <a href='product-details.html'>{item?.name}</a>
                                                 </h5>
                                                 <div className='sigma_rating'>
                                                     <i className='fas fa-star' />
@@ -1177,11 +1094,8 @@ const HomePage = () => {
                                                     <span>{item?.maxPrice}</span>
                                                     <i>VNĐ</i>
                                                 </div>
-                                                <a href='#' className='sigma_btn btn-sm'>
-                                                    Thêm vào giỏ hàng
-                                                </a>
+                                                <p className='sigma_btn btn-sm'>Thêm vào giỏ hàng</p>
                                                 <a
-                                                    href='#'
                                                     className='sigma_btn btn-sm light'
                                                     data-toggle='modal'
                                                     data-target='#quickViewModal'
@@ -1211,32 +1125,28 @@ const HomePage = () => {
                                                     <img src={pro?.image} alt='product' />
                                                 </a>
                                                 <div className='sigma_product-controls'>
-                                                    <a href='#' data-toggle='tooltip' title='Wishlist'>
-                                                        {' '}
-                                                        <i className='far fa-heart' />{' '}
-                                                    </a>
+                                                    <p data-toggle='tooltip' title='Wishlist'>
+                                                        <i className='far fa-heart' />
+                                                    </p>
                                                     <a
                                                         href='product-details.html'
                                                         data-toggle='tooltip'
                                                         title='Add To Cart'
                                                     >
-                                                        {' '}
-                                                        <i className='far fa-shopping-basket' />{' '}
+                                                        <i className='far fa-shopping-basket' />
                                                     </a>
-                                                    <a href='#' data-toggle='tooltip' title='Quick View'>
-                                                        {' '}
+                                                    <p data-toggle='tooltip' title='Quick View'>
                                                         <i
                                                             data-toggle='modal'
                                                             data-target='#quickViewModal'
                                                             className='far fa-eye'
-                                                        />{' '}
-                                                    </a>
+                                                        />
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div className='sigma_product-body'>
                                                 <h5 className='sigma_product-title'>
-                                                    {' '}
-                                                    <a href='product-details.html'>{pro?.name}</a>{' '}
+                                                    <a href='product-details.html'>{pro?.name}</a>
                                                 </h5>
                                                 <div className='sigma_rating'>
                                                     <i className='fas fa-star' />
@@ -1250,9 +1160,7 @@ const HomePage = () => {
                                                     <span>{pro?.maxPrice}</span>
                                                     <i>VNĐ</i>
                                                 </div>
-                                                <a href='#' className='sigma_btn btn-sm'>
-                                                    Thêm vào giỏ hàng
-                                                </a>
+                                                <p className='sigma_btn btn-sm'>Thêm vào giỏ hàng</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1268,16 +1176,16 @@ const HomePage = () => {
                         <div className='container-fluid p-0'>
                             <div className='sigma_instagram style-1 insta-images'>
                                 <div className='chiu_roi' style={{ marginLeft: '10px' }}>
-                                    <a href='#'>
+                                    <a>
                                         <img src='src/assets/img/home-2/376x430.jpg' alt='img' />
                                     </a>
-                                    <a href='#'>
+                                    <a>
                                         <img src='src/assets/img/home-2/376x430-0.jpg' alt='img' />
                                     </a>
-                                    <a href='#'>
+                                    <a>
                                         <img src='src/assets/img/home-2/376x430-1.jpg' alt='img' />
                                     </a>
-                                    <a href='#'>
+                                    <a>
                                         <img src='src/assets/img/home-2/376x430-2.jpg' alt='img' />
                                     </a>
                                 </div>
@@ -1459,9 +1367,7 @@ const HomePage = () => {
                                                 <a href='blog-details.html'>Taking Your Dog Out On The First Date</a>
                                             </h5>
                                         </div>
-                                        <a href='#' className='btn-link'>
-                                            Read more
-                                        </a>
+                                        <a className='btn-link'>Read more</a>
                                     </div>
                                 </article>
                             </div>
@@ -1499,9 +1405,7 @@ const HomePage = () => {
                                                 <a href='blog-details.html'>What Your Cat Breed Says About You</a>
                                             </h5>
                                         </div>
-                                        <a href='#' className='btn-link'>
-                                            Read more
-                                        </a>
+                                        <a className='btn-link'>Read more</a>
                                     </div>
                                 </article>
                             </div>
@@ -1539,9 +1443,7 @@ const HomePage = () => {
                                                 <a href='blog-details.html'>Secrets to a Better Life With Your Dog</a>
                                             </h5>
                                         </div>
-                                        <a href='#' className='btn-link'>
-                                            Read more
-                                        </a>
+                                        <a className='btn-link'>Read more</a>
                                     </div>
                                 </article>
                             </div>
@@ -1600,8 +1502,7 @@ const HomePage = () => {
                                                     </strong>
                                                 </p>
                                                 <p>
-                                                    <strong>Tags: </strong> <a href='#'>Fashion</a>,{' '}
-                                                    <a href='#'>ClassNameic</a>{' '}
+                                                    <strong>Tags: </strong> <a>Fashion</a>,<a>ClassNameic</a>
                                                 </p>
                                             </div>
 
@@ -1610,19 +1511,19 @@ const HomePage = () => {
                                             <form className='sigma_product-atc-form'>
                                                 <div className='sigma_product-buttons d-block'>
                                                     <a href='product-details.html' className='ml-0 btn-block sigma_btn'>
-                                                        Buy Now <i className='far fa-shopping-basket' />{' '}
+                                                        Buy Now <i className='far fa-shopping-basket' />
                                                     </a>
                                                     <a
                                                         href='product-details.html'
                                                         className='ml-0 btn-block sigma_btn light'
                                                     >
-                                                        Wishlist <i className='far fa-heart' />{' '}
+                                                        Wishlist <i className='far fa-heart' />
                                                     </a>
                                                     <a
                                                         href='product-details.html'
                                                         className='ml-0 btn-block sigma_btn light'
                                                     >
-                                                        Compare <i className='far fa-compress' />{' '}
+                                                        Compare <i className='far fa-compress' />
                                                     </a>
                                                 </div>
                                             </form>
@@ -1632,22 +1533,22 @@ const HomePage = () => {
                                                     <h5>Share</h5>
                                                     <ul className='sigma_sm'>
                                                         <li>
-                                                            <a href='#'>
+                                                            <a>
                                                                 <i className='fab fa-facebook-f' />
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href='#'>
+                                                            <a>
                                                                 <i className='fab fa-linkedin-in' />
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href='#'>
+                                                            <a>
                                                                 <i className='fab fa-twitter' />
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href='#'>
+                                                            <a>
                                                                 <i className='fab fa-youtube' />
                                                             </a>
                                                         </li>

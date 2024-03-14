@@ -3,8 +3,9 @@ import instance from '@/services/core/api'
 import { Layout } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import '@/styles/listVouherAdmin.css'
 
-const { Content, Sider } = Layout
+const { Content } = Layout
 type Props = {}
 const MyVoucher = (_props: Props) => {
     const [userID, setUserID] = useState<any>()
@@ -15,7 +16,6 @@ const MyVoucher = (_props: Props) => {
         }
     }, [])
     const [dataMyVoucher, setdataMyVoucher] = useState<any[]>([])
-    console.log('🚀 ~ MyVoucher ~ dataMyVoucher:', dataMyVoucher)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -29,7 +29,18 @@ const MyVoucher = (_props: Props) => {
                     ...item,
                     key: index + 1
                 }))
-                setdataMyVoucher(formattedData)
+
+                setdataMyVoucher(
+                    formattedData.sort((a: any, b: any) => {
+                        if (a.voucher.status === true && b.voucher.status === false) {
+                            return -1 // a trước b
+                        } else if (a.voucher.status === false && b.voucher.status === true) {
+                            return 1 // b trước a
+                        } else {
+                            return 0 // Giữ nguyên vị trí
+                        }
+                    })
+                )
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
@@ -57,7 +68,7 @@ const MyVoucher = (_props: Props) => {
                                 >
                                     {dataMyVoucher.map((item) => (
                                         <div
-                                            className=''
+                                            className={item?.voucher?.status === true ? 'statusTrue' : 'statusFalse'}
                                             style={{
                                                 width: '600px',
                                                 display: 'flex',
@@ -70,7 +81,11 @@ const MyVoucher = (_props: Props) => {
                                         >
                                             <div className='image'>
                                                 <img
-                                                    src='https://www.veggiepatch.com.au/wp-content/uploads/2017/06/Gift-Voucher-1.png'
+                                                    src={
+                                                        item?.voucher?.status === true
+                                                            ? 'https://www.veggiepatch.com.au/wp-content/uploads/2017/06/Gift-Voucher-1.png'
+                                                            : 'https://res.cloudinary.com/drwpkuqxv/image/upload/c_crop,g_auto:12,h_800,w_150/b6oaapgwb1hqxouctswl.jpg'
+                                                    }
                                                     alt='anh'
                                                     width={200}
                                                 />
@@ -99,7 +114,7 @@ const MyVoucher = (_props: Props) => {
                                                         fontSize: '18px'
                                                     }}
                                                 >
-                                                    Lượt sử dụng:{' '}
+                                                    Lượt sử dụng: &nbsp;
                                                     <span
                                                         style={{
                                                             color: 'red',
@@ -122,7 +137,13 @@ const MyVoucher = (_props: Props) => {
                                             <div>
                                                 <Link to={`/products`}>
                                                     <button type='submit' className='btn btn-warning'>
-                                                        Dùng sau
+                                                        {item?.voucher?.status === true ? (
+                                                            'Dùng sau'
+                                                        ) : (
+                                                            <span style={{ color: 'red', fontWeight: 700 }}>
+                                                                Hết hiệu lực
+                                                            </span>
+                                                        )}
                                                     </button>
                                                 </Link>
                                             </div>

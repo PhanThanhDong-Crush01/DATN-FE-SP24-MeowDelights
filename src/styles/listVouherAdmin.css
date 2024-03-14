@@ -1,0 +1,12 @@
+.voucher-expired {
+    background: url('https://res.cloudinary.com/drwpkuqxv/image/upload/v1710340265/b6oaapgwb1hqxouctswl.png'); /* Ảnh nền */
+    background-repeat: 1; /* Không lặp lại */
+    background-size: cover; /* Tự động điều chỉnh kích thước ảnh để lấp đầy nền */
+    opacity: 50%; /* Độ mờ của background */
+}
+.statusFalse {
+    background: url('https://res.cloudinary.com/drwpkuqxv/image/upload/v1710340265/b6oaapgwb1hqxouctswl.png'); /* Ảnh nền */
+    background-size: cover; /* Đảm bảo hình ảnh nền che phủ toàn bộ phần tử */
+    background-repeat: 1; /* Không lặp lại */
+    opacity: 60%; /* Độ mờ của background */
+}

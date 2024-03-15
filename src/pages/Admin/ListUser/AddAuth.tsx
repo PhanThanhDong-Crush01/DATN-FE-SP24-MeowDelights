@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 const AddAuth = () => {
     const navigate = useNavigate()
+    const [userId, setUserId] = useState('')
     const [password, setPassword] = useState('') // State để lưu trữ giá trị mật khẩu
     const [confirmPassword, setConfirmPassword] = useState('') // State để lưu trữ giá trị nhập lại mật khẩu
     const { onSubmit } = useAuthMutation({

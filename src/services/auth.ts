@@ -158,3 +158,15 @@ export const editAuth = async (user: any) => {
         console.log(`['_AUTH_ERROR']`, error)
     }
 }
+export const deleteEmployee = async (user: IAuth) => {
+    try {
+        const response = await instance.patch(`/auth/deleteEmployee/${user._id}`, user)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['delete_Employee']`, error)
+    }
+}

@@ -15,6 +15,9 @@ import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
+import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
+import { toast } from '@/components/ui/use-toast'
+import { deleteEmployee } from '@/services/auth'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -54,6 +57,9 @@ const ListUserPage = () => {
             )
         }
     }, [data])
+    const handleDelete = (record: any) => {
+        deleteEmployee(record)
+    }
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -319,7 +325,7 @@ const ListUserPage = () => {
             title: 'Hành động',
             dataIndex: '',
             key: 'x',
-            width: '20%',
+            width: '30%',
             fixed: 'right',
             render: (_, record) => (
                 <Space size='middle'>
@@ -329,6 +335,20 @@ const ListUserPage = () => {
                     <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
                         <FormOutlined style={{ display: 'inline-flex' }} />
                     </Link>
+
+                    <Popconfirm
+                        placement='topRight'
+                        title='Xóa mã nhân viên?'
+                        description='Bạn có chắc chắn xóa mã nhân viên này không?'
+                        onConfirm={() => handleDelete(record)}
+                        onCancel={cancel}
+                        okText='Đồng ý'
+                        cancelText='Không'
+                    >
+                        <Button type='primary' danger>
+                            <DeleteOutlined style={{ display: 'inline-flex' }} />
+                        </Button>
+                    </Popconfirm>
                 </Space>
             )
         }

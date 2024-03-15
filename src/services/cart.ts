@@ -46,6 +46,7 @@ export const update = async (cart: ICart) => {
     }
 }
 export const add = async (cart: ICart) => {
+    console.log('🚀 ~ add ~ cart:', cart)
     try {
         const response = await instance.post('/cart', cart)
         if (response.data) {

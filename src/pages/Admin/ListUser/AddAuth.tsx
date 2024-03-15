@@ -2,8 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
-import { useTypeVoucherQuery } from '@/hooks/TypeVoucher/useTypeVoucherQuery'
-import { useVoucherMutation } from '@/hooks/Voucher/useVoucherMutation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -14,11 +12,6 @@ const AddAuth = () => {
     const { onSubmit } = useAuthMutation({
         action: 'ADD',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm thành công!!',
-                description: 'Thêm tài khoản nhân viên thành công!'
-            })
             navigate('/admin/user')
         }
     })

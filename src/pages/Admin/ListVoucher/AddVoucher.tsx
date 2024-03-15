@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
 import { useTypeVoucherQuery } from '@/hooks/TypeVoucher/useTypeVoucherQuery'
 import { useVoucherMutation } from '@/hooks/Voucher/useVoucherMutation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 const AddVoucher = () => {
@@ -13,11 +14,6 @@ const AddVoucher = () => {
     const { onSubmit } = useVoucherMutation({
         action: 'ADD',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm thành công!!',
-                description: 'Thêm danh mục khuyến mại thành công!'
-            })
             navigate('/admin/voucher')
         }
     })
@@ -27,6 +23,7 @@ const AddVoucher = () => {
         setValue,
         formState: { errors }
     } = useForm()
+    const [currentDate] = useState(new Date())
 
     const onHandleSubmit = (data: any) => {
         const dataNew = {
@@ -35,6 +32,7 @@ const AddVoucher = () => {
                 status: true,
                 quantity: data.quantity,
                 decrease: data.decrease,
+                startDate: data.startDate,
                 expiry: data.expiry,
                 conditions: data.conditions,
                 idTypeVoucher: data.idTypeVoucher
@@ -55,13 +53,14 @@ const AddVoucher = () => {
                 <form onSubmit={handleSubmit(onHandleSubmit)} className=''>
                     <h1 style={{ fontSize: '20px', marginTop: '20px' }}>Thêm voucher</h1>
 
-                    <div className='flex flex-row gap-5'>
+                    <div className='flex flex-row gap-5  mt-2'>
                         <div>
                             <p>Tên voucher</p>
                             <Input
                                 className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
                                 type='text'
                                 id='name'
+                                style={{ border: '1px solid gray' }}
                                 {...register('name', { required: true, minLength: 3, maxLength: 50 })}
                                 onChange={(e) => setValue('name', e.target.value)}
                                 placeholder='Mã voucher'
@@ -80,34 +79,94 @@ const AddVoucher = () => {
                                 className='border-spacing-1 border-gray-200 pl-3 mb-1'
                                 type='number'
                                 id='decrease'
-                                placeholder='Giảm'
-                                {...register('decrease', { required: true, min: 1 })}
+                                defaultValue={1000}
+                                style={{ border: '1px solid gray' }}
+                                {...register('decrease', { required: true, min: 1000 })}
                                 onChange={(e) => setValue('decrease', e.target.value)}
                             />
                             {errors.decrease && errors.decrease.type === 'required' && (
                                 <p className='text-red-500'>Giảm là bắt buộc.</p>
                             )}
                             {errors.decrease && errors.decrease.type === 'min' && (
-                                <p className='text-red-500'>Giảm phải lớn hơn hoặc bằng 0.</p>
+                                <p className='text-red-500'>Giảm phải lớn hơn hoặc bằng 1000.</p>
                             )}
                         </div>
                     </div>
-                    <div className='flex flex-row gap-5'>
+                    <div className='flex flex-row gap-5  mt-2'>
+                        <div>
+                            <p>Ngày bắt đầu</p>
+                            <input
+                                className='border-spacing-1 border-gray-200 pl-2 rounded-md h-14  mb-1 -mr-0'
+                                type='date'
+                                style={{ border: '1px solid gray', width: '185px' }}
+                                placeholder='Ngày hết hạn'
+                                id='startDate'
+                                {...register('startDate', {
+                                    required: 'Ngày bắt đầu là bắt buộc',
+                                    pattern: {
+                                        value: /^\d{4}-\d{2}-\d{2}$/,
+                                        message: 'Vui lòng nhập ngày hợp lệ (YYYY-MM-DD)'
+                                    },
+                                    validate: {
+                                        futureDate: (value) =>
+                                            new Date(value) > currentDate ||
+                                            'Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại',
+                                        maxDate: (value) =>
+                                            new Date(value) <=
+                                                new Date(currentDate.getTime() + 90 * 24 * 60 * 60 * 1000) ||
+                                            'Ngày bắt đầu không thể sau 3 tháng'
+                                    }
+                                })}
+                                onChange={(e) => setValue('startDate', e.target.value)}
+                            />
+                            {errors.startDate && (
+                                <p className='text-red-500'>
+                                    {typeof errors.startDate === 'string' ? errors.startDate : errors.startDate.message}
+                                </p>
+                            )}{' '}
+                        </div>
                         <div>
                             <p>Ngày hết hạn</p>
-                            <Input
-                                className='border-spacing-1 border-gray-200  rounded-md h-14 pl-5  mb-1 -mr-0'
+                            <input
+                                className='border-spacing-1 border-gray-200 pl-2 rounded-md h-14  mb-1 -mr-0'
                                 type='date'
+                                style={{ border: '1px solid gray', width: '200px' }}
                                 placeholder='Ngày hết hạn'
                                 id='expiry'
-                                {...register('expiry', { required: true, pattern: /^\d{4}-\d{2}-\d{2}$/ })}
+                                {...register('expiry', {
+                                    required: 'Ngày hết hạn là bắt buộc',
+                                    pattern: {
+                                        value: /^\d{4}-\d{2}-\d{2}$/,
+                                        message: 'Vui lòng nhập ngày hợp lệ (YYYY-MM-DD)'
+                                    },
+                                    validate: {
+                                        startDateAfterEndDate: (value, { startDate }) =>
+                                            new Date(value) >= new Date(startDate) ||
+                                            'Ngày hết hạn không thể trước ngày bắt đầu'
+                                    }
+                                })}
                                 onChange={(e) => setValue('expiry', e.target.value)}
                             />
-                            {errors.expiry && errors.expiry.type === 'required' && (
-                                <p className='text-red-500'>Ngày hết hạn là bắt buộc.</p>
+                            {errors.expiry && <p className='text-red-500'>{errors.expiry.message}</p>}
+                        </div>
+                    </div>
+                    <div className='flex flex-row gap-5 mt-2'>
+                        <div>
+                            <p>Số lượng</p>
+                            <Input
+                                className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-1'
+                                type='number'
+                                id='quantity'
+                                defaultValue={1}
+                                style={{ width: '185px', border: '1px solid gray' }}
+                                {...register('quantity', { required: true, min: 1 })}
+                                onChange={(e) => setValue('quantity', e.target.value)}
+                            />
+                            {errors.quantity && errors.quantity.type === 'required' && (
+                                <p className='text-red-500'>Giảm là bắt buộc.</p>
                             )}
-                            {errors.expiry && errors.expiry.type === 'pattern' && (
-                                <p className='text-red-500'>Vui lòng nhập ngày hợp lệ (YYYY-MM-DD).</p>
+                            {errors.quantity && errors.quantity.type === 'min' && (
+                                <p className='text-red-500'>Giảm phải lớn hơn hoặc bằng 1 .</p>
                             )}
                         </div>
                         <div>
@@ -116,6 +175,7 @@ const AddVoucher = () => {
                                 className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-1'
                                 type='number'
                                 id='conditions'
+                                style={{ border: '1px solid gray' }}
                                 placeholder='Hóa đơn tối thiểu'
                                 {...register('conditions', { required: true, min: 1 })}
                                 onChange={(e) => setValue('conditions', e.target.value)}
@@ -128,24 +188,7 @@ const AddVoucher = () => {
                             )}
                         </div>
                     </div>
-                    <div className='flex flex-row gap-5'>
-                        <div>
-                            <p>Số lượng</p>
-                            <Input
-                                className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-1'
-                                type='number'
-                                id='quantity'
-                                placeholder='Số lượng'
-                                {...register('quantity', { required: true, min: 1 })}
-                                onChange={(e) => setValue('quantity', e.target.value)}
-                            />
-                            {errors.quantity && errors.quantity.type === 'required' && (
-                                <p className='text-red-500'>Giảm là bắt buộc.</p>
-                            )}
-                            {errors.quantity && errors.quantity.type === 'min' && (
-                                <p className='text-red-500'>Giảm phải lớn hơn hoặc bằng 1 .</p>
-                            )}
-                        </div>
+                    <div className=' mt-2'>
                         <div>
                             <p>Loại mã</p>
                             <select
@@ -157,7 +200,7 @@ const AddVoucher = () => {
                                     const selectedIndex = e.target.selectedIndex
                                     setValue('idTypeVoucher', e.target.options[selectedIndex].value)
                                 }}
-                                style={{ width: '270px' }}
+                                style={{ width: '100%' }}
                             >
                                 <option value=''>Chọn loại voucher</option>
                                 {typeVoucher?.map((item: any, index: any) => (

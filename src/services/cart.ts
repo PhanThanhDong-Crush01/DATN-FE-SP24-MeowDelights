@@ -29,6 +29,13 @@ export const getOne = async (id: string) => {
 export const update = async (cart: ICart) => {
     try {
         const response = await instance.patch('/cart/', cart)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật giỏ hàng thành công!!',
+                description: 'Cập nhật giỏ hàng thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -41,6 +48,13 @@ export const update = async (cart: ICart) => {
 export const add = async (cart: ICart) => {
     try {
         const response = await instance.post('/cart', cart)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thêm giỏ hàng thành công!!',
+                description: 'Thêm giỏ hàng thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -53,6 +67,25 @@ export const add = async (cart: ICart) => {
 export const remove = async (cart: ICart) => {
     try {
         const response = await instance.delete('/cart/' + cart._id)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Xóa giỏ hàng thành công!!',
+                description: 'Xóa giỏ hàng thành công!'
+            })
+        }
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['DELET_CART_ERROR']`, error)
+    }
+}
+export const removeCartUser = async (userId: any) => {
+    try {
+        const response = await instance.delete('/cart/user/' + userId)
         return response.data
     } catch (error: any) {
         toast({

@@ -75,10 +75,6 @@ const ListContact = () => {
     const { onSubmit } = useContactMutation({
         action: 'SetStaff',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Giao liên hệ cho nhân viên chuyên ngành thành công!!'
-            })
             refetch()
         }
     })

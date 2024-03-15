@@ -263,14 +263,7 @@ const OrderPage: React.FC = () => {
         console.log(dataComment)
     }
     const { onSubmit } = useCommentMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: ' Thành công!!',
-                description: 'Đã hoàn thanh đánh giá sản phẩm'
-            })
-        }
+        action: 'ADD'
     })
     const handleAddWhy = () => {
         const dataWhy = {
@@ -288,11 +281,6 @@ const OrderPage: React.FC = () => {
     const { onSubmitWhy } = useWhyCancelOrder({
         action: 'ADD',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: ' Thành công!!',
-                description: 'Đã gửi lí do hủy đơn hàng thành công'
-            })
             // navigate('/order')
             const updatedData = filteredData.map((item: DataType) => {
                 if (item._id === selectedIdBill) {

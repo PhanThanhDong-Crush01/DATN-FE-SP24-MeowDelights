@@ -19,13 +19,7 @@ const formItemLayout = {
 const AddProduct = () => {
     const { onSubmit } = useProductMutation({
         action: 'ADD',
-        onSuccess() {
-            toast({
-                variant: 'success',
-                title: 'Thêm sản phẩm thành công!!',
-                description: 'Quay lại trang quản lý sản phẩm để kiểm tra sản phẩm vừa thêm!'
-            })
-        }
+        onSuccess() {}
     })
 
     const [imageUrl, setImageUrl] = useState<string>('')

@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import 'moment/locale/vi'
 import moment from 'moment'
+import { removeCartUser } from '@/services/cart'
 
 moment.locale('vi')
 
@@ -44,8 +45,8 @@ const PaymentInformationPage = () => {
 
     const navigate = useNavigate()
 
-    const onHanldeSubmit = (data: any) => {
-        data.adress = data.adress + '' + data.city + '' + data.country
+    const onHanldeSubmit = async (data: any) => {
+        data.adress = data.adress + ', ' + data.country
         const { city, country, ...newData } = data
         const Order = { thongTinNhanHang: newData, thongTinDonHang: thongTinDonHang }
 
@@ -69,14 +70,16 @@ const PaymentInformationPage = () => {
                 tel: Order?.thongTinNhanHang?.phone,
                 idvc: Order?.thongTinDonHang?.voucher?.idVc,
                 paymentmethods: Order?.thongTinNhanHang?.paymentmethods,
-                paymentstatus: 'Chưa thanh toán',
+                paymentstatus:
+                    Order?.thongTinNhanHang?.paymentmethods === 'Thanh toán khi nhận hàng'
+                        ? 'Chưa thanh toán'
+                        : 'Chờ thanh toán',
                 orderstatus: 'Chờ xác nhận'
             },
             billdetails: billdetails
         }
-        console.log('🚀 ~ onHanldeSubmit ~ addNew:', addNew)
-
         localStorage.setItem('donhang', JSON.stringify(addNew))
+        await removeCartUser(userID)
         navigate('/check_order')
     }
 
@@ -94,15 +97,13 @@ const PaymentInformationPage = () => {
                 const country = data.results[0]?.components?.country
                 setValue('city', city)
                 setValue('country', country)
-                if (city == undefined) {
+                if (city === undefined) {
                     setkhongGhiRoDiaChi('Địa chỉ chưa rõ ràng! Mời bạn ghi địa chỉ nhận hàng chi tiết!')
                 } else {
                     setkhongGhiRoDiaChi('')
                 }
             }
-        } catch (error) {
-            console.error('Error fetching data from OpenCage Geocoding API')
-        }
+        } catch (error) {}
     }
 
     useEffect(() => {
@@ -351,15 +352,15 @@ const PaymentInformationPage = () => {
                                         <select
                                             className='form-control'
                                             {...register('paymentmethods', { required: true })}
-                                            style={{ fontSize: '17px', color: 'blue', width: '103%' }}
+                                            style={{ fontSize: '20px', color: 'blue', width: '103%' }}
                                         >
                                             <option disabled style={{ fontSize: '17px' }}>
                                                 ----- Chọn phương thức thanh toán -----
                                             </option>
-                                            <option value='Thanh toán qua MoMo' style={{ fontSize: '17px' }}>
-                                                Thanh toán qua MoMo
+                                            <option value='Thanh toán qua PayPal' style={{ fontSize: '20px' }}>
+                                                Thanh toán qua PayPal
                                             </option>
-                                            <option value='Thanh toán khi nhận hàng' style={{ fontSize: '17px' }}>
+                                            <option value='Thanh toán khi nhận hàng' style={{ fontSize: '20px' }}>
                                                 Thanh toán khi nhận hàng
                                             </option>
                                         </select>

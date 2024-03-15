@@ -39,6 +39,7 @@ import AddAuth from '@/pages/Admin/ListUser/AddAuth'
 import EditAuth from '@/pages/Admin/ListUser/EditAuth'
 import Cart_virtual_users from '@/pages/Client/CartPage/Cart_virtual_users'
 import { useEffect, useState } from 'react'
+import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayPal'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -61,7 +62,7 @@ const Routers = () => {
                 )}
 
                 <Route path='payment_information' element={<PaymentInformationPage />} />
-                <Route path='payment_method_momo' element={<PaymentMoMo />} />
+                <Route path='payment_method_paypalcheckout' element={<PaymentVNPayComponent />} />
                 <Route path='payment_success' element={<PaymentSuccessPage />} />
                 <Route path='contact' element={<ContactPage />} />
                 <Route path='introduce' element={<IntroducePage />} />
@@ -99,6 +100,7 @@ const Routers = () => {
                 <Route path='bill/:id' element={<BillDetail />} />
                 <Route path='contact' element={<ListContact />} />
             </Route>
+            <Route path='*' element={'Page Not Found'} />
         </Routes>
     )
 }

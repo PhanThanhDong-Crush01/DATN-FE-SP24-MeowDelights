@@ -41,9 +41,15 @@ export const getBillDetail = async (id: string) => {
 }
 export const update = async (bill: IBill) => {}
 export const add = async (bill: IBill) => {
-    console.log('🚀 ~ add ~ bill:', bill)
     try {
         const response = await instance.post('/bill/', bill)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Tạo hóa đơn thành công!!',
+                description: 'Tạo hóa đơn thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -60,6 +66,13 @@ export const apiChangeStatusOrder = async (bill: any) => {
     console.log('🚀 ~ apiChangeStatusOrder ~ bill:', bill)
     try {
         const response = await instance.patch(`/bill/changeOrderStatus/${bill._id}`, bill)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thay đổi trạng thái đơn hàng thành công!!',
+                description: 'Thay đổi trạng thái đơn hàng thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -69,9 +82,16 @@ export const apiChangeStatusOrder = async (bill: any) => {
         console.log(`['CHANGE_STATUS_ORDER_ERROR']`, error)
     }
 }
-export const apiChangePaymentStatus = async (bill: IBill) => {
+export const apiChangePaymentStatus = async (bill: any) => {
     try {
         const response = await instance.patch(`/bill/changePaymentStatus/${bill._id}`, bill)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thay đổi trạng thái thanh toán đơn hàng thành công!!',
+                description: 'Thay đổi trạng thái thanh toán đơn hàng thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -84,6 +104,13 @@ export const apiChangePaymentStatus = async (bill: IBill) => {
 export const apiCancelOrder = async (bill: IBill) => {
     try {
         const response = await instance.patch(`/bill/cancelOrder/${bill._id}`, bill)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Hủy đơn hàng thành công!!',
+                description: 'Hủy đơn hàng thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({

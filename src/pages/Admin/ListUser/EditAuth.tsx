@@ -20,11 +20,6 @@ const EditAuth = () => {
     const { onSubmit } = useAuthMutation({
         action: 'UPDATEAUTH',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật thành công!!',
-                description: 'Cập nhật tài khoản thành công!'
-            })
             navigate('/admin/user')
         }
     })

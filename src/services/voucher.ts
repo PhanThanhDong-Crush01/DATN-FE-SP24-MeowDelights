@@ -29,6 +29,13 @@ export const getOne = async (id: string) => {
 export const update = async (voucher: IVoucher) => {
     try {
         const response = await instance.put(`/voucher/${voucher._id}`, voucher)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật khuyến mãi thành công!!',
+                description: 'Cập nhật khuyến mãi thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -41,6 +48,13 @@ export const update = async (voucher: IVoucher) => {
 export const add = async (voucher: IVoucher) => {
     try {
         const response = await instance.post('/voucher', voucher)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thêm khuyến mãi thành công!!',
+                description: 'Thêm khuyến mãi thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -54,6 +68,11 @@ export const add = async (voucher: IVoucher) => {
 export const remove = async (voucher: IVoucher) => {
     try {
         await instance.delete(`/voucher/${voucher._id}`)
+        toast({
+            variant: 'success',
+            title: 'Xóa khuyến mãi thành công!!',
+            description: 'Xóa khuyến mãi thành công!'
+        })
     } catch (error: any) {
         toast({
             variant: 'destructive',

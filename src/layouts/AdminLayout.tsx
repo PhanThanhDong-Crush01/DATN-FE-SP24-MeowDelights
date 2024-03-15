@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { FaRegChartBar } from 'react-icons/fa6'
 import { LiaProductHunt } from 'react-icons/lia'
 import { MdOutlineCategory } from 'react-icons/md'
@@ -87,10 +87,16 @@ const AdminLayout = () => {
                     <Menu.Item key='7' icon={<MdOutlineSettingsPhone />}>
                         <Link to='/admin/contact'>Liên hệ</Link>
                     </Menu.Item>
-                    <Menu.Item key='8' icon={<MdOutlineAccountCircle />}>
-                        <Link to='/admin/user'>Tài khoản</Link>
-                        <Link to='/admin/user'>Tài khoản</Link>
-                    </Menu.Item>
+                    {/* <Menu.Item key='8' icon={<MdOutlineAccountCircle />}> */}
+                    <Menu.SubMenu key='sub1' icon={<MdOutlineAccountCircle />} title='Tài khoản'>
+                        <Menu.Item key='1'>
+                            <Link to='/admin/auth'>Tài khoản khách hàng</Link>
+                        </Menu.Item>
+                        <Menu.Item key='2'>
+                            <Link to='/admin/user'>Tài khoản nhân viên</Link>
+                        </Menu.Item>
+                    </Menu.SubMenu>
+                    {/* </Menu.Item> */}
                     <Menu.Item key='9' icon={<VscAccount />}>
                         <Link to='/admin/'>Thông tin của tôi</Link>
                     </Menu.Item>

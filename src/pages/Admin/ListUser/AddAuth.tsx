@@ -12,8 +12,16 @@ const AddAuth = () => {
     const [confirmPassword, setConfirmPassword] = useState('') // State để lưu trữ giá trị nhập lại mật khẩu
     const { onSubmit } = useAuthMutation({
         action: 'ADD',
-        onSuccess: () => {
-            navigate('/admin/user')
+        onSuccess: (data) => {
+            localStorage.setItem('auth', JSON.stringify(data))
+            toast({
+                variant: 'success',
+                title: 'Thêm thành công',
+                description: 'Thêm tài khoản nhân viên thành công'
+            })
+            localStorage.setItem('authID', data?.user?._id)
+
+            navigate(`/admin/user/editAuth/${data?.user?._id}`)
         }
     })
     const {

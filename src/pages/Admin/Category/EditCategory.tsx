@@ -13,14 +13,7 @@ const EditCategory = ({ id }: any) => {
     const category = data?.data
     console.log(category)
     const { form, onSubmit } = useCategoryMutation({
-        action: 'UPDATE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật thành công!!',
-                description: 'Cập nhật danh mục sản phẩm thành công!'
-            })
-        }
+        action: 'UPDATE'
     })
     const { register, handleSubmit, setValue } = useForm()
 

@@ -29,6 +29,13 @@ export const getOne = async (id: string) => {
 export const update = async (typeVoucher: ITypeVoucher) => {
     try {
         const response = await instance.patch(`/type_voucher/${typeVoucher._id}`, typeVoucher)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật loại khuyến mãi thành công!!',
+                description: 'Cập nhật loại khuyến mãi thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -41,6 +48,13 @@ export const update = async (typeVoucher: ITypeVoucher) => {
 export const add = async (typeVoucher: ITypeVoucher) => {
     try {
         const response = await instance.post('/type_voucher/', typeVoucher)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thêm loại khuyến mãi thành công!!',
+                description: 'Thêm loại khuyến mãi thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -53,6 +67,11 @@ export const add = async (typeVoucher: ITypeVoucher) => {
 export const remove = async (typeVoucher: ITypeVoucher) => {
     try {
         await instance.delete(`/type_voucher/${typeVoucher._id}`)
+        toast({
+            variant: 'success',
+            title: 'Xóa loại khuyến mãi thành công!!',
+            description: 'Xóa loại khuyến mãi thành công!'
+        })
     } catch (error: any) {
         toast({
             variant: 'destructive',

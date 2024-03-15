@@ -50,10 +50,7 @@ const FormAddInfoTypeProduct = ({ data, onClose }: any) => {
             }
         })
         localStorage.setItem('typeProduct', JSON.stringify(typeProduct))
-        toast({
-            variant: 'success',
-            title: 'Thêm thông tin phân loại phẩm thành công!!'
-        })
+       
         onClose(true)
     }
 

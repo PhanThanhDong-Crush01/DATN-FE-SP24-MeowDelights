@@ -5,13 +5,7 @@ import React, { useState } from 'react'
 const AddTypeVc = () => {
     const { form, onSubmit } = useTypeVoucherMutation({
         action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm thành công!!',
-                description: 'Thêm danh mục khuyến mại thành công!'
-            })
-        }
+        onSuccess: () => {}
     })
 
     const [newVoucherName, setNewVoucherName] = useState('')

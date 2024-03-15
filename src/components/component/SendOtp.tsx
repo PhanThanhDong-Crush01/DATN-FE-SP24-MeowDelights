@@ -5,10 +5,6 @@ import { getRandomNumber } from '@/lib/utils'
 import instance from '@/services/core/api'
 import { useEffect, useState } from 'react'
 import { toast } from '../ui/use-toast'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { useBillMutation } from '@/hooks/Bill/useBillMutation'
-import FooterTemplate from './Footer'
-import MenuClientComponent from './MenuClientComponent'
 import { useNavigate } from 'react-router-dom'
 
 export const SendOTP = () => {
@@ -29,15 +25,13 @@ export const SendOTP = () => {
         setOTPXN(value)
     }
 
+    const [label, setLabel] = useState<any>(false)
     const sendOtp = async () => {
         try {
             const otpguidi = getRandomNumber()
             setotpguidi(otpguidi)
             await instance.post('/send-otp', { otp: otpguidi, phoneNumber: phone })
-            toast({
-                variant: 'success',
-                title: 'OTP đã gửi đến số điện thoại của bạn. Lưu ý: OTP có hiệu lực trong 3 phút!'
-            })
+            setLabel(true)
         } catch (error: any) {
             toast({
                 variant: 'destructive',
@@ -48,7 +42,7 @@ export const SendOTP = () => {
 
     const navigate = useNavigate()
 
-    const onSubmitOtp = () => {
+    const onSubmitOtp = async () => {
         if (otpxacnhan == ' ') {
             toast({
                 variant: 'destructive',
@@ -64,7 +58,9 @@ export const SendOTP = () => {
                 variant: 'success',
                 title: 'OTP chính xác!'
             })
-            onSubmit(donhang)
+            const response = await instance.post('/bill/', donhang)
+            response.data
+            localStorage.setItem('billNew', JSON.stringify(response.data))
             localStorage.removeItem('donhang')
             const pttt = donhang?.bill?.paymentmethods
             if (pttt === 'Thanh toán khi nhận hàng') {
@@ -73,104 +69,77 @@ export const SendOTP = () => {
                 }, 2000) // 2 seconds delay
             } else {
                 setTimeout(() => {
-                    navigate('/payment_method_momo')
+                    navigate('/payment_method_paypalcheckout')
                 }, 2000) // 2 seconds delay
             }
         }
     }
 
-    const { onSubmit } = useBillMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Đặt hàng thành công!!'
-            })
-        }
-    })
-
     return (
-        <>
-            <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-9'>
-                <MenuClientComponent />
-                <div className='search-form-wrapper'>
-                    <div className='search-trigger sigma_close'>
-                        <span></span>
-                        <span></span>
+        <div style={{ margin: '0 auto', marginTop: '50px' }}>
+            <div className='section pt-0'>
+                <div className='container'>
+                    <div className='section-title centered'>
+                        <h1 className='title' style={{ fontSize: '30px' }}>
+                            Nhập OTP để xác nhận đơn hàng
+                        </h1>
                     </div>
-                    <form className='search-form' method='post'>
-                        <input type='text' placeholder='Search...' value='' />
-                        <button type='submit' className='btn search-btn'>
-                            <i className='fal fa-search m-0'></i>
-                        </button>
-                    </form>
-                </div>
-
-                <div className='sigma_subheader style-5 bg-gray'>
-                    <div className='container'>
-                        <div className='sigma_subheader-inner'>
-                            <h1>Xác nhận đơn hàng</h1>
-                        </div>
-                        <ol className='breadcrumb'>
-                            <li className='breadcrumb-item'>
-                                <a className='btn-link' href='#'>
-                                    Trang chủ
-                                </a>
-                            </li>
-                            <li className='breadcrumb-item active' aria-current='page'>
-                                OTP
-                            </li>
-                        </ol>
-                    </div>
-
-                    <img src='src/assets/img/subheader-br.png' className='br' alt='subheader' />
-                    <img src='src/assets/img/subheader-bl.png' className='bl' alt='subheader' />
-                    <img src='src/assets/img/subheader-tr.png' className='tr' alt='subheader' />
-                </div>
-
-                <div className='section pt-0'>
-                    <div className='container'>
-                        <div className='section-title centered'>
-                            <h3 className='title'>Nhập OTP để xác nhận đơn hàng</h3>
-                        </div>
-                        <div
-                            className='sigma_form style-2'
-                            style={{
-                                width: '300px',
-                                height: '300px',
-                                border: '1px soild gray',
-                                borderColor: 'gray',
-                                borderRadius: '10%',
-                                margin: '0 auto'
-                            }}
-                        >
-                            <div className='grid gap-2'>
-                                <Label htmlFor='username'>OTP</Label>
-                                <Input
-                                    id='otpxacnhan'
-                                    placeholder='123456'
-                                    onChange={(e: any) => handleOTPChange(e.target.value)}
-                                />
+                    <div
+                        className='sigma_form style-2'
+                        style={{
+                            width: '300px',
+                            height: '300px',
+                            border: '1px soild gray',
+                            borderColor: 'gray',
+                            borderRadius: '10%',
+                            margin: '0 auto'
+                        }}
+                    >
+                        <div className='grid gap-2'>
+                            <Label htmlFor='username'>
+                                {!label ? (
+                                    <span>Nhấn gửi để nhận mã OTP</span>
+                                ) : (
+                                    <span>
+                                        OTP đã được gửi đến số điện thoại {phone.replace(/\d(?=\d{4})/g, '*')}, hãy mở
+                                        hộp thư trên điện thoại và xác nhận OTP ở đây!
+                                    </span>
+                                )}
+                            </Label>
+                            <Input
+                                id='otpxacnhan'
+                                placeholder='123456'
+                                onChange={(e: any) => handleOTPChange(e.target.value)}
+                            />
+                            <div style={{ display: 'flex' }}>
                                 <Button
                                     variant='destructive'
                                     style={{
-                                        color: 'white',
-                                        backgroundColor: 'green'
+                                        color: 'black',
+                                        backgroundColor: 'white',
+                                        border: '0.5px solid gray',
+                                        width: '30px'
                                     }}
                                     onClick={sendOtp}
                                 >
-                                    Gửi OTP
+                                    Gửi
                                 </Button>
-                                <Button style={{ color: 'white', backgroundColor: 'blue' }} onClick={onSubmitOtp}>
+                                <Button
+                                    style={{
+                                        color: 'white',
+                                        backgroundColor: 'blue',
+                                        width: '100%',
+                                        marginLeft: '10px'
+                                    }}
+                                    onClick={onSubmitOtp}
+                                >
                                     Check
                                 </Button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <FooterTemplate />
             </div>
-        </>
+        </div>
     )
 }

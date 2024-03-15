@@ -276,7 +276,7 @@ const CartPage = () => {
                                                 }}
                                             ></strong>
                                         </td>
-                                        <td className='quantity' data-title='Quantity' style={{ width: '10%' }}>
+                                        <td className='quantity' data-title='Quantity' style={{ width: '20%' }}>
                                             <input
                                                 type='number'
                                                 className='qty form-control'

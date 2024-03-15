@@ -1,6 +1,6 @@
 import { IAuth } from '@/interface/IAuth'
 import AddAuth from '@/pages/Admin/ListUser/AddAuth'
-import { createAuth, editAuth, updateUserProfile, updateUserRole } from '@/services/auth'
+import { createAuth, deleteEmployee, editAuth, updateUserProfile, updateUserRole } from '@/services/auth'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -18,8 +18,9 @@ const formSchema = Joi.object({
 type useAuthMutationProps = {
     action: 'UPDATE' | 'UPDATEROLE' | 'ADD' | 'UPDATEAUTH'
     defaultValues?: IAuth
-    onSuccess?: () => void
+    onSuccess?: (data: any) => void
 }
+// Modify the useAuthMutation hook
 export const useAuthMutation = ({
     action,
     defaultValues = {
@@ -48,25 +49,28 @@ export const useAuthMutation = ({
                     return await createAuth(user)
                 case 'UPDATEAUTH':
                     return await editAuth(user)
+
                 default:
                     return null
             }
         },
-        onSuccess: () => {
-            onSuccess && onSuccess()
+        onSuccess: (data) => {
+            // Modify onSuccess to receive data from server response
+            onSuccess && onSuccess(data) // Pass the data to the callback function
             queryClient.invalidateQueries({
                 queryKey: ['AUTH']
             })
         }
     })
+
     const form = useForm({
-        // resolver: joiResolver(formSchema),
         defaultValues
     })
+
     const onSubmit: SubmitHandler<any> = (values) => {
-        console.log(values)
         mutate(values)
     }
+
     return {
         form,
         onSubmit,

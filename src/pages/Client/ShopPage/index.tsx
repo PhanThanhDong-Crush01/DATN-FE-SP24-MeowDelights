@@ -6,7 +6,8 @@ import ListProduct from './listProduct'
 const ShopPage = () => {
     return (
         <>
-            <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-8'>
+            <div className='btn-style-5  btn-rounded sidebar-style-8'>
+                {/* sigma_header-absolute */}
                 <MenuClientComponent />
                 <div className='search-form-wrapper'>
                     <div className='search-trigger sigma_close'>

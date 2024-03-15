@@ -40,6 +40,7 @@ import EditAuth from '@/pages/Admin/ListUser/EditAuth'
 import Cart_virtual_users from '@/pages/Client/CartPage/Cart_virtual_users'
 import { useEffect, useState } from 'react'
 import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayPal'
+import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -82,6 +83,7 @@ const Routers = () => {
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
+                <Route path='auth' element={<ListAuthPage />} />
                 <Route path='user' element={<ListUserPage />} />
                 <Route path='user/add' element={<AddAuth />} />
                 <Route path='user/editAuth/:id' element={<EditAuth />} />

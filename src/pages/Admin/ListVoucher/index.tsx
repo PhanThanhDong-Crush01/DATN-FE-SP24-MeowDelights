@@ -31,7 +31,9 @@ type DataIndex = keyof DataType
 
 const Voucher = () => {
     const { data }: any = useVoucherQuery()
+    console.log('🚀 ~ Voucher ~ data:', data)
     const [dataVoucher, setDataVoucher] = useState<any>()
+    console.log('🚀 ~ Voucher ~ dataVoucher:', dataVoucher)
     const [dataVoucherAll, setDataVoucherAll] = useState<any>()
     useEffect(() => {
         if (data) {

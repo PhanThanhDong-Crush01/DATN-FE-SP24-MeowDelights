@@ -62,4 +62,16 @@ export const remove = async (cart: ICart) => {
         console.log(`['DELET_CART_ERROR']`, error)
     }
 }
+export const removeCartUser = async (userId: any) => {
+    try {
+        const response = await instance.delete('/cart/user/' + userId)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['DELET_CART_ERROR']`, error)
+    }
+}
 //mẫu product

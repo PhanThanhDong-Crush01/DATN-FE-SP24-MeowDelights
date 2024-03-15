@@ -13,7 +13,6 @@ import instance from '@/services/core/api'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
-    console.log('🚀 ~ CartPage ~ dataCart:', dataCart)
 
     const { onRemove } = useCartMutation({
         action: 'DELETE',

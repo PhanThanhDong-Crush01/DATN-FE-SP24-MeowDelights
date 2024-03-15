@@ -78,6 +78,20 @@ const Voucher = () => {
         }
     }
 
+    const locVoucher = async (value: any) => {
+        if (value === 'tong') {
+            setDataVoucher(dataVoucherAll)
+        } else if (value === 'conHieuLuc') {
+            setDataVoucher(dataVoucherAll.filter((item: any) => item?.status === true))
+        } else if (value === 'hetHieuLuc') {
+            setDataVoucher(dataVoucherAll.filter((item: any) => item?.status === false))
+        } else if (value === 'hetLuotDung') {
+            setDataVoucher(dataVoucherAll.filter((item: any) => item?.quantity === 0))
+        } else if (value === 'hetHanSuDung') {
+            setDataVoucher(dataVoucherAll.filter((item: any) => new Date(item?.expiry) < new Date()))
+        }
+    }
+
     const { onRemove } = useVoucherMutation({
         action: 'DELETE'
     })
@@ -316,6 +330,7 @@ const Voucher = () => {
                     Số voucher hết hạn sử dụng: {data?.soVoucherHetHan}
                 </button>
             </div>
+
 
             <Modal open={isModalOpen} onCancel={handleCancel}>
                 <AddVoucher />

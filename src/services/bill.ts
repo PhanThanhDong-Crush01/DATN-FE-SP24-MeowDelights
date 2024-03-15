@@ -41,7 +41,6 @@ export const getBillDetail = async (id: string) => {
 }
 export const update = async (bill: IBill) => {}
 export const add = async (bill: IBill) => {
-    console.log('🚀 ~ add ~ bill:', bill)
     try {
         const response = await instance.post('/bill/', bill)
         if (response.data) {
@@ -83,7 +82,7 @@ export const apiChangeStatusOrder = async (bill: any) => {
         console.log(`['CHANGE_STATUS_ORDER_ERROR']`, error)
     }
 }
-export const apiChangePaymentStatus = async (bill: IBill) => {
+export const apiChangePaymentStatus = async (bill: any) => {
     try {
         const response = await instance.patch(`/bill/changePaymentStatus/${bill._id}`, bill)
         if (response.data) {

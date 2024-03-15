@@ -221,6 +221,10 @@ const ListBill = () => {
                     value: 'Chưa thanh toán'
                 },
                 {
+                    text: 'Chờ thanh toán',
+                    value: 'Chờ thanh toán'
+                },
+                {
                     text: 'Đã thanh toán',
                     value: 'Đã thanh toán'
                 }
@@ -257,7 +261,7 @@ const ListBill = () => {
                                 </p>
                             )}
                         </>
-                    ) : record?.paymentmethods === 'Thanh toán MoMo' ? (
+                    ) : record?.paymentmethods === 'Thanh toán qua PayPal' ? (
                         <>
                             {record?.paymentstatus === 'Chờ thanh toán' ? (
                                 <p

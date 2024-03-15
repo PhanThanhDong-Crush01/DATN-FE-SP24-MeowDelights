@@ -14,11 +14,6 @@ const AddVoucher = () => {
     const { onSubmit } = useVoucherMutation({
         action: 'ADD',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm thành công!!',
-                description: 'Thêm danh mục khuyến mại thành công!'
-            })
             navigate('/admin/voucher')
         }
     })

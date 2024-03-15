@@ -15,24 +15,10 @@ const CartPage = () => {
     const { dataCart } = useCartQuery()
 
     const { onRemove } = useCartMutation({
-        action: 'DELETE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Xoá sản phẩm thành công!!',
-                description: 'Sản phẩm bạn không thích trong giỏ hàng đã bị xóa'
-            })
-        }
+        action: 'DELETE'
     })
     const { onSubmit } = useCartMutation({
-        action: 'UPDATE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật số lượng thành công!!',
-                description: 'Cập nhật số lượng của sản phẩm thành công!'
-            })
-        }
+        action: 'UPDATE'
     })
 
     const onChangeQuantity_Cart = (cartItem: any, value: any) => {

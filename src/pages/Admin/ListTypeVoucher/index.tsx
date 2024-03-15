@@ -17,24 +17,10 @@ const ListTypeVoucher = () => {
     const { data }: any = useTypeVoucherQuery()
     console.log('🚀 ~ ListTypeVoucher ~ data:', data)
     const { onRemove } = useTypeVoucherMutation({
-        action: 'DELETE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Xoá danh mục khuyến mại thành công!!',
-                description: 'Danh mục khuyến mại đã bị xóa'
-            })
-        }
+        action: 'DELETE'
     })
     const { onSubmit } = useTypeVoucherMutation({
-        action: 'UPDATE',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Cập nhật thành công!!',
-                description: 'Cập nhật danh mục khuyến mại thành công!'
-            })
-        }
+        action: 'UPDATE'
     })
 
     const dataWithKeys = data?.datas.map((item: any, index: any) => ({

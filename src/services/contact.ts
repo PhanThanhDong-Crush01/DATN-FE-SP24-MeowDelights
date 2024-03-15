@@ -29,6 +29,13 @@ export const getOne = async (id: string) => {
 export const update = async (contact: any) => {
     try {
         const response = await instance.patch(`/contact/${contact._id}`, contact)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật liên hệ thành công!!',
+                description: 'Cập nhật liên hệ thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -41,6 +48,12 @@ export const update = async (contact: any) => {
 export const setStaffWithContact = async (contact: any) => {
     try {
         const response = await instance.patch(`/contact/1/staff`, contact)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật liên hệ cho nhân viên thành công!!'
+            })
+        }
         await instance.get('/contact')
         return response.data
     } catch (error: any) {
@@ -54,6 +67,13 @@ export const setStaffWithContact = async (contact: any) => {
 export const add = async (contact: any) => {
     try {
         const response = await instance.post('/contact/', contact)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Thêm liên hệ thành công!!',
+                description: 'Thêm liên hệ thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -66,6 +86,13 @@ export const add = async (contact: any) => {
 export const remove = async (contact: any) => {
     try {
         const response = await instance.delete(`/contact/${contact._id}`)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Xóa liên hệ thành công!!',
+                description: 'Xóa liên hệ thành công!'
+            })
+        }
         return response.data
     } catch (error: any) {
         toast({

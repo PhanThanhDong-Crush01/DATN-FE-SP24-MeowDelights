@@ -70,7 +70,10 @@ const PaymentInformationPage = () => {
                 tel: Order?.thongTinNhanHang?.phone,
                 idvc: Order?.thongTinDonHang?.voucher?.idVc,
                 paymentmethods: Order?.thongTinNhanHang?.paymentmethods,
-                paymentstatus: 'Chưa thanh toán',
+                paymentstatus:
+                    Order?.thongTinNhanHang?.paymentmethods === 'Thanh toán khi nhận hàng'
+                        ? 'Chưa thanh toán'
+                        : 'Chờ thanh toán',
                 orderstatus: 'Chờ xác nhận'
             },
             billdetails: billdetails
@@ -94,7 +97,7 @@ const PaymentInformationPage = () => {
                 const country = data.results[0]?.components?.country
                 setValue('city', city)
                 setValue('country', country)
-                if (city == undefined) {
+                if (city === undefined) {
                     setkhongGhiRoDiaChi('Địa chỉ chưa rõ ràng! Mời bạn ghi địa chỉ nhận hàng chi tiết!')
                 } else {
                     setkhongGhiRoDiaChi('')

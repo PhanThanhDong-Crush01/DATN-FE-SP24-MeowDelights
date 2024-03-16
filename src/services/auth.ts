@@ -16,7 +16,7 @@ export const getAll = async () => {
         console.log(`['GETALL_AUTH_ERROR']`, error)
     }
 }
-export const getOne = async (id: string) => {
+export const getOneUser = async (id: string) => {
     try {
         const response = await instance.get(`/auth/${id}`)
         return response.data

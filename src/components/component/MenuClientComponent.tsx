@@ -222,7 +222,7 @@ const MenuClientComponent = () => {
                                                         <img
                                                             src={data?.datas?.imgUser}
                                                             alt='usser '
-                                                            style={{ width: '100%', height: 'auto' }}
+                                                            style={{ width: '110px', height: '55px' }}
                                                         />
                                                     </p>
                                                 </Link>

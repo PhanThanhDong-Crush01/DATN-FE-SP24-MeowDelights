@@ -209,7 +209,7 @@ const PaymentInformationPage = () => {
                                                 <i className='text-danger'>{khongGhiRoDiaChi}</i>
                                             )}
                                         </div>
-                                        {/* 
+
                                         <div className='form-group col-xl-12'>
                                             <label>Thị trấn/Thành phố</label>
                                             <input
@@ -240,7 +240,7 @@ const PaymentInformationPage = () => {
                                                     Quốc gia là bắt buộc, bạn phải ghi rõ địa chỉ hơn
                                                 </i>
                                             )}
-                                        </div> */}
+                                        </div>
 
                                         <div className='form-group col-xl-12 mb-0'>
                                             <label>Ghi chú đặt hàng</label>

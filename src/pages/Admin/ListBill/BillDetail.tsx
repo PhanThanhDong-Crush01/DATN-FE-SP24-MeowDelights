@@ -33,6 +33,7 @@ const BillDetail = () => {
     const [open, setOpen] = useState(false)
     const { id } = useParams()
     const { data } = useBillDetailQuery(id)
+    console.log(data)
     const [bill, setBill] = useState<any>()
     useEffect(() => {
         if (data) {
@@ -289,7 +290,6 @@ const BillDetail = () => {
                                                 <>
                                                     <option className='font-medium'>Chưa thanh toán</option>
                                                     <option className='font-medium'>Thanh toán thành công</option>
-                                                    <option className='font-medium'>Chờ thanh toán</option>
                                                 </>
                                             )}
                                         </>

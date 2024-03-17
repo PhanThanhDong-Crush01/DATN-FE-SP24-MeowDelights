@@ -35,6 +35,7 @@ type DataIndex = keyof DataType
 const ListBill = () => {
     const [bill, setBill] = useState<any>()
     const { data } = useBillQuery()
+    console.log(data)
     useEffect(() => {
         if (data) {
             const dataBill = data?.datas.map((item: any) => {

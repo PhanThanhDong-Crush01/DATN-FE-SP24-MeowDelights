@@ -284,19 +284,37 @@ const ListProduct = () => {
                                                     </Link>{' '}
                                                 </h5>
                                                 <div className='sigma_rating'>
+                                                    <div className='flex'>
+                                                        <p
+                                                            style={{ fontWeight: 700 }}
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: formatPriceBootstrap(product.minPrice)
+                                                            }}
+                                                        ></p>
+                                                    </div>
+                                                    {/* <div>-</div>
+                                                    <div className='flex'>
+                                                        <p
+                                                            style={{ fontWeight: 700 }}
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: formatPriceBootstrap(product.maxPrice)
+                                                            }}
+                                                        ></p>
+                                                    </div> */}
+
+                                                    {/* <i className='fas fa-star'></i>
                                                     <i className='fas fa-star'></i>
                                                     <i className='fas fa-star'></i>
                                                     <i className='fas fa-star'></i>
-                                                    <i className='fas fa-star'></i>
-                                                    <i className='fal fa-star'></i>
+                                                    <i className='fal fa-star'></i> */}
                                                 </div>
                                                 <div className='sigma_product-price'>
-                                                    <span>{product.price}</span>
+                                                    <span></span>
                                                     {/* <span>{product.price}</span> */}
                                                 </div>
                                                 {/* <a href='#' > */}
 
-                                                <Dialog>
+                                                {/* <Dialog>
                                                     <DialogTrigger asChild>
                                                         <Button onClick={() => handleAddToCartClick(product?._id)}>
                                                             Thêm giỏ hàng
@@ -600,7 +618,7 @@ const ListProduct = () => {
                                                             </div>
                                                         </div>
                                                     </DialogContent>
-                                                </Dialog>
+                                                </Dialog> */}
                                                 {/* </a> */}
                                             </div>
                                         </div>

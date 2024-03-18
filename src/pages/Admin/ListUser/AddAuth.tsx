@@ -7,12 +7,21 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 const AddAuth = () => {
     const navigate = useNavigate()
+    const [userId, setUserId] = useState('')
     const [password, setPassword] = useState('') // State để lưu trữ giá trị mật khẩu
     const [confirmPassword, setConfirmPassword] = useState('') // State để lưu trữ giá trị nhập lại mật khẩu
     const { onSubmit } = useAuthMutation({
         action: 'ADD',
-        onSuccess: () => {
-            navigate('/admin/user')
+        onSuccess: (data) => {
+            localStorage.setItem('auth', JSON.stringify(data))
+            toast({
+                variant: 'success',
+                title: 'Thêm thành công',
+                description: 'Thêm tài khoản nhân viên thành công'
+            })
+            localStorage.setItem('authID', data?.user?._id)
+
+            navigate(`/admin/user/editAuth/${data?.user?._id}`)
         }
     })
     const {

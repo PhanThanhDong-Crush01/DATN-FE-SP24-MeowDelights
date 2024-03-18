@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { FaRegChartBar } from 'react-icons/fa6'
 import { LiaProductHunt } from 'react-icons/lia'
 import { MdOutlineCategory } from 'react-icons/md'
@@ -9,7 +9,7 @@ import { VscAccount } from 'react-icons/vsc'
 import { MdOutlineSettingsPhone } from 'react-icons/md'
 import { FiSettings } from 'react-icons/fi'
 import { MdPowerSettingsNew } from 'react-icons/md'
-
+import { AiOutlineComment } from 'react-icons/ai'
 import { Layout, Menu, Button, theme } from 'antd'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
@@ -84,19 +84,29 @@ const AdminLayout = () => {
                     <Menu.Item key='6' icon={<FaRegMoneyBillAlt />}>
                         <Link to='/admin/bill'>Hóa đơn</Link>
                     </Menu.Item>
-                    <Menu.Item key='7' icon={<MdOutlineSettingsPhone />}>
+                    <Menu.Item key='7' icon={<AiOutlineComment />}>
+                        <Link to='/admin/comment'>Đánh giá</Link>
+                    </Menu.Item>
+                    <Menu.Item key='8' icon={<MdOutlineSettingsPhone />}>
                         <Link to='/admin/contact'>Liên hệ</Link>
                     </Menu.Item>
-                    <Menu.Item key='8' icon={<MdOutlineAccountCircle />}>
-                        <Link to='/admin/user'>Tài khoản</Link>
-                    </Menu.Item>
-                    <Menu.Item key='9' icon={<VscAccount />}>
+                    {/* <Menu.Item key='8' icon={<MdOutlineAccountCircle />}> */}
+                    <Menu.SubMenu key='9' icon={<MdOutlineAccountCircle />} title='Tài khoản'>
+                        <Menu.Item key='1'>
+                            <Link to='/admin/auth'>Tài khoản khách hàng</Link>
+                        </Menu.Item>
+                        <Menu.Item key='2'>
+                            <Link to='/admin/user'>Tài khoản nhân viên</Link>
+                        </Menu.Item>
+                    </Menu.SubMenu>
+                    {/* </Menu.Item> */}
+                    <Menu.Item key='10' icon={<VscAccount />}>
                         <Link to='/admin/'>Thông tin của tôi</Link>
                     </Menu.Item>
-                    <Menu.Item key='10' icon={<FiSettings />}>
+                    <Menu.Item key='11' icon={<FiSettings />}>
                         <Link to='/admin/'>Cài đặt</Link>
                     </Menu.Item>
-                    <Menu.Item key='11' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
+                    <Menu.Item key='12' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
                         Đăng xuất
                     </Menu.Item>
                 </Menu>

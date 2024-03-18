@@ -35,8 +35,6 @@ interface DataType {
     gender: boolean
     imgUser: string
     phone: string
-    employee: string
-    jobPosition: string
     discount_points: number
     totalBillCount: number
     totalAmount: number
@@ -44,12 +42,12 @@ interface DataType {
 
 type DataIndex = keyof DataType
 
-const ListUserPage = () => {
+const ListAuthPage = () => {
     const { data }: any = useAuthQuery()
     const [dataUser, setDataUser] = useState<any>()
     useEffect(() => {
         if (data?.users) {
-            setDataUser(data.users.filter((user: any) => user.role !== 'member'))
+            setDataUser(data.users.filter((user: any) => user.role === 'member'))
         }
     }, [data])
     const handleDelete = (record: any) => {
@@ -190,42 +188,7 @@ const ListUserPage = () => {
             render: (_, record) => record.email,
             fixed: 'left'
         },
-        {
-            title: 'Vai trò',
-            dataIndex: 'role',
-            key: 'role',
-            width: '20%',
-            filters: [
-                { text: 'admin', value: 'admin' },
-                { text: 'member', value: 'member' }
-            ],
-            filteredValue: filteredInfo.role || null,
-            onFilter: (value: string, record: any) => record.role.includes(value),
-            fixed: 'left',
-            render: (_, record) => {
-                // Thay thế giá trị "member" bằng "Khách hàng" khi hiển thị
-                switch (record?.role) {
-                    case 'member':
-                        return 'Khách hàng'
-                    case 'adminProduct':
-                        return 'Nhân viên quản lí sản phẩm'
-                    case 'adminVoucher':
-                        return 'Nhân viên quản lí Voucher '
-                    case 'adminOrder':
-                        return 'Nhân viên quản lí hóa đơn'
-                    case 'adminContact':
-                        return 'Nhân viên quản lí liên hệ'
-                    case 'adminMember':
-                        return 'Nhân viên quản lí bình luận, đánh giá'
-                    case 'adminComment':
-                        return 'Nhân viên quản lí sản phẩm'
-                    case 'adminWeb':
-                        return 'Quản lí cấp cao'
-                    default:
-                        return record?.role
-                }
-            }
-        },
+
         {
             title: 'Địa chỉ',
             dataIndex: 'address',
@@ -278,83 +241,67 @@ const ListUserPage = () => {
             render: (_, record) => record.phone
         },
         {
-            title: 'Mã nhân viên',
-            dataIndex: 'employee',
-            key: 'employee',
+            title: 'Tích điểm',
+            dataIndex: ' discount_points',
+            key: ' discount_points',
             width: '20%',
-            render: (_, record) => record.employee
+            render: (_, record) => record.discount_points
+            // fixed: 'right'
+        },
+
+        {
+            title: 'Tổng hóa đơn',
+            dataIndex: ' totalBillCount',
+            key: ' totalBillCount',
+            width: '20%',
+            render: (_, record) => record.totalBillCount
+            // fixed: 'right'
         },
         {
-            title: 'Vị trí công việc',
-            dataIndex: 'jobPosition',
-            key: 'jobPosition',
+            title: 'Tổng tiền',
+            dataIndex: ' totalAmount',
+            key: ' totalAmount',
             width: '20%',
-            render: (_, record) => record.jobPosition
-        },
-        // {
-        //     title: 'Tích điểm',
-        //     dataIndex: ' discount_points',
-        //     key: ' discount_points',
-        //     width: '20%',
-        //     render: (_, record) => record.discount_points
-        //     // fixed: 'right'
-        // },
-
-        // {
-        //     title: 'Tổng hóa đơn',
-        //     dataIndex: ' totalBillCount',
-        //     key: ' totalBillCount',
-        //     width: '20%',
-        //     render: (_, record) => record.totalBillCount
-        //     // fixed: 'right'
-        // },
-        // {
-        //     title: 'Tổng tiền',
-        //     dataIndex: ' totalAmount',
-        //     key: ' totalAmount',
-        //     width: '20%',
-        //     render: (_, record) => record.totalAmount
-        //     // fixed: 'right'
-        // },
-        {
-            title: 'Hành động',
-            dataIndex: '',
-            key: 'x',
-            width: '30%',
-            fixed: 'right',
-            render: (_, record) => (
-                <Space size='middle'>
-                    <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
-                        <EditOutlined style={{ display: 'inline-flex' }} />
-                    </Link>
-                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
-                        <FormOutlined style={{ display: 'inline-flex' }} />
-                    </Link>
-
-                    <Popconfirm
-                        placement='topRight'
-                        title='Xóa mã nhân viên?'
-                        description='Bạn có chắc chắn xóa mã nhân viên này không?'
-                        onConfirm={() => handleDelete(record)}
-                        onCancel={cancel}
-                        okText='Đồng ý'
-                        cancelText='Không'
-                    >
-                        <Button type='primary' danger>
-                            <DeleteOutlined style={{ display: 'inline-flex' }} />
-                        </Button>
-                    </Popconfirm>
-                </Space>
-            )
+            render: (_, record) => record.totalAmount
+            // fixed: 'right'
         }
+        // {
+        //     title: 'Hành động',
+        //     dataIndex: '',
+        //     key: 'x',
+        //     width: '30%',
+        //     fixed: 'right',
+        //     render: (_, record) => (
+        //         <Space size='middle'>
+        //             <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
+        //                 <EditOutlined style={{ display: 'inline-flex' }} />
+        //             </Link>
+        //             <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+        //                 <FormOutlined style={{ display: 'inline-flex' }} />
+        //             </Link>
+
+        //             <Popconfirm
+        //                 placement='topRight'
+        //                 title='Xóa mã nhân viên?'
+        //                 description='Bạn có chắc chắn xóa mã nhân viên này không?'
+        //                 onConfirm={() => handleDelete(record)}
+        //                 onCancel={cancel}
+        //                 okText='Đồng ý'
+        //                 cancelText='Không'
+        //             >
+        //                 <Button type='primary' danger>
+        //                     <DeleteOutlined style={{ display: 'inline-flex' }} />
+        //                 </Button>
+        //             </Popconfirm>
+        //         </Space>
+        //     )
+        // }
     ]
-    const cancel = () => {
-        message.error('Đã hủy!')
-    }
+
     return (
         <div>
             <div className='flex justify-between items-center '>
-                <p className='text-[30px] pb-4'>Danh sách tài khoản </p>
+                <p className='text-[30px] pb-4'>Danh sách tài khoản khách hàng </p>
                 <Link to={'/admin/user/add'}>
                     <Button
                         className='flex justify-center mb-2 bg-[#1677ff]'
@@ -371,4 +318,4 @@ const ListUserPage = () => {
     )
 }
 
-export default ListUserPage
+export default ListAuthPage

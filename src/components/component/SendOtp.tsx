@@ -13,6 +13,7 @@ export const SendOTP = () => {
     const [phone, setPhone] = useState<any>()
 
     const [donhang, setDonHang] = useState<any>()
+    console.log('🚀 ~ SendOTP ~ donhang:', donhang)
     const donghangJson = JSON.parse(localStorage.getItem('donhang') as any)
     useEffect(() => {
         if (donghangJson) {
@@ -58,20 +59,34 @@ export const SendOTP = () => {
                 variant: 'success',
                 title: 'OTP chính xác!'
             })
-            const response = await instance.post('/bill/', donhang)
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            response.data
-            localStorage.setItem('billNew', JSON.stringify(response.data))
-            localStorage.removeItem('donhang')
-            const pttt = donhang?.bill?.paymentmethods
-            if (pttt === 'Thanh toán khi nhận hàng') {
-                setTimeout(() => {
-                    navigate('/payment_success')
-                }, 2000) // 2 seconds delay
-            } else {
-                setTimeout(() => {
-                    navigate('/payment_method_paypalcheckout')
-                }, 2000) // 2 seconds delay
+            try {
+                const response = await instance.post('/bill/', donhang)
+                if (response.data) {
+                    toast({
+                        variant: 'success',
+                        title: 'Tạo hóa đơn thành công!!',
+                        description: 'Tạo hóa đơn thành công!'
+                    })
+                    localStorage.setItem('billNew', JSON.stringify(response.data))
+                    localStorage.removeItem('donhang')
+                    const pttt = donhang?.bill?.paymentmethods
+                    if (pttt === 'Thanh toán khi nhận hàng') {
+                        setTimeout(() => {
+                            navigate('/payment_success')
+                        }, 2000) // 2 seconds delay
+                    } else {
+                        setTimeout(() => {
+                            navigate('/payment_method_paypalcheckout')
+                        }, 2000) // 2 seconds delay
+                    }
+                }
+                return response.data
+            } catch (error: any) {
+                toast({
+                    variant: 'destructive',
+                    title: error?.response?.data?.message + '!'
+                })
+                console.log(`['Post_Bill']`, error)
             }
         }
     }

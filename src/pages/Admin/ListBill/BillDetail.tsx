@@ -1,5 +1,5 @@
 import '../../../styles/BillDetail.css'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useBillDetailQuery } from '@/hooks/BillDetail/useBillDetailQuery'
 import { formatPrice, formatPriceBootstrap } from '@/lib/utils'
 import { GrLinkNext } from 'react-icons/gr'
@@ -17,8 +17,10 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/components/ui/use-toast'
-import { apiCancelOrder, apiChangeStatusOrder } from '@/services/bill'
+import { apiCancelOrder, apiChangeStatusOrder, getOneCancelOrder } from '@/services/bill'
 import { useBillDetailMutation } from '@/hooks/BillDetail/useBillDetailMutation'
+import { Image } from 'antd'
+import { IoCardSharp } from 'react-icons/io5'
 const BillDetail = () => {
     const handlePrint = () => {
         const printContent = document.getElementById('bill-detail')
@@ -33,11 +35,19 @@ const BillDetail = () => {
     const [open, setOpen] = useState(false)
     const { id } = useParams()
     const { data } = useBillDetailQuery(id)
-    console.log(data)
     const [bill, setBill] = useState<any>()
+    console.log('🚀 ~ BillDetail ~ bill:', bill)
+    const [messgaseCanCelOrder, setmessgaseCanCelOrder] = useState<any>()
     useEffect(() => {
         if (data) {
             setBill(data)
+            if (data?.bill?.orderstatus == 'Đã hủy hàng') {
+                const fetch = async () => {
+                    const mess = await getOneCancelOrder(id)
+                    setmessgaseCanCelOrder(mess?.datas)
+                }
+                fetch()
+            }
         }
     }, [data, open, id])
 
@@ -99,9 +109,8 @@ const BillDetail = () => {
                 idStaff: userID,
                 orderstatus: data?.status
             }
-            console.log('🚀 ~ handleSubmitForm ~ changeStatusOrder:', changeStatusOrder)
             const change = await apiChangeStatusOrder(changeStatusOrder)
-            setBill({ ...bill?.billChangeStatusOrderHistory, ...change.changeOrder })
+            window.location.reload()
             setOpen(false)
         }
     }
@@ -114,34 +123,33 @@ const BillDetail = () => {
             orderstatus: data?.status
         }
         const change = await apiCancelOrder(CancelOrder)
-        setBill({ ...bill?.billChangeStatusOrderHistory, ...change.changeOrder })
         setOpen(false)
-
         navigate('/admin/bill')
     }
-    const { register, handleSubmit, setValue } = useForm()
     const { onSubmit } = useBillDetailMutation({
         action: 'UPDATE_PAYMENT_STATUS',
         onSuccess: () => {
-            navigate('/admin/bill')
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
         }
     })
-    useEffect(() => {
-        if (data) {
-            console.log('Order status from data:', data?.bill?.paymentstatus)
-            setValue('paymentstatus', data?.bill?.paymentstatus)
-        }
-    }, [data, setValue])
 
     const handleSubmitPaymentStatus = (data: any) => {
-        const updatedPayMents = {
-            ...data,
-            _id: id,
-            paymentstatus: data.paymentstatus
+        const confirm = window.confirm('Xác nhận lại là đơn hàng đã thanh toán!')
+        if (confirm) {
+            const confirm2 = window.confirm('Xác nhận lại lần 2 là đơn hàng đã thanh toán!')
+            if (confirm2) {
+                const updatedPayMents = {
+                    ...data,
+                    _id: id,
+                    paymentstatus: 'Đã thanh toán'
+                }
+                onSubmit(updatedPayMents)
+            }
         }
-        console.log('🚀 ~ onHandleSubmit ~ updatedCategory:', updatedPayMents)
-        onSubmit(updatedPayMents)
     }
+
     return (
         <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-2 '>
             <div className='flex flex-row  mt-4 ml-20 gap-72 pl-10'>
@@ -176,7 +184,7 @@ const BillDetail = () => {
                     {/* <span className='font-bold text-base text-blue-500'>Thời gian đặt hàng: 17.00pm 12/1/2024</span> */}
                     <div className=' gap-72 font-thin text-base  flex flex-row pt-2'>
                         <div className='flex flex-col gap-3 pl-2'>
-                            <p id='ten-cua-hang' className='mt-2 font-serif text-lg'>
+                            <p id='ten-cua-hang' className='mt-2 font-serif'>
                                 Trạng thái giao hàng
                             </p>
 
@@ -202,120 +210,145 @@ const BillDetail = () => {
                                     ))}
                             </ul>
 
-                            <Dialog open={open} onOpenChange={setOpen}>
-                                <DialogTrigger asChild>
-                                    {/* <Button>Hủy đơn hàng</Button> */}
-                                    <Button
-                                        variant='outline'
-                                        style={{ backgroundColor: 'white', borderColor: '#93C5FD', color: '#93C5FD' }}
-                                    >
-                                        Cập nhật trạng thái
-                                    </Button>
-                                </DialogTrigger>
-
-                                <DialogContent className='sm:max-w-[425px]'>
-                                    <DialogHeader>
-                                        <DialogTitle>Thay đổi trạng thái giao hàng</DialogTitle>
-                                        <DialogDescription>
-                                            Cập nhật trạng thái giao hàng do nhân viên hoặc shiper thông báo
-                                        </DialogDescription>
-                                    </DialogHeader>
-
-                                    <Form {...form}>
-                                        <form
-                                            onSubmit={form.handleSubmit(handleSubmitForm)}
-                                            className='w-2/3 space-y-6'
-                                            style={{ textAlign: 'center' }}
+                            {data?.bill?.orderstatus != 'Đã hủy hàng' && (
+                                <Dialog open={open} onOpenChange={setOpen}>
+                                    <DialogTrigger asChild>
+                                        {/* <Button>Hủy đơn hàng</Button> */}
+                                        <Button
+                                            variant='outline'
+                                            style={{
+                                                backgroundColor: 'white',
+                                                borderColor: '#93C5FD',
+                                                color: '#93C5FD'
+                                            }}
                                         >
-                                            <FormField
-                                                control={form.control}
-                                                name='status'
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <Select
-                                                            onValueChange={field.onChange}
-                                                            defaultValue={field.value}
-                                                        >
-                                                            <FormControl>
-                                                                <SelectTrigger className='w-[370px]'>
-                                                                    <SelectValue
-                                                                        placeholder='Trạng thái'
-                                                                        style={{ color: 'black' }}
-                                                                    />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                {missingOrderStatusesFormatted.map(
-                                                                    (item: any, index: number) => (
-                                                                        <SelectItem key={index} value={item.status}>
-                                                                            {item.status}
-                                                                        </SelectItem>
-                                                                    )
-                                                                )}
-                                                            </SelectContent>
-                                                        </Select>
+                                            Cập nhật trạng thái
+                                        </Button>
+                                    </DialogTrigger>
 
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <div className='flex flex-row gap-16'>
-                                                <Button className='' onClick={() => handleSubmitOrder({})}>
-                                                    Hủy đơn hàng
-                                                </Button>
-                                                <Button type='submit' className=''>
-                                                    Submit
-                                                </Button>
-                                            </div>
-                                        </form>
-                                    </Form>
-                                </DialogContent>
-                            </Dialog>
+                                    <DialogContent className='sm:max-w-[425px]'>
+                                        <DialogHeader>
+                                            <DialogTitle>Thay đổi trạng thái giao hàng</DialogTitle>
+                                            <DialogDescription>
+                                                Cập nhật trạng thái giao hàng do nhân viên hoặc shiper thông báo
+                                            </DialogDescription>
+                                        </DialogHeader>
+
+                                        <Form {...form}>
+                                            <form
+                                                onSubmit={form.handleSubmit(handleSubmitForm)}
+                                                className='w-2/3 space-y-6'
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                <FormField
+                                                    control={form.control}
+                                                    name='status'
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <Select
+                                                                onValueChange={field.onChange}
+                                                                defaultValue={field.value}
+                                                            >
+                                                                <FormControl>
+                                                                    <SelectTrigger className='w-[370px]'>
+                                                                        <SelectValue
+                                                                            placeholder='Trạng thái'
+                                                                            style={{ color: 'black' }}
+                                                                        />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    {missingOrderStatusesFormatted.map(
+                                                                        (item: any, index: number) => (
+                                                                            <SelectItem key={index} value={item.status}>
+                                                                                {item.status}
+                                                                            </SelectItem>
+                                                                        )
+                                                                    )}
+                                                                </SelectContent>
+                                                            </Select>
+
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <div className='flex'>
+                                                    <Button className='bg-[red]' onClick={() => handleSubmitOrder({})}>
+                                                        Hủy đơn hàng
+                                                    </Button>
+
+                                                    <Button type='submit' className='ml-10'>
+                                                        Submit
+                                                    </Button>
+                                                </div>
+                                            </form>
+                                        </Form>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
+                            {data?.bill?.orderstatus == 'Đã hủy hàng' && (
+                                <h1 style={{ fontSize: '20px', color: 'black' }}>
+                                    Lí do: <span style={{ color: 'red' }}>{messgaseCanCelOrder?.message}</span>
+                                </h1>
+                            )}
                         </div>
-                        <div className='flex flex-col gap-3' id='trang-thai-thanh-toan'>
-                            <p id='ten-cua-hang' className='mt-2 font-serif text-lg'>
-                                Trạng thái thanh toán
+                        <div className='mt-2' id='trang-thai-thanh-toan'>
+                            <p id='ten-cua-hang' className=' font-serif'>
+                                Phương thức thanh toán: {data?.bill?.paymentmethods}
                             </p>
-                            <form action='' onSubmit={handleSubmit(handleSubmitPaymentStatus)}>
-                                <select
-                                    {...register('paymentstatus')}
-                                    name='paymentstatus'
-                                    id='trang-thai-don-hang'
-                                    className='w-44 h-12 border-2 px-2 border-blue-300 rounded-md bg-blue-300 text-white '
+                            <p
+                                className='mt-2 font-serif'
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'start',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                Trạng thái thanh toán: &nbsp;
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        alignItems: 'center'
+                                    }}
                                 >
-                                    {data?.bill?.paymentmethods !== 'Thanh toán MoMo' && (
-                                        <>
-                                            <option className='font-medium'>{data?.bill?.paymentstatus}</option>
-                                            {data?.bill?.paymentstatus !== 'Thanh toán thành công' && (
-                                                <>
-                                                    <option className='font-medium'>Chưa thanh toán</option>
-                                                    <option className='font-medium'>Thanh toán thành công</option>
-                                                </>
-                                            )}
-                                        </>
+                                    {data?.bill?.paymentstatus == 'Chưa thanh toán' ||
+                                    data?.bill?.paymentstatus == 'Chờ thanh toán' ? (
+                                        <span style={{ color: 'red', fontWeight: 700 }}>Chưa thanh toán</span>
+                                    ) : (
+                                        <span style={{ color: 'green', fontWeight: 700 }}>Đã thanh toán</span>
                                     )}
-                                    {data?.bill?.paymentmethods !== 'Thanh toán khi nhận hàng' && (
-                                        <>
-                                            <option className='font-medium'>{data?.bill?.paymentstatus}</option>
-                                            {data?.bill?.paymentstatus !== 'Thanh toán thành công' && (
-                                                <>
-                                                    <option className='font-medium'>Chờ thanh toán</option>
-                                                    <option className='font-medium'>Thanh toán thành công</option>
-                                                </>
-                                            )}
-                                        </>
-                                    )}
-                                </select>
-                                <Button className='mt-2' type='submit'>
-                                    Cập nhật
-                                </Button>
-                            </form>
+                                </span>
+                            </p>
+                            {data?.bill?.paymentstatus == 'Chưa thanh toán' ||
+                            data?.bill?.paymentstatus == 'Chờ thanh toán' ? (
+                                <div className='flex mt-2' style={{ alignItems: 'center' }}>
+                                    <GrLinkNext /> &nbsp;
+                                    <button
+                                        style={{
+                                            backgroundColor: 'orangered',
+                                            color: 'wheat',
+                                            padding: '5px',
+                                            border: '1px solid gray',
+                                            borderRadius: '10px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            fontSize: '12px'
+                                        }}
+                                        onClick={() => handleSubmitPaymentStatus(data?.bill?._id)}
+                                    >
+                                        Cập nhật thanh toán &nbsp; <IoCardSharp />
+                                    </button>
+                                </div>
+                            ) : (
+                                ''
+                            )}
                         </div>
                     </div>
-                    <div className='flex flex-row gap-5 border-stroke py-1  dark:border-strokedark   font-thin text-base pt-5'>
+                    <div className='flex flex-col gap-3 border-stroke py-1  dark:border-strokedark pt-5'>
                         <div>
-                            <p className=' font-serif text-lg'>Thông tin cửa hàng</p>
-                            <table>
+                            <p className='text-lg'>Thông tin cửa hàng</p>
+                            <table style={{ textAlign: 'left' }}>
                                 <thead>
                                     <tr>
                                         <th>Tên cửa hàng</th>
@@ -332,7 +365,7 @@ const BillDetail = () => {
                             </table>
                         </div>
                         <div>
-                            <p className=' font-serif text-lg'>Thông tin người nhận</p>
+                            <p className='text-lg'>Thông tin người nhận</p>
                             <table>
                                 <thead>
                                     <tr>
@@ -343,7 +376,7 @@ const BillDetail = () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{data?.bill?.user.name}</td>
+                                        <td>{data?.bill?.nameUser}</td>
                                         <td>{data?.bill?.tel}</td>
                                         <td>{data?.bill?.address}</td>
                                     </tr>
@@ -351,58 +384,89 @@ const BillDetail = () => {
                             </table>
                         </div>
                     </div>
-                    <div className='font-thin text-base pt-5 mb-5'>
-                        <p className=' font-serif text-lg '>Thông tin sản phẩm</p>
-                        <table className='w-full'>
+
+                    <div className='pt-5 mb-5'>
+                        <p className=' text-lg '>Thông tin sản phẩm</p>
+                        <table className='w-full' style={{ textAlign: 'center' }}>
                             <thead>
                                 <tr className=''>
-                                    <th className=''>STT </th>
-                                    <th className=''>Sản phẩm</th>
+                                    <th className=''>#</th>
+                                    <th className='w-[40%]'>Sản phẩm</th>
                                     <th className=''>Kích thước</th>
                                     <th className=''>Số lượng</th>
-                                    <th className=''>Gía</th>
-                                    <th className=''>Tổng tiền</th>
+                                    <th className=''>Tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data?.billDetails &&
                                     data?.billDetails.map((item: any, index: number) => (
-                                        <tr>
+                                        <tr key={item?.imageTypePro}>
                                             <td className=''>{index + 1}</td>
-                                            <>
-                                                <td className=''>
-                                                    <img src={item?.type_product?.image} alt='' /> {item?.product?.name}
-                                                </td>
-                                                <td className='text-center'>
-                                                    {item?.type_product?.color} - {item?.type_product?.size}
-                                                </td>
-                                                <td className='text-center'>{item?.quantity}</td>
-                                                <td
-                                                    className='text-base '
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: formatPriceBootstrap(item?.type_product?.price)
+                                            <td
+                                                style={{
+                                                    textAlign: 'left',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between'
+                                                }}
+                                            >
+                                                <Image
+                                                    src={item?.imageTypePro}
+                                                    alt='product'
+                                                    width={100}
+                                                    style={{
+                                                        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
                                                     }}
-                                                ></td>
-                                                <td
-                                                    className='text-xl pt-4'
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: formatPrice(item?.money)
-                                                    }}
-                                                ></td>
-                                            </>
+                                                />
+                                                <Link to={'/products/' + item?.idpro} className='ml-3'>
+                                                    {item?.namePro}
+                                                </Link>
+                                            </td>
+                                            <td className='text-center'>{item?.nameTypePro}</td>
+                                            <td className='text-center'>{item?.quantity}</td>
+                                            <td
+                                                style={{ fontWeight: 700 }}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(item?.money)
+                                                }}
+                                            ></td>
                                         </tr>
                                     ))}
                             </tbody>
                         </table>
                     </div>
 
-                    <p
-                        style={{ fontWeight: 900 }}
-                        className='text-xl pt-2 text-end bg-blue-400 text-red-500 text-xl  font-extralight px-5 my-3 h-16'
-                        dangerouslySetInnerHTML={{
-                            __html: formatPrice(data?.bill?.money)
-                        }}
-                    ></p>
+                    <div className='text-xl pt-2 text-end bg-blue-200 px-5 py-2'>
+                        <p className='mb-2'>
+                            Giảm: &nbsp;
+                            <span
+                                style={{ fontWeight: 700 }}
+                                className='text-red-500 text-xl'
+                                dangerouslySetInnerHTML={{
+                                    __html: formatPrice(data?.bill?.decreaseVc)
+                                }}
+                            ></span>
+                        </p>
+                        <p className='mb-2'>
+                            Vận chuyển: &nbsp;
+                            <span
+                                style={{ fontWeight: 700 }}
+                                className='text-red-500 text-xl'
+                                dangerouslySetInnerHTML={{
+                                    __html: formatPrice(25000)
+                                }}
+                            ></span>
+                        </p>
+                        <p className='mb-2'>
+                            Tổng tiền: &nbsp;
+                            <span
+                                style={{ fontWeight: 700 }}
+                                className='text-red-500 text-xl'
+                                dangerouslySetInnerHTML={{
+                                    __html: formatPrice(data?.bill?.money)
+                                }}
+                            ></span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

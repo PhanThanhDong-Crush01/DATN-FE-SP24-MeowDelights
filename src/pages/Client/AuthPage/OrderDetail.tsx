@@ -1,147 +1,288 @@
-import { Divider, Layout, Steps } from 'antd'
-import { useParams } from 'react-router-dom'
-import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
-import { useEffect, useState } from 'react'
+import '../../../styles/BillDetail.css'
+import { Link, useParams } from 'react-router-dom'
 import { useBillDetailQuery } from '@/hooks/BillDetail/useBillDetailQuery'
 import { formatPrice, formatPriceBootstrap } from '@/lib/utils'
-import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
-import { useProductQuery } from '@/hooks/Product/useProductQuery'
-const { Content } = Layout
-type Props = {}
-const OrderDetailPage = (_props: Props) => {
+import { GrLinkNext } from 'react-icons/gr'
+import { IoCardSharp } from 'react-icons/io5'
+import { useEffect, useState } from 'react'
+import ThanhToanSau from '../PaymentSuccessPage/ThanhToanSau'
+import { Image } from 'antd'
+
+const BillDetail = () => {
+    const [open, setOpen] = useState(false)
     const { id } = useParams()
-    console.log(id)
-    const { data } = useBillDetailQuery(id || '')
-    console.log(data)
-    const [currentStep, setCurrentStep] = useState(0)
+    const { data } = useBillDetailQuery(id)
+    const [bill, setBill] = useState<any>()
     useEffect(() => {
-        if (data?.bill?.orderstatus) {
-            const statusToStep: Record<string, number> = {
-                'Chờ xác nhận': 0,
-                'Đang chuẩn bị hàng': 1,
-                'Đã giao hàng cho đơn vị vận chuyển': 2,
-                'Đang giao hàng': 3,
-                'Đã giao hàng thành công': 4,
-                'Đã hủy hàng': 5
-            }
-            setCurrentStep(statusToStep[data.bill.orderstatus] || 0)
-            if (data.bill.orderstatus === 'Đã hủy hàng' && (currentStep === 0 || currentStep === 1)) {
-                // Thực hiện các hành động bạn muốn khi đơn hàng bị hủy ở trạng thái này,
-                // ví dụ: hiển thị thông báo cho người dùng
-                console.log("Đơn hàng đã bị hủy khi đang ở trạng thái 'Chờ xác nhận' hoặc 'Đang chuẩn bị hàng'.")
-            }
+        if (data) {
+            setBill(data)
         }
-    }, [data])
+    }, [data, open, id])
+
+    const TimeDate = (time: any) => {
+        const createdAtDate = new Date(time)
+        const day = createdAtDate.getDate().toString().padStart(2, '0')
+        const month = (createdAtDate.getMonth() + 1).toString().padStart(2, '0')
+        const year = createdAtDate.getFullYear().toString().slice(-2)
+
+        const formattedDate = `${day}/${month}/${year}`
+        const timeTmas = createdAtDate.toLocaleTimeString('en-GB', { hour12: false })
+
+        const inRa = timeTmas + ' - ' + formattedDate
+        return inRa
+    }
+
+    const [userID, setUserID] = useState<any>()
+    useEffect(() => {
+        const storedUserID = localStorage.getItem('userID')
+        if (storedUserID) {
+            setUserID(storedUserID)
+        }
+    }, [])
+
+    const [showThanhToanSau, setShowThanhToanSau] = useState(false)
+    const [idBill, setIdBill] = useState('')
+
+    const handleThanhToanNgay = (id: string) => {
+        setIdBill(id)
+        setShowThanhToanSau(true)
+    }
 
     return (
-        <Content>
-            <main className=' px-10 py-2'>
-                <Divider />
-                <div className='flex flex-row gap-64 px-5 '>
-                    <div className='pt-1'>
-                        <h2 className='text-2xl'>Địa chỉ nhận hàng</h2>
-                        <div className='pt-2 px-4'>
-                            <p className='font-mono text-lg'>{data?.bill?.user?.name}</p>
-                            <p>(+84){data?.bill?.user?.phone}</p>
-                            <p>{data?.bill?.address}</p>
-                        </div>
-                    </div>
-                    <div className='pt-1'>
-                        {' '}
-                        <Steps
-                            progressDot
-                            current={currentStep}
-                            direction='vertical'
-                            items={[
-                                {
-                                    title: 'Chờ xác nhận',
-                                    description: 'This is a description.'
-                                },
-                                {
-                                    title: 'Đang chuẩn bị hàng',
-                                    description: 'This is a description.'
-                                },
-                                ...(data?.bill?.orderstatus !== 'Đã hủy hàng'
-                                    ? [
-                                          {
-                                              title: 'Đã giao hàng cho đơn vị vận chuyển',
-                                              description: 'This is a description. This is a description.'
-                                          },
-                                          {
-                                              title: 'Đang giao hàng',
-                                              description: 'This is a description. This is a description.'
-                                          },
-                                          {
-                                              title: 'Giao hàng thành công',
-                                              description: 'This is a description. This is a description.'
-                                          }
-                                      ]
-                                    : []),
-                                ...(data?.bill?.orderstatus !== 'Đã giao hàng thành công'
-                                    ? [
-                                          {
-                                              title: 'Đã hủy đơn hàng',
-                                              description: 'This is a description. This is a description.'
-                                          }
-                                      ]
-                                    : [])
-                            ]}
-                        />
-                    </div>
-                </div>
-                <Divider />
-                {data?.billDetails?.map((item: any) => (
-                    <div className='flex flex-row gap-10 bg-white p-5 rounded-lg' key={item._id}>
-                        <img src={item.product.image} alt='Product' style={{ width: 120 }} />
-                        <div className='flex flex-row gap-24 '>
-                            <div className='flex flex-col gap-5  '>
-                                <p className='text-base'>{item.product.name}</p>
-                                <p className='text-gray-400'>
-                                    Phân loại: {item.type_product.size} - {item.type_product.color}
-                                    <p className='text-sm pt-2'>Số lượng: {item?.quantity}</p>
-                                </p>
-                                <p
-                                    className='text-base '
-                                    dangerouslySetInnerHTML={{
-                                        __html: formatPriceBootstrap(item.type_product.price)
-                                    }}
-                                ></p>
-                            </div>
-                            <p
-                                className='text-xl pt-20'
-                                dangerouslySetInnerHTML={{
-                                    __html: formatPrice(item?.money)
-                                }}
-                            ></p>
-                        </div>
-                    </div>
-                ))}
+        <div
+            className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-2 '
+            style={{ margin: '0 auto' }}
+        >
+            <div
+                className='mt-4 ml-20 gap-72 pl-10'
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+                <h4
+                    className='text-[30px] font-bold text-black dark:text-white pb-5  mt-10'
+                    id='name-bill'
+                    style={{ fontWeight: 900 }}
+                >
+                    Hóa đơn chi tiết
+                    <br />
+                    <span style={{ fontSize: '19px' }}>Code: {id}</span>
+                </h4>
+            </div>
+            <div id='bill-detail' className=' border-2 border-blue-300  rounded  w-auto mx-28 my-2'>
+                <div className='  md:px-6 xl:px-7.5 '>
+                    {/* <span className='font-bold text-base text-blue-500'>Thời gian đặt hàng: 17.00pm 12/1/2024</span> */}
+                    <div className=' gap-10 font-thin text-base  flex flex-col pt-2'>
+                        <div className='flex flex-col pl-2'>
+                            <p id='ten-cua-hang' className='mt-2 font-serif text-lg'>
+                                Trạng thái giao hàng
+                            </p>
 
-                {/* <Table columns={columns} dataSource={data} /> */}
-                <div className=' pt-5 flex flex-col gap-1 text-base'>
-                    <Divider />
-                    <div className='flex flex-row gap-36 pl-96'>
-                        <span>Tổng tiền</span>
-                        <span
-                            className='text-base '
-                            dangerouslySetInnerHTML={{
-                                __html: formatPriceBootstrap(data?.bill?.money)
-                            }}
-                        ></span>
+                            <ul>
+                                {bill?.billChangeStatusOrderHistory &&
+                                    bill?.billChangeStatusOrderHistory.map((item: any) => (
+                                        <li
+                                            key={item?.changeStatusOrder?.createdAt}
+                                            style={{
+                                                marginTop: '5px',
+                                                fontWeight: 500,
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <span style={{ color: 'gray' }}>
+                                                {TimeDate(item?.changeStatusOrder?.createdAt)}
+                                            </span>
+                                            &nbsp;
+                                            <GrLinkNext />
+                                            &nbsp;
+                                            {item?.changeStatusOrder?.statusOrder}
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+                        <div className='' id='trang-thai-thanh-toan'>
+                            <p id='ten-cua-hang' className=' font-serif text-lg'>
+                                Phương thức thanh toán: {data?.bill?.paymentmethods}
+                            </p>
+                            <p
+                                className='mt-2 font-serif text-lg'
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'start',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                Trạng thái thanh toán: &nbsp;
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    {data?.bill?.paymentstatus == 'Chưa thanh toán' ||
+                                    data?.bill?.paymentstatus == 'Chờ thanh toán' ? (
+                                        <span style={{ color: 'red', fontWeight: 700 }}>Chưa thanh toán</span>
+                                    ) : (
+                                        <span style={{ color: 'green', fontWeight: 700 }}>Đã thanh toán</span>
+                                    )}
+                                    &nbsp;
+                                    {data?.bill?.paymentstatus === 'Chờ thanh toán' &&
+                                    data?.bill?.paymentmethods === 'Thanh toán qua PayPal' ? (
+                                        <>
+                                            <GrLinkNext /> &nbsp;
+                                            <button
+                                                style={{
+                                                    backgroundColor: 'orangered',
+                                                    color: 'wheat',
+                                                    padding: '5px',
+                                                    border: '1px solid gray',
+                                                    borderRadius: '10px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    fontSize: '12px'
+                                                }}
+                                                onClick={() => handleThanhToanNgay(data?.bill?._id)}
+                                            >
+                                                Thanh toán ngay &nbsp; <IoCardSharp />
+                                            </button>
+                                            {showThanhToanSau && (
+                                                <ThanhToanSau money={data?.bill?.money} idBill={idBill} show={true} />
+                                            )}
+                                        </>
+                                    ) : (
+                                        ''
+                                    )}
+                                </span>
+                            </p>
+                        </div>
                     </div>
-                    <Divider />
-                    {/* <p className='pl-96'>
-                        Mã khuyến mãi : <span className='pl-24'>{voucher?.data?.datas?.name}</span>
-                    </p> */}
-                    <Divider />
-                    <p className='pl-96'>
-                        Phương thức thanh toán : <span className='pl-10'>{data?.bill?.paymentmethods}</span>{' '}
-                    </p>
-                    <Divider />
+                    <div className='flex flex-col gap-3 border-stroke py-1  dark:border-strokedark  pt-5'>
+                        <div>
+                            <p className='text-lg'>Thông tin cửa hàng</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tên cửa hàng</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tr>
+                                    <td>MeoDelight</td>
+                                    <td>0334370130</td>
+                                    <td>ngõ 71, Phương Canh, Nam Từ Liêm</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <p className='text-lg'>Thông tin người nhận</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tên cửa hàng</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{data?.bill?.nameUser}</td>
+                                        <td>{data?.bill?.tel}</td>
+                                        <td>{data?.bill?.address}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className='pt-5 mb-5'>
+                        <p className=' text-lg '>Thông tin sản phẩm</p>
+                        <table className='w-full' style={{ textAlign: 'center' }}>
+                            <thead>
+                                <tr className=''>
+                                    <th className=''>#</th>
+                                    <th className='w-[40%]'>Sản phẩm</th>
+                                    <th className=''>Kích thước</th>
+                                    <th className=''>Số lượng</th>
+                                    <th className=''>Tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data?.billDetails &&
+                                    data?.billDetails.map((item: any, index: number) => (
+                                        <tr key={item?.imageTypePro}>
+                                            <td className=''>{index + 1}</td>
+                                            <td
+                                                style={{
+                                                    textAlign: 'left',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between'
+                                                }}
+                                            >
+                                                <Image
+                                                    src={item?.imageTypePro}
+                                                    alt='product'
+                                                    width={100}
+                                                    style={{
+                                                        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+                                                    }}
+                                                />
+                                                <Link to={'/products/' + item?.idpro} className='ml-3'>
+                                                    {item?.namePro}
+                                                </Link>
+                                            </td>
+                                            <td className='text-center'>{item?.nameTypePro}</td>
+                                            <td className='text-center'>{item?.quantity}</td>
+                                            <td
+                                                style={{ fontWeight: 700 }}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(item?.money)
+                                                }}
+                                            ></td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className='text-xl pt-2 text-end bg-blue-200 px-5 py-2'>
+                        <p className='mb-2'>
+                            Giảm: &nbsp;
+                            <span
+                                style={{ fontWeight: 700 }}
+                                className='text-red-500 text-xl'
+                                dangerouslySetInnerHTML={{
+                                    __html: formatPrice(data?.bill?.decreaseVc)
+                                }}
+                            ></span>
+                        </p>
+                        <p className='mb-2'>
+                            Vận chuyển: &nbsp;
+                            <span
+                                style={{ fontWeight: 700 }}
+                                className='text-red-500 text-xl'
+                                dangerouslySetInnerHTML={{
+                                    __html: formatPrice(25000)
+                                }}
+                            ></span>
+                        </p>
+                        <p className='mb-2'>
+                            Tổng tiền: &nbsp;
+                            <span
+                                style={{ fontWeight: 700 }}
+                                className='text-red-500 text-xl'
+                                dangerouslySetInnerHTML={{
+                                    __html: formatPrice(data?.bill?.money)
+                                }}
+                            ></span>
+                        </p>
+                    </div>
                 </div>
-            </main>
-        </Content>
+            </div>
+        </div>
     )
 }
 
-export default OrderDetailPage
+export default BillDetail

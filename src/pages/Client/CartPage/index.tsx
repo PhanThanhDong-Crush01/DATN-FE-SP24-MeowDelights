@@ -51,33 +51,6 @@ const CartPage = () => {
         setIdVoucher(idVC.toLowerCase())
     }
 
-    const [diemTichLuy, setDiem] = useState(0)
-
-    const handleChangeDiamTichLuy = async (value: any) => {
-        setDiem(value.target.value)
-    }
-    const apDungDiem = async () => {
-        if (diemTichLuy > auth?.discount_points) {
-            toast({
-                variant: 'destructive',
-                title: 'Bạn làm gì có nhiều điểm thế, nhập lại đi!'
-            })
-        } else if (diemTichLuy < 0) {
-            toast({
-                variant: 'destructive',
-                title: 'Sao lại nhập âm, nhập lại đi, nhập số lớn hơn 0 ý!'
-            })
-        } else {
-            setTongTienCanThanhToan(tongTienCanThanhToan - diemTichLuy)
-            toast({
-                variant: 'success',
-                title: 'Sử dụng điểm tích lũy thành công!'
-            })
-            auth.discount_points = auth?.discount_points - diemTichLuy
-            await instance.patch(`/auth/${userID}`, auth)
-        }
-    }
-
     const [data, setDataVoucherOne] = useState<any>() // Fix variable name
 
     const xetIdVoucher = () => {
@@ -118,7 +91,7 @@ const CartPage = () => {
             phiVanChuyen: phiVanChuyen,
             voucher: {
                 idVc: data?._id || '',
-                nameVc: data?.name || 'Không có',
+                nameVc: data?.name || '',
                 decreaseVc: voucherGiamGia || 0
             },
             tongTien: tongTienCanThanhToan
@@ -178,7 +151,6 @@ const CartPage = () => {
     }, [userID, tongTienCanThanhToan])
 
     const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
-    console.log('🚀 ~ CartPage ~ voucherDuocChon:', voucherDuocChon)
     useEffect(() => {
         if (MyVoucher !== undefined && data !== undefined) {
             const voucherDuocChon = MyVoucher.filter((item: any) => item.idVoucher === data?._id)
@@ -261,7 +233,7 @@ const CartPage = () => {
                                                 <img src={cartItem?.typeProduct?.image} alt='prod1' />
                                                 <div className='sigma_cart-product-body'>
                                                     <h6 style={{ width: '100%' }}>
-                                                        <Link to={'/products/' + cartItem}>
+                                                        <Link to={'/products/' + cartItem.idpro}>
                                                             {cartItem?.product?.name}
                                                         </Link>
                                                     </h6>
@@ -317,44 +289,6 @@ const CartPage = () => {
                     }}
                 >
                     <div className='row' style={{ width: '30%', display: 'flex', flexDirection: 'column' }}>
-                        {auth?.discount_points > 0 ? (
-                            <div className='form-group mb-3'>
-                                <h1 style={{ fontSize: '19px', marginBottom: '5px' }}>
-                                    Số điểm tích lũy của bạn:{' '}
-                                    <span style={{ color: 'gray' }}>{auth?.discount_points} VNĐ</span>
-                                </h1>
-                                <div className='input-group mb-0' style={{ display: 'flex' }}>
-                                    <input
-                                        style={{
-                                            width: '75%',
-                                            height: '40px',
-                                            border: '1px solid #d2d2d2',
-                                            borderRadius: '10px'
-                                        }}
-                                        type='mumber'
-                                        className='form-control'
-                                        aria-label='Coupon Code'
-                                        defaultValue={1}
-                                        min={1}
-                                        max={auth?.discount_points}
-                                        onChange={handleChangeDiamTichLuy}
-                                    />
-                                    <div className='input-group-append'>
-                                        <button
-                                            className='sigma_btn-custom shadow-none  btn mt-3'
-                                            type='button'
-                                            style={{ backgroundColor: '#FFCC01' }}
-                                            onClick={apDungDiem}
-                                        >
-                                            Áp dụng
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            ''
-                        )}
-
                         <div className='form-group mb-0'>
                             <div className='input-group mb-0' style={{ display: 'flex' }}>
                                 <Select
@@ -369,7 +303,7 @@ const CartPage = () => {
                                 />
                                 <div className='input-group-append'>
                                     <button
-                                        className='sigma_btn-custom shadow-none  btn mt-3'
+                                        className='sigma_btn-custom shadow-none  btn'
                                         type='button'
                                         style={{ backgroundColor: '#FFCC01' }}
                                         onClick={apDungVoucher}

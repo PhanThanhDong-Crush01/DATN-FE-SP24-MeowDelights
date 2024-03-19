@@ -63,9 +63,8 @@ export const remove = async (bill: IBill) => {}
 //mẫu product
 
 export const apiChangeStatusOrder = async (bill: any) => {
-    console.log('🚀 ~ apiChangeStatusOrder ~ bill:', bill)
     try {
-        const response = await instance.patch(`/bill/changeOrderStatus/${bill._id}`, bill)
+        const response = await instance.patch(`/bill/changeOrderStatus/${bill.idBill}`, bill)
         if (response.data) {
             toast({
                 variant: 'success',

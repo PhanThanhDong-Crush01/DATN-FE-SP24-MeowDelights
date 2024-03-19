@@ -226,6 +226,7 @@ const ProductDetailPage = () => {
                                             {uniqueColorsWithImage &&
                                                 uniqueColorsWithImage.map((item: any) => (
                                                     <img
+                                                        key={item.image } 
                                                         {...register('imageTypePro')}
                                                         className=''
                                                         src={item.image}

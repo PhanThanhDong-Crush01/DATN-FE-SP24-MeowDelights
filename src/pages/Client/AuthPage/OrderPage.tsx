@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Form, Input, Menu, Rate, Space, Table, Tabs } from 'antd'
+import { Button, Input, Rate, Space, Table, Tabs } from 'antd'
 import type { InputRef, TableColumnType, TableProps, TabsProps } from 'antd'
-import Layout, { Content } from 'antd/es/layout/layout'
-import Sider from 'antd/es/layout/Sider'
-import { AiOutlineAccountBook, AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
+import { Content } from 'antd/es/layout/layout'
 import { Link, useNavigate } from 'react-router-dom'
-import Search, { SearchProps } from 'antd/es/input/Search'
+import { SearchProps } from 'antd/es/input/Search'
 import { useBillQuery } from '@/hooks/Bill/useBillQuery'
-import { SearchOutlined, StarOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 import { FilterDropdownProps } from 'antd/es/table/interface'
 import {
     Dialog,
@@ -20,17 +18,15 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { useCommentMutation } from '@/hooks/Comment/useCommentMutation'
-import { toast } from '@/components/ui/use-toast'
-import ProductReviews from '../ProductDetailPage/ProductReviews'
 import { formatPrice, formatPriceBootstrap } from '@/lib/utils'
 import { useWhyCancelOrder } from '@/hooks/Bill/useWhyCancelOrder'
-import { useForm } from 'react-hook-form'
+import { FcNext } from 'react-icons/fc'
 interface DataType {
     key: string
     products: {
         // hasReviewed: boolean
-        product: Product
-        productType: ProductType
+        product: any
+        productType: any
     }[]
     _id: string
     tel: string
@@ -42,77 +38,7 @@ interface DataType {
     orderstatus: string
 }
 type DataIndex = keyof DataType
-// const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
-//     console.log('params', pagination, filters, sorter, extra)
-// }
 
-const items: TabsProps['items'] = [
-    {
-        key: '1',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Tất cả
-            </span>
-        )
-
-        // children: 'Content of Tab Pane 1'
-    },
-    {
-        key: '2',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Chờ xác nhận
-            </span>
-        )
-        // children: 'Content of Tab Pane 2'
-    },
-    // {
-    //     key: '3',
-    //     label: (
-    //         <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-    //             Đã giao cho đơn vị vận chuyển
-    //         </span>
-    //     )
-    //     // children: 'Content of Tab Pane 3'
-    // },
-    {
-        key: '3',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Đang chuẩn bị hàng
-            </span>
-        )
-        // children: 'Content of Tab Pane 3'
-    },
-    {
-        key: '4',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Đang giao hàng
-            </span>
-        )
-        // children: 'Content of Tab Pane 3'
-    },
-
-    {
-        key: '5',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Giao hàng thành công
-            </span>
-        )
-        // children: 'Content of Tab Pane 3'
-    },
-    {
-        key: '6',
-        label: (
-            <span style={{ fontSize: '15px', display: 'inline-block', textAlign: 'center', width: '100%' }}>
-                Hủy đơn hàng
-            </span>
-        )
-        // children: 'Content of Tab Pane 3'
-    }
-]
 const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 const OrderPage: React.FC = () => {
     const navigate = useNavigate()
@@ -200,33 +126,179 @@ const OrderPage: React.FC = () => {
         }
     }, [])
     const { data } = useBillQuery(userID || '')
-    console.log(data)
-    const filteredData = data?.bill?.filter((item: DataType) => {
-        switch (selectedTab) {
-            case '1':
-                return true // All orders
-            case '2':
-                return item.orderstatus === 'Chờ xác nhận'
-            case '3':
-                return (
-                    item.orderstatus === 'Đang chuẩn bị hàng' ||
-                    item.orderstatus === 'Đã giao hàng cho đơn vị vận chuyển'
-                )
-            case '4':
-                return item.orderstatus === 'Đang giao hàng'
-            case '5':
-                return item.orderstatus === 'Đã giao hàng thành công'
-            case '6':
-                return item.orderstatus === 'Đã hủy hàng'
-            default:
-                return true
-        }
-    })
-    console.log(filteredData)
+    const [filteredData, setfilteredData] = useState<any>()
+    const [soDonHangChoXacNhan, setsoDonHangChoXacNhan] = useState<any>()
+    const [soDonHangDangChuanBiHang, setsoDonHangDangChuanBiHang] = useState<any>()
+    const [soDonHangGiao, setsoDonHangGiao] = useState<any>()
+    const [soDonHangGiaoHangThanhCong, setsoDonHangGiaoHangThanhCong] = useState<any>()
+    const [soDonHangDaHuy, setsoDonHangDaHuy] = useState<any>()
+    useEffect(() => {
+        const filtered = data?.bill
+            ?.filter((item: DataType) => {
+                switch (selectedTab) {
+                    case '1':
+                        return true
+                    case '2':
+                        return item.orderstatus === 'Chờ xác nhận'
+                    case '3':
+                        return (
+                            item.orderstatus === 'Đang chuẩn bị hàng' ||
+                            item.orderstatus === 'Đã giao hàng cho đơn vị vận chuyển'
+                        )
+                    case '4':
+                        return item.orderstatus === 'Đang giao hàng'
+                    case '5':
+                        return item.orderstatus === 'Đã giao hàng thành công'
+                    case '6':
+                        return item.orderstatus === 'Đã hủy hàng'
+                    default:
+                        return true
+                }
+            })
+            .sort((a: any, b: any) => {
+                // Sắp xếp từ mới nhất đến cũ nhất dựa trên thời gian tạo ra (createdAt)
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            })
+        setfilteredData(filtered)
+
+        // Đếm số lượng các đơn hàng trong mỗi trạng thái
+        const countPendingConfirmation = data?.bill.filter((item: any) => item.orderstatus === 'Chờ xác nhận').length
+        const countPreparing = data?.bill.filter((item: any) => item.orderstatus === 'Đang chuẩn bị hàng').length
+        const countShipping = data?.bill.filter((item: any) => item.orderstatus === 'Đang giao hàng').length
+        const countDelivered = data?.bill.filter((item: any) => item.orderstatus === 'Đã giao hàng thành công').length
+        const countCancelled = data?.bill.filter((item: any) => item.orderstatus === 'Đã hủy hàng').length
+
+        // Cập nhật số đơn hàng trong mỗi trạng thái bằng cách gọi các hàm setsoDonHang... tương ứng
+        setsoDonHangChoXacNhan(countPendingConfirmation)
+        setsoDonHangDangChuanBiHang(countPreparing)
+        setsoDonHangGiao(countShipping)
+        setsoDonHangGiaoHangThanhCong(countDelivered)
+        setsoDonHangDaHuy(countCancelled)
+    }, [data, selectedTab])
     const onChangeTab = (key: string) => {
         console.log(key)
         setSelectedTab(key)
     }
+
+    const items: TabsProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <span
+                    style={{
+                        fontSize: '15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Tất cả <span className='text-[red] ml-1 mb-3'> {data?.bill.length}</span> &nbsp;
+                    <FcNext />
+                </span>
+            )
+
+            // children: 'Content of Tab Pane 1'
+        },
+        {
+            key: '2',
+            label: (
+                <span
+                    style={{
+                        fontSize: '15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Chờ xác nhận <span className='text-[red] ml-1 mb-3'> {soDonHangChoXacNhan}</span> &nbsp;
+                    <FcNext />
+                </span>
+            )
+            // children: 'Content of Tab Pane 2'
+        },
+        {
+            key: '3',
+            label: (
+                <span
+                    style={{
+                        fontSize: '15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Đang chuẩn bị hàng <span className='text-[red] ml-1 mb-3'> {soDonHangDangChuanBiHang}</span>
+                    &nbsp;
+                    <FcNext />
+                </span>
+            )
+            // children: 'Content of Tab Pane 3'
+        },
+        {
+            key: '4',
+            label: (
+                <span
+                    style={{
+                        fontSize: '15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Đang giao hàng <span className='text-[red] ml-1 mb-3'> {soDonHangGiao}</span> &nbsp;
+                    <FcNext />
+                </span>
+            )
+            // children: 'Content of Tab Pane 3'
+        },
+
+        {
+            key: '5',
+            label: (
+                <span
+                    style={{
+                        fontSize: '15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Giao hàng thành công <span className='text-[red] ml-1 mb-3'> {soDonHangGiaoHangThanhCong}</span>{' '}
+                    &nbsp;
+                </span>
+            )
+            // children: 'Content of Tab Pane 3'
+        },
+        {
+            key: '6',
+            label: (
+                <span
+                    style={{
+                        fontSize: '15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        width: '100%'
+                    }}
+                >
+                    Hủy đơn hàng <span className='text-[red] ml-1 mb-3'> {soDonHangDaHuy}</span>
+                </span>
+            )
+            // children: 'Content of Tab Pane 3'
+        }
+    ]
+
     // const [isReviewDialogVisible, setIsReviewDialogVisible] = useState(false)
     const [selectedProductId, setSelectedProductId] = useState<string>('')
     const [selectedProductTypeId, setSelectedProductTypeId] = useState<string>('')
@@ -262,7 +334,6 @@ const OrderPage: React.FC = () => {
             comment: newComment
         }
         onSubmit(dataComment)
-        console.log(dataComment)
     }
     const { onSubmit } = useCommentMutation({
         action: 'ADD'
@@ -270,14 +341,12 @@ const OrderPage: React.FC = () => {
     const handleAddWhy = () => {
         const dataWhy = {
             idbill: selectedIdBill,
-
-            iduser: userID || '', // Thêm ID của người dùng vào dữ liệu đánh giá
+            iduser: userID || '',
             idpro: selectedIdPro,
             idprotype: selectedIdProTye,
             message: newWhy
         }
         onSubmitWhy(dataWhy)
-        console.log(dataWhy)
     }
 
     const { onSubmitWhy } = useWhyCancelOrder({
@@ -304,11 +373,6 @@ const OrderPage: React.FC = () => {
             filteredData(updatedFilteredData.concat(canceledOrders))
         }
     })
-    // const { register, handleSubmit, errors }: any = useForm()
-
-    // const onSubmitHanled = (data: any) => {
-    //     onSubmitWhy({ ...data })
-    // }
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -318,18 +382,9 @@ const OrderPage: React.FC = () => {
             ...getColumnSearchProps('_id')
         },
         {
-            // title: 'Hình ảnh',
             dataIndex: 'products',
             key: 'image',
-            render: (
-                _,
-                record: DataType
-
-                // products: {
-                //     product: product
-                //     productType: ProductType
-                // }[]
-            ) =>
+            render: (_: any, record: DataType) =>
                 record?.products[0]?.productType?.image ? (
                     <>
                         <div className='flex flex-row gap-10'>
@@ -365,7 +420,7 @@ const OrderPage: React.FC = () => {
             // title: 'Hành động',
             dataIndex: '',
             key: '',
-            render: (_, record: DataType) => (
+            render: (_: any, record: DataType) => (
                 <Space>
                     <div className=' flex flex-col gap-3'>
                         {/* Nút "Xem chi tiết" hiển thị luôn */}
@@ -378,7 +433,8 @@ const OrderPage: React.FC = () => {
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button
-                                        variant='outline'
+                                        type='primary'
+                                        danger
                                         onClick={() =>
                                             handleWhyCancelButtonClick(
                                                 record?._id,
@@ -393,25 +449,27 @@ const OrderPage: React.FC = () => {
                                 <DialogContent className='sm:max-w-[425px]'>
                                     <DialogHeader>
                                         <DialogTitle>Hủy đơn</DialogTitle>
-                                        <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
+                                        <DialogDescription>
+                                            Mời bạn viết lí do hủy đơn hàng {record?._id}
+                                        </DialogDescription>
                                     </DialogHeader>
                                     <form action=''>
-                                        <div className='grid gap-4 py-5'>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <Label htmlFor='message' className='text-right'>
-                                                    Lí do
-                                                </Label>
-                                                <Input
-                                                    className='col-span-3'
-                                                    onChange={(e) => setNewWhy(e.target.value)}
-                                                />
-                                                {/* {errors?.message && (
-                                                <span className='error'>Vui lòng viết lí do hủy đơn hàng</span>
-                                            )} */}
-                                            </div>
-                                        </div>
+                                        <Input
+                                            className='col-span-3'
+                                            onChange={(e) => setNewWhy(e.target.value)}
+                                            placeholder='Lí do...'
+                                            style={{
+                                                border: '1px solid gray',
+                                                borderRadius: '10px',
+                                                marginBottom: '10px'
+                                            }}
+                                        />
                                         <DialogFooter>
-                                            <Button type='submit' onClick={handleAddWhy}>
+                                            <Button
+                                                type='primary'
+                                                style={{ backgroundColor: 'blueviolet' }}
+                                                onClick={handleAddWhy}
+                                            >
                                                 Lưu
                                             </Button>
                                         </DialogFooter>
@@ -497,48 +555,49 @@ const OrderPage: React.FC = () => {
                                 </DialogContent>
                             </Dialog>
                         )}
-                        {record.paymentmethods === 'Thanh toán MoMo' && record.paymentstatus === 'Chờ thanh toán' && (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button
-                                        variant='outline'
-                                        onClick={() =>
-                                            handleWhyCancelButtonClick(
-                                                record?._id,
-                                                record?.products[0]?.product?._id,
-                                                record?.products[0]?.productType?._id
-                                            )
-                                        }
-                                    >
-                                        Thanh toán ngay
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className='sm:max-w-[425px]'>
-                                    <DialogHeader>
-                                        <DialogTitle>Hủy đơn</DialogTitle>
-                                        <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
-                                    </DialogHeader>
-                                    <form action=''>
-                                        <div className='grid gap-4 py-5'>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <Label htmlFor='message' className='text-right'>
-                                                    Lí do
-                                                </Label>
-                                                <Input
-                                                    className='col-span-3'
-                                                    onChange={(e) => setNewWhy(e.target.value)}
-                                                />
+                        {record.paymentmethods === 'Thanh toán qua PayPal' &&
+                            record.paymentstatus === 'Chờ thanh toán' && (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            variant='outline'
+                                            onClick={() =>
+                                                handleWhyCancelButtonClick(
+                                                    record?._id,
+                                                    record?.products[0]?.product?._id,
+                                                    record?.products[0]?.productType?._id
+                                                )
+                                            }
+                                        >
+                                            Thanh toán ngay
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className='sm:max-w-[425px]'>
+                                        <DialogHeader>
+                                            <DialogTitle>Hủy đơn</DialogTitle>
+                                            <DialogDescription>Mời bạn viết lí do hủy đơn hàng</DialogDescription>
+                                        </DialogHeader>
+                                        <form action=''>
+                                            <div className='grid gap-4 py-5'>
+                                                <div className='grid grid-cols-4 items-center gap-4'>
+                                                    <Label htmlFor='message' className='text-right'>
+                                                        Lí do
+                                                    </Label>
+                                                    <Input
+                                                        className='col-span-3'
+                                                        onChange={(e) => setNewWhy(e.target.value)}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <Button type='submit' onClick={handleAddWhy}>
-                                                Lưu
-                                            </Button>
-                                        </DialogFooter>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        )}
+                                            <DialogFooter>
+                                                <Button type='submit' onClick={handleAddWhy}>
+                                                    Lưu
+                                                </Button>
+                                            </DialogFooter>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
                     </div>
                 </Space>
             )

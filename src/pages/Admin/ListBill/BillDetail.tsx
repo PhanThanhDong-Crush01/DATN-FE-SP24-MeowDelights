@@ -99,7 +99,6 @@ const BillDetail = () => {
                 idStaff: userID,
                 orderstatus: data?.status
             }
-            console.log('🚀 ~ handleSubmitForm ~ changeStatusOrder:', changeStatusOrder)
             const change = await apiChangeStatusOrder(changeStatusOrder)
             setBill({ ...bill?.billChangeStatusOrderHistory, ...change.changeOrder })
             setOpen(false)
@@ -343,7 +342,7 @@ const BillDetail = () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{data?.bill?.user.name}</td>
+                                        <td>{data?.bill?.user?.name}</td>
                                         <td>{data?.bill?.tel}</td>
                                         <td>{data?.bill?.address}</td>
                                     </tr>

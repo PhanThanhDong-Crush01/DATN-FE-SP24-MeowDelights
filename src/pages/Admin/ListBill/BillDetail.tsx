@@ -33,6 +33,7 @@ const BillDetail = () => {
     const [open, setOpen] = useState(false)
     const { id } = useParams()
     const { data } = useBillDetailQuery(id)
+    console.log(data)
     const [bill, setBill] = useState<any>()
     useEffect(() => {
         if (data) {
@@ -289,7 +290,6 @@ const BillDetail = () => {
                                                 <>
                                                     <option className='font-medium'>Chưa thanh toán</option>
                                                     <option className='font-medium'>Thanh toán thành công</option>
-                                                    <option className='font-medium'>Chờ thanh toán</option>
                                                 </>
                                             )}
                                         </>
@@ -345,13 +345,12 @@ const BillDetail = () => {
                                     <tr>
                                         <td>{data?.bill?.user.name}</td>
                                         <td>{data?.bill?.tel}</td>
-                                        <td>{data?.bill?.adress}</td>
+                                        <td>{data?.bill?.address}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <div className='font-thin text-base pt-5 mb-5'>
                         <p className=' font-serif text-lg '>Thông tin sản phẩm</p>
                         <table className='w-full'>

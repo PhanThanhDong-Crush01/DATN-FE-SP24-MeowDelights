@@ -41,9 +41,9 @@ const OrderDetailPage = (_props: Props) => {
                     <div className='pt-1'>
                         <h2 className='text-2xl'>Địa chỉ nhận hàng</h2>
                         <div className='pt-2 px-4'>
-                            <p className='font-mono text-lg'>{data?.user?.name}</p>
-                            <p>(+84){data?.user?.phone}</p>
-                            <p>{data?.user?.adress}</p>
+                            <p className='font-mono text-lg'>{data?.bill?.user?.name}</p>
+                            <p>(+84){data?.bill?.user?.phone}</p>
+                            <p>{data?.bill?.address}</p>
                         </div>
                     </div>
                     <div className='pt-1'>

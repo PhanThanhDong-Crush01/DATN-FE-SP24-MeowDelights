@@ -5,7 +5,7 @@ import { toast } from '@/components/ui/use-toast'
 
 export const getAll = async () => {
     try {
-        const response = await instance.get('/comment')
+        const response = await instance.get(`/comment`)
         return response.data
     } catch (error: any) {
         toast({
@@ -13,6 +13,18 @@ export const getAll = async () => {
             title: error?.response?.data?.message + '!'
         })
         console.log(`['GETALL_COMMENT_ERROR']`, error)
+    }
+}
+export const getOne = async (id: string) => {
+    try {
+        const response = await instance.get(`/comment/${encodeURIComponent(id)}`)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['GETONE_COMMENT_ERROR']`, error)
     }
 }
 export const getAllCommentOfProduct = async (id: string) => {

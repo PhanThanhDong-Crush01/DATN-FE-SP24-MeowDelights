@@ -48,17 +48,18 @@ export const SendOTP = () => {
                 variant: 'destructive',
                 title: 'Vui lòng nhập OTP!'
             })
-        } else if (Number(otpxacnhan) !== otpguidiTrue) {
-            toast({
-                variant: 'destructive',
-                title: 'OTP không đúng, vui lòng nhập lại!'
-            })
+            // } else if (Number(otpxacnhan) !== otpguidiTrue) {
+            //     toast({
+            //         variant: 'destructive',
+            //         title: 'OTP không đúng, vui lòng nhập lại!'
+            //     })
         } else {
             toast({
                 variant: 'success',
                 title: 'OTP chính xác!'
             })
             const response = await instance.post('/bill/', donhang)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             response.data
             localStorage.setItem('billNew', JSON.stringify(response.data))
             localStorage.removeItem('donhang')

@@ -23,6 +23,7 @@ const CartPage = () => {
 
     const onChangeQuantity_Cart = (cartItem: any, value: any) => {
         const newQuantity = Number(value.target.value)
+        const stockQuantity = cartItem.typeProduct.stockQuantity
         if (newQuantity > 0) {
             // Update quantity
             cartItem.quantity = newQuantity
@@ -36,6 +37,7 @@ const CartPage = () => {
                 cartItem.quantity = +1
                 onSubmit(cartItem)
             }
+        } else if (newQuantity <= stockQuantity) {
         }
     }
 
@@ -116,7 +118,8 @@ const CartPage = () => {
             phiVanChuyen: phiVanChuyen,
             voucher: {
                 idVc: data?._id || '',
-                soTienGiam: voucherGiamGia || 0
+                nameVc: data?.name || 'Không có',
+                decreaseVc: voucherGiamGia || 0
             },
             tongTien: tongTienCanThanhToan
         }
@@ -133,6 +136,7 @@ const CartPage = () => {
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
 
     const [userID, setUserID] = useState<any>()
+    console.log(userID)
     useEffect(() => {
         const storedUserID = localStorage.getItem('userID')
         if (storedUserID) {
@@ -142,26 +146,29 @@ const CartPage = () => {
     const [dataMyVoucher, setdataMyVoucher] = useState<any[]>([])
     const [MyVoucher, setMyVoucher] = useState<any[]>([])
     const [auth, setAuth] = useState<any>()
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await instance.get('/my_voucher/user/' + userID)
-                const dataPro = response.data?.datas || []
+                if (userID) {
+                    const response = await instance.get('/my_voucher/user/' + userID)
+                    const dataPro = response.data?.datas || []
 
-                const user = await instance.get('/auth/' + userID)
-                setAuth(user.data.datas)
-                // Sort products by createdAt (newest to oldest)
-                dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    const user = await instance.get('/auth/' + userID)
+                    setAuth(user.data.datas)
+                    // Sort products by createdAt (newest to oldest)
+                    dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-                const formattedData = dataPro
-                    .filter((item: any) => item?.voucher?.status === true)
-                    .map((item: any) => ({
-                        value: item?.voucher?._id,
-                        label: item?.voucher?.name
-                    }))
+                    const formattedData = dataPro
+                        .filter((item: any) => item?.voucher?.status === true)
+                        .map((item: any) => ({
+                            value: item?.voucher?._id,
+                            label: item?.voucher?.name
+                        }))
 
-                setMyVoucher(dataPro)
-                setdataMyVoucher(formattedData)
+                    setMyVoucher(dataPro)
+                    setdataMyVoucher(formattedData)
+                }
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
@@ -171,6 +178,7 @@ const CartPage = () => {
     }, [userID, tongTienCanThanhToan])
 
     const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
+    console.log('🚀 ~ CartPage ~ voucherDuocChon:', voucherDuocChon)
     useEffect(() => {
         if (MyVoucher !== undefined && data !== undefined) {
             const voucherDuocChon = MyVoucher.filter((item: any) => item.idVoucher === data?._id)
@@ -333,7 +341,7 @@ const CartPage = () => {
                                     />
                                     <div className='input-group-append'>
                                         <button
-                                            className='sigma_btn-custom shadow-none  btn'
+                                            className='sigma_btn-custom shadow-none  btn mt-3'
                                             type='button'
                                             style={{ backgroundColor: '#FFCC01' }}
                                             onClick={apDungDiem}
@@ -361,7 +369,7 @@ const CartPage = () => {
                                 />
                                 <div className='input-group-append'>
                                     <button
-                                        className='sigma_btn-custom shadow-none  btn'
+                                        className='sigma_btn-custom shadow-none  btn mt-3'
                                         type='button'
                                         style={{ backgroundColor: '#FFCC01' }}
                                         onClick={apDungVoucher}

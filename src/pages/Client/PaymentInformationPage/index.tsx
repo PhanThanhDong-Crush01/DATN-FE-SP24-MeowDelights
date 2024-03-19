@@ -27,10 +27,12 @@ const PaymentInformationPage = () => {
     }, [])
 
     const { data }: any = useAuthQuery(userID)
+    console.log(data)
 
     useEffect(() => {
-        setValue('name', data?.datas?.name || '')
-        setValue('adress', data?.datas?.address || '')
+        setValue('nameUser', data?.datas?.name || '')
+        setValue('address', data?.datas?.address || '')
+        setValue('email', data?.datas?.email || '')
         setValue('phone', data?.datas?.phone || '')
         setValue('email', data?.datas?.email)
         setValue('note', '')
@@ -53,9 +55,12 @@ const PaymentInformationPage = () => {
         const currentDate = moment().format('YYYY/MM/DD HH:mm:ss') // Sử dụng Moment.js
         const billdetails: any = Order?.thongTinDonHang?.order.map((item: any) => {
             return {
-                iduser: undefined,
+                iduser: userID,
                 idpro: item?.idpro,
+                imageTypePro: item?.imageTypePro,
                 idprotype: item?.idprotype,
+                nameTypePro: item?.nameTypePro,
+                namePro: item?.namePro,
                 quantity: item?.quantity,
                 money: item?.money
             }
@@ -64,11 +69,15 @@ const PaymentInformationPage = () => {
         const addNew: any = {
             bill: {
                 iduser: userID,
+                email: Order?.thongTinNhanHang?.email,
+                nameUser: Order?.thongTinNhanHang?.nameUser,
                 money: Order?.thongTinDonHang?.tongTien,
                 date: currentDate,
-                adress: Order?.thongTinNhanHang?.adress,
+                address: Order?.thongTinNhanHang?.address,
                 tel: Order?.thongTinNhanHang?.phone,
-                idvc: Order?.thongTinDonHang?.voucher?.idVc,
+                idvc: Order?.thongTinDonHang?.voucher?.idVc || '',
+                nameVc: Order?.thongTinDonHang?.voucher?.nameVc || '',
+                decreaseVc: Order?.thongTinDonHang?.voucher?.decreaseVc || 0,
                 paymentmethods: Order?.thongTinNhanHang?.paymentmethods,
                 paymentstatus:
                     Order?.thongTinNhanHang?.paymentmethods === 'Thanh toán khi nhận hàng'
@@ -158,7 +167,7 @@ const PaymentInformationPage = () => {
                                                 type='text'
                                                 placeholder='Họ và tên'
                                                 className='form-control'
-                                                {...register('name', { required: true })}
+                                                {...register('nameUser', { required: true })}
                                             />
                                             {errors.name && <i className='text-danger'>Họ và tên là bắt buộc</i>}
                                         </div>
@@ -197,7 +206,7 @@ const PaymentInformationPage = () => {
                                                 type='text'
                                                 placeholder='Địa chỉ....'
                                                 className='form-control'
-                                                {...register('adress', { required: true })}
+                                                {...register('address', { required: true })}
                                                 onChange={(e: any) => getCityAndCountry(e.target.value)}
                                             />
                                             {errors.adress && (
@@ -210,7 +219,7 @@ const PaymentInformationPage = () => {
                                             )}
                                         </div>
 
-                                        <div className='form-group col-xl-12'>
+                                        {/* <div className='form-group col-xl-12'>
                                             <label>Thị trấn/Thành phố</label>
                                             <input
                                                 type='text'
@@ -240,7 +249,7 @@ const PaymentInformationPage = () => {
                                                     Quốc gia là bắt buộc, bạn phải ghi rõ địa chỉ hơn
                                                 </i>
                                             )}
-                                        </div>
+                                        </div> */}
 
                                         <div className='form-group col-xl-12 mb-0'>
                                             <label>Ghi chú đặt hàng</label>
@@ -321,7 +330,7 @@ const PaymentInformationPage = () => {
                                                     <strong
                                                         dangerouslySetInnerHTML={{
                                                             __html: formatPriceBootstrap(
-                                                                Number(thongTinDonHang?.voucher?.soTienGiam)
+                                                                Number(thongTinDonHang?.voucher?.decreaseVc)
                                                             )
                                                         }}
                                                     ></strong>

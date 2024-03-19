@@ -24,7 +24,10 @@ export const useCartMutation = ({
         iduser: '',
         idpro: '',
         idprotype: '',
-        quantity: 0
+        quantity: 0,
+        namePro: '',
+        nameTypePro: '',
+        imageTypePro: ''
     },
     onSuccess
 }: useCartMutationProps) => {
@@ -51,10 +54,11 @@ export const useCartMutation = ({
         }
     })
     const form = useForm({
-        resolver: joiResolver(formSchema),
+        // resolver: joiResolver(formSchema),
         defaultValues
     })
     const onSubmit: SubmitHandler<any> = (values) => {
+        console.log(values)
         mutate(values)
     }
     const onRemove = (cart: ICart) => {

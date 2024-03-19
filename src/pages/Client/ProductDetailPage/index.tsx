@@ -18,6 +18,7 @@ const ProductDetailPage = () => {
             try {
                 const { data } = await instance.get(`/products/${id}`)
                 setProductData(data)
+                console.log(data)
             } catch (error) {
                 console.error('Error fetching product data:', error)
             }
@@ -28,6 +29,9 @@ const ProductDetailPage = () => {
     const { register, handleSubmit } = useForm()
 
     const productId = data?.data?._id
+    const name = data?.data?.name
+    console.log(productId)
+    console.log(name)
 
     const uniqueColorsWithImage = data?.typeProduct.reduce((unique: any, item: any) => {
         if (!unique.some((color: any) => color.color === item.color)) {
@@ -116,7 +120,11 @@ const ProductDetailPage = () => {
                 iduser: storedUserID || '',
                 idpro: productId,
                 idprotype: TypeProductID,
-                quantity: Number(data.quantity)
+                quantity: Number(data.quantity),
+                imageTypePro: imageChinh,
+                nameTypePro: selectedColor + ' - ' + selectedSize,
+                namePro: name,
+                money: selectedPrice
             }
 
             if (storedUserID) {
@@ -207,90 +215,95 @@ const ProductDetailPage = () => {
   <!--Section Start--> */}
                 <div className='section section-padding sigma_product-single'>
                     <div className='container'>
-                        <div className='row'>
-                            <div className='col-lg-5 col-md-6'>
-                                <div className='sigma_product-single-thumb mb-lg-30'>
-                                    <div className='slider'>
-                                        <img src={imageChinh} alt='product' />
-                                    </div>
-                                    <div className='slider-nav flex flex-row w-24 gap-2'>
-                                        {uniqueColorsWithImage &&
-                                            uniqueColorsWithImage.map((item: any) => (
-                                                <img
-                                                    className=''
-                                                    src={item.image}
-                                                    alt='product'
-                                                    onClick={() => setImageChinh(item.image)}
-                                                />
-                                            ))}
-                                    </div>
-                                    <div
-                                        className='sigma_post-single-meta-item sigma_post-share flex flex-row gap-3 pt-3 '
-                                        style={{ marginTop: '20px' }}
-                                    >
-                                        <h5 className='pt-2'>Chia sẻ</h5>
-                                        <ul className='sigma_sm'>
-                                            <li>
-                                                <a href='#'>
-                                                    <i className='fab fa-facebook-f'></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href='#'>
-                                                    <i className='fab fa-linkedin-in'></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href='#'>
-                                                    <i className='fab fa-twitter'></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href='#'>
-                                                    <i className='fab fa-youtube'></i>
-                                                </a>
-                                            </li>
-                                        </ul>
+                        <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
+                            <div className='row'>
+                                <div className='col-lg-5 col-md-6'>
+                                    <div className='sigma_product-single-thumb mb-lg-30'>
+                                        <div className='slider'>
+                                            <img src={imageChinh} alt='product' />
+                                        </div>
+                                        <div className='slider-nav flex flex-row w-24 gap-2'>
+                                            {uniqueColorsWithImage &&
+                                                uniqueColorsWithImage.map((item: any) => (
+                                                    <img
+                                                        {...register('imageTypePro')}
+                                                        className=''
+                                                        src={item.image}
+                                                        alt='product'
+                                                        onClick={() => setImageChinh(item.image)}
+                                                    />
+                                                ))}
+                                        </div>
+                                        <div
+                                            className='sigma_post-single-meta-item sigma_post-share flex flex-row gap-3 pt-3 '
+                                            style={{ marginTop: '20px' }}
+                                        >
+                                            <h5 className='pt-2'>Chia sẻ</h5>
+                                            <ul className='sigma_sm'>
+                                                <li>
+                                                    <a href='#'>
+                                                        <i className='fab fa-facebook-f'></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href='#'>
+                                                        <i className='fab fa-linkedin-in'></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href='#'>
+                                                        <i className='fab fa-twitter'></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href='#'>
+                                                        <i className='fab fa-youtube'></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className='col-lg-7 col-md-6'>
-                                <div className='sigma_product-single-content'>
-                                    <div className='sigma_product-price' style={{ textAlign: 'left' }}>
-                                        <span style={{ display: 'block', width: '100%' }}>{data?.data?.name}</span>
-                                        {/* <h1>{data?.maxPrice}</h1>
+                                <div className='col-lg-7 col-md-6'>
+                                    <div className='sigma_product-single-content'>
+                                        <div className='sigma_product-price' style={{ textAlign: 'left' }}>
+                                            <span style={{ display: 'block', width: '100%' }}>{data?.data?.name}</span>
+                                            {/* <h1>{data?.maxPrice}</h1>
                                         <h1>số lượng: {data?.totalQuantity}</h1> */}
 
-                                        {selectedPrice !== null && (
-                                            <p>
-                                                Giá:
-                                                <span
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: formatPriceBootstrap(Number(selectedPrice))
-                                                    }}
-                                                ></span>
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className='sigma_rating-wrapper'>
-                                        <div className='sigma_rating'>
-                                            <i className='fas fa-star active'></i>
-                                            <i className='fas fa-star active'></i>
-                                            <i className='fas fa-star active'></i>
-                                            <i className='fas fa-star active'></i>
-                                            <i className='fas fa-star'></i>
+                                            {selectedPrice !== null && (
+                                                <p>
+                                                    Giá:
+                                                    <span
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: formatPriceBootstrap(Number(selectedPrice))
+                                                        }}
+                                                    ></span>
+                                                </p>
+                                            )}
                                         </div>
-                                        <span>255 Đánh giá</span>
-                                    </div>
+                                        <div className='sigma_rating-wrapper'>
+                                            <div className='sigma_rating'>
+                                                <i className='fas fa-star active'></i>
+                                                <i className='fas fa-star active'></i>
+                                                <i className='fas fa-star active'></i>
+                                                <i className='fas fa-star active'></i>
+                                                <i className='fas fa-star'></i>
+                                            </div>
+                                            <span>255 Đánh giá</span>
+                                        </div>
 
-                                    <hr />
+                                        <hr />
 
-                                    <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
                                         <div className='sigma_product-meta'>
                                             <p>
                                                 <strong>
                                                     Mã sản phẩm <span>{data?.data?._id}</span>
+                                                </strong>
+                                                <strong hidden>
+                                                    Tên sản phẩm{' '}
+                                                    <span {...register('namePro')}>{data?.data?.name}</span>
                                                 </strong>
                                             </p>
                                             <p>
@@ -301,7 +314,7 @@ const ProductDetailPage = () => {
                                                             uniqueColorsWithImage.map((itemColor: any) => (
                                                                 <label key={itemColor.color}>
                                                                     <input
-                                                                        {...register('color')}
+                                                                        {...register('nameTypePro')}
                                                                         className='sr-only peer'
                                                                         name='color'
                                                                         type='radio'
@@ -335,7 +348,7 @@ const ProductDetailPage = () => {
                                                         {uniqueSizes.map((size: any) => (
                                                             <label key={size}>
                                                                 <input
-                                                                    {...register('size')}
+                                                                    {...register('nameTypePro')}
                                                                     className='sr-only peer'
                                                                     name='size'
                                                                     type='radio'
@@ -416,11 +429,12 @@ const ProductDetailPage = () => {
                                                 </a>
                                             </div>
                                         </div>
-                                    </form>
-                                    <div className='sigma_post-single-meta'></div>
+
+                                        <div className='sigma_post-single-meta'></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
 

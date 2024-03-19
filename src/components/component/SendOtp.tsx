@@ -13,6 +13,7 @@ export const SendOTP = () => {
     const [phone, setPhone] = useState<any>()
 
     const [donhang, setDonHang] = useState<any>()
+    console.log('🚀 ~ SendOTP ~ donhang:', donhang)
     const donghangJson = JSON.parse(localStorage.getItem('donhang') as any)
     useEffect(() => {
         if (donghangJson) {

@@ -227,7 +227,7 @@ const AddVoucher = () => {
                                     id='name'
                                     {...register('minTotalBill1', { required: true, min: 100000 })}
                                     onChange={(e) => setValue('minTotalBill1', e.target.value)}
-                                    placeholder='> 100000 VNĐ'
+                                    defaultValue={100000}
                                 />
                                 {errors.minTotalBill1 && <p className='text-red-500'>minTotalBill 1 là bắt buộc.</p>}
                                 {errors.minTotalBill1 && errors.minTotalBill1.type === 'min' && (
@@ -260,7 +260,7 @@ const AddVoucher = () => {
                                     id='name'
                                     {...register('minTotalBill2', { required: true, min: 100000 })}
                                     onChange={(e) => setValue('minTotalBill2', e.target.value)}
-                                    placeholder='> 300000 VNĐ'
+                                    defaultValue={400000}
                                 />
                                 {errors.minTotalBill2 && <p className='text-red-500'>minTotalBill 2 là bắt buộc.</p>}
                                 {errors.minTotalBill2 && errors.minTotalBill2.type === 'min' && (
@@ -292,7 +292,7 @@ const AddVoucher = () => {
                                     id='name'
                                     {...register('minTotalBill3', { required: true, min: 100000 })}
                                     onChange={(e) => setValue('minTotalBill3', e.target.value)}
-                                    placeholder='> 500000 VNĐ'
+                                    defaultValue={800000}
                                 />
                                 {errors.minTotalBill3 && <p className='text-red-500'>minTotalBill 3 là bắt buộc.</p>}
                                 {errors.minTotalBill3 && errors.minTotalBill3.type === 'min' && (
@@ -324,7 +324,7 @@ const AddVoucher = () => {
                                     id='name'
                                     {...register('minTotalBill4', { required: true, min: 100000 })}
                                     onChange={(e) => setValue('minTotalBill4', e.target.value)}
-                                    placeholder='> 800000 VNĐ'
+                                    defaultValue={1200000}
                                 />
                                 {errors.minTotalBill4 && <p className='text-red-500'>minTotalBill 4 là bắt buộc.</p>}
                                 {errors.minTotalBill4 && errors.minTotalBill4.type === 'min' && (

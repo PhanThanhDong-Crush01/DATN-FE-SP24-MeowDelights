@@ -15,7 +15,6 @@ export const getAll = async () => {
     }
 }
 export const getBillOfUser = async (id: string) => {
-    console.log('🚀 ~ getBillOfUser ~ id:', id)
     try {
         const response = await instance.get('/bill/user/' + id)
         return response.data
@@ -117,5 +116,18 @@ export const apiCancelOrder = async (bill: IBill) => {
             title: error?.response?.data?.message + '!'
         })
         console.log(`['CHANGE_PAYMENT_STATUS_ERROR']`, error)
+    }
+}
+
+export const getOneCancelOrder = async (idbill: any) => {
+    try {
+        const response = await instance.get(`/bill/whyCanCelOrder/${idbill}`)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['getOneCancelOrder']`, error)
     }
 }

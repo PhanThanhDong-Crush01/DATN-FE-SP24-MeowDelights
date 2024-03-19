@@ -4,9 +4,7 @@ import { toast } from '@/components/ui/use-toast'
 
 export const getAll = async () => {
     try {
-        console.log(1)
         const response = await instance.get('/products')
-        console.log('🚀 ~ getAll ~ response:', response)
         return response.data
     } catch (error: any) {
         toast({

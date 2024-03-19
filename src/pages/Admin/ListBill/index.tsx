@@ -16,13 +16,14 @@ interface DataType {
     money: number
     totalQuantity: number
     date: string
-    adress: string
+    address: string
     tel: string
     idvc: number
     paymentmethods: string
     paymentstatus: string
     orderstatus: string
-    voucher: any
+    nameVc: string
+    decreaseVc: number
     user: {
         name: any
         email: any
@@ -151,7 +152,7 @@ const ListBill = () => {
                         Email: <span style={{ color: 'gray' }}>{record?.user?.email}</span>
                     </p>
                     <p>
-                        Đến: <i style={{ fontSize: '12px' }}>{record?.adress}</i>
+                        Đến: <i style={{ fontSize: '12px' }}>{record?.address}</i>
                     </p>
                 </div>
             )
@@ -330,14 +331,14 @@ const ListBill = () => {
                 </div>
             )
         },
-        {
-            title: 'Số lượng',
-            dataIndex: 'totalQuantity',
-            key: '4',
-            sorter: (a, b) => a.totalQuantity - b.totalQuantity,
-            sortDirections: ['descend', 'ascend'],
-            width: 100
-        },
+        // {
+        //     title: 'Số lượng',
+        //     dataIndex: 'totalQuantity',
+        //     key: '4',
+        //     sorter: (a, b) => a.totalQuantity - b.totalQuantity,
+        //     sortDirections: ['descend', 'ascend'],
+        //     width: 100
+        // },
         {
             title: 'Khuyến mại',
             dataIndex: 'voucher',
@@ -345,14 +346,12 @@ const ListBill = () => {
             width: 120,
             render: (_, record) => (
                 <div>
-                    {record?.voucher?.decrease && (
-                        <h1
-                            style={{ fontWeight: 700, fontSize: '20px' }}
-                            dangerouslySetInnerHTML={{
-                                __html: formatPriceBootstrap(record?.voucher?.decrease)
-                            }}
-                        ></h1>
-                    )}
+                    <h1
+                        style={{ fontWeight: 700, fontSize: '20px' }}
+                        dangerouslySetInnerHTML={{
+                            __html: formatPriceBootstrap(record?.decreaseVc)
+                        }}
+                    ></h1>
                 </div>
             )
         },

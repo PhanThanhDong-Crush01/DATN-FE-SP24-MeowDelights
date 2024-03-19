@@ -4,5 +4,8 @@ export interface ICart {
     idpro: string
     idprotype: string
     quantity: number
+    imageTypePro: string
+    nameTypePro: string
+    namePro: string
 }
 //mẫu

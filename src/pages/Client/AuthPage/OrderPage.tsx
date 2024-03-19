@@ -200,6 +200,7 @@ const OrderPage: React.FC = () => {
         }
     }, [])
     const { data } = useBillQuery(userID || '')
+    console.log(data)
     const filteredData = data?.bill?.filter((item: DataType) => {
         switch (selectedTab) {
             case '1':
@@ -221,6 +222,7 @@ const OrderPage: React.FC = () => {
                 return true
         }
     })
+    console.log(filteredData)
     const onChangeTab = (key: string) => {
         console.log(key)
         setSelectedTab(key)

@@ -345,13 +345,12 @@ const BillDetail = () => {
                                     <tr>
                                         <td>{data?.bill?.user.name}</td>
                                         <td>{data?.bill?.tel}</td>
-                                        <td>{data?.bill?.adress}</td>
+                                        <td>{data?.bill?.address}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <div className='font-thin text-base pt-5 mb-5'>
                         <p className=' font-serif text-lg '>Thông tin sản phẩm</p>
                         <table className='w-full'>

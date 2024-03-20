@@ -76,14 +76,20 @@ const SigninPage = () => {
                 <img src='src/assets/img/subheader-bl.png' className='bl' alt='subheader' />
                 <img src='src/assets/img/subheader-tr.png' className='tr' alt='subheader' />
             </div>
-            <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
+            <div
+                className='flex min-h-full flex-1 flex-col justify-center px-6 mt-10 lg:px-8 rounded-md shadow-lg relative z-10 '
+                style={{
+                    backgroundImage:
+                        "url('https://res.cloudinary.com/difmqasye/image/upload/v1710874415/samples/da/unnamed_qe3fnu.jpg')"
+                }}
+            >
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     {/* <img
                         className='mx-auto h-10 w-auto'
                         src='https://matpetfamily.com/wp-content/uploads/2019/11/m%E1%BA%ADt-pet-logo-300x297.png'
                         alt='Your Company'
                     /> */}
-                    <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
+                    <h2 className='mt-10 text-center text-4xl font-bold leading-9 tracking-tight text-white'>
                         Đăng nhập với MeowDelights
                     </h2>
                 </div>
@@ -111,6 +117,7 @@ const SigninPage = () => {
                                     Password
                                 </label>
                                 <input
+                                    placeholder='Password'
                                     {...register('password')}
                                     type='password'
                                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
@@ -127,7 +134,7 @@ const SigninPage = () => {
                             </button>
                         </div>
 
-                        <div>
+                        {/* <div>
                             <button
                                 type='submit'
                                 className='flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
@@ -144,12 +151,12 @@ const SigninPage = () => {
                                 </svg>
                                 <p className='pl-2'>Đăng nhập với Google </p>
                             </button>
-                        </div>
+                        </div> */}
                     </form>
 
-                    <p className='mt-10 text-center text-sm text-gray-500'>
+                    <p className='mt-10 text-center text-sm text-gray-500 pb-4'>
                         Not a member?{' '}
-                        <Link to='#' className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'>
+                        <Link to='/signup' className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'>
                             Registered
                         </Link>
                     </p>

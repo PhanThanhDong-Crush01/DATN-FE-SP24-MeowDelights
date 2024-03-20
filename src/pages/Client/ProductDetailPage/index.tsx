@@ -32,6 +32,9 @@ const ProductDetailPage = () => {
     const { register, handleSubmit } = useForm()
 
     const productId = data?.data?._id
+    const name = data?.data?.name
+    console.log(productId)
+    console.log(name)
 
     const uniqueColorsWithImage = data?.typeProduct.reduce((unique: any, item: any) => {
         if (!unique.some((color: any) => color.color === item.color)) {
@@ -120,7 +123,11 @@ const ProductDetailPage = () => {
                 iduser: storedUserID || '',
                 idpro: productId,
                 idprotype: TypeProductID,
-                quantity: Number(data.quantity)
+                quantity: Number(data.quantity),
+                imageTypePro: imageChinh,
+                nameTypePro: selectedColor + ' - ' + selectedSize,
+                namePro: name,
+                money: selectedPrice
             }
 
             if (storedUserID) {

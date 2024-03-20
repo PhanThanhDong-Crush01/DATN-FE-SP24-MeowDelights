@@ -5,6 +5,41 @@ import { toast } from '../ui/use-toast'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { useEffect, useState } from 'react'
 import instance from '@/services/core/api'
+import { Menu, MenuProps } from 'antd'
+import { AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
+import { MessageOutlined, SettingOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import MenuItem from 'antd/es/menu/MenuItem'
+type MenuItem = Required<MenuProps>['items'][number]
+
+function getItem(
+    label: React.ReactNode,
+    key?: React.Key | null,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+    type?: 'group'
+): MenuItem {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type
+    } as MenuItem
+}
+const items: MenuItem[] = [
+    getItem('Navigation Two', 'sub2', <UnorderedListOutlined />, [
+        getItem('Trang chủ', '1', <Link to='/'></Link>),
+        getItem('Cửa hàng', '2', '', [
+            getItem('Phụ kiện mèo', '3', <Link to='/products'></Link>),
+            getItem('Đồ ăn mèo', '4', <Link to='/products'></Link>)
+        ]),
+        getItem('Gioi thiệu', '5', <Link to='/introduce'></Link>),
+        getItem('Liên hệ', '6', <Link to='/contact'></Link>)
+    ])
+]
+const onClick: MenuProps['onClick'] = (e: any) => {
+    console.log('click', e)
+}
 const MenuClientComponent = () => {
     const [userID, setUserID] = useState<any>()
     useEffect(() => {
@@ -84,11 +119,7 @@ const MenuClientComponent = () => {
                         />
                     </a>
                 </div>
-                <ul className='navbar-nav'>
-                    <li className='menu-item menu-item-has-children'>
-                        <Link to={'/'}>Trang chủ</Link>
-                    </li>
-                </ul>
+                <ul className='navbar-nav'></ul>
             </aside>
             <div className='sigma_aside-overlay aside-trigger'></div>
             <header className='sigma_header style-5 bg-transparent shadow-none can-sticky'>
@@ -336,9 +367,8 @@ const MenuClientComponent = () => {
                                         </a>
                                     </li>
                                     <li className='aside-toggle aside-trigger'>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
+                                        <Menu style={{}} items={items} onClick={onClick} />
+                                        {/* d-block d-sm-none */}
                                     </li>
                                 </ul>
                             </div>

@@ -219,7 +219,7 @@ const PaymentInformationPage = () => {
                                             )}
                                         </div>
 
-                                        <div className='form-group col-xl-12'>
+                                        {/* <div className='form-group col-xl-12'>
                                             <label>Thị trấn/Thành phố</label>
                                             <input
                                                 type='text'
@@ -249,7 +249,7 @@ const PaymentInformationPage = () => {
                                                     Quốc gia là bắt buộc, bạn phải ghi rõ địa chỉ hơn
                                                 </i>
                                             )}
-                                        </div>
+                                        </div> */}
 
                                         <div className='form-group col-xl-12 mb-0'>
                                             <label>Ghi chú đặt hàng</label>

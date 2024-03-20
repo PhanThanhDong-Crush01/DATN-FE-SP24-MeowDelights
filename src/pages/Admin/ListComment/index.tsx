@@ -188,7 +188,7 @@ const ListCommentPage = () => {
             title: 'Sản phẩm',
             dataIndex: 'productId',
             key: 'productId',
-            width: '40%',
+            width: '35%',
             ...getColumnSearchProps('productId'),
             render: (_, record) => {
                 return (
@@ -215,8 +215,8 @@ const ListCommentPage = () => {
                         {record?.productTypeInfo?.weight}
                     </div>
                 )
-            },
-            fixed: 'left'
+            }
+            // fixed: 'left'
         },
         {
             title: 'Khách hàng',

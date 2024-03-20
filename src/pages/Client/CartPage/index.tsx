@@ -51,33 +51,6 @@ const CartPage = () => {
         setIdVoucher(idVC.toLowerCase())
     }
 
-    const [diemTichLuy, setDiem] = useState(0)
-
-    const handleChangeDiamTichLuy = async (value: any) => {
-        setDiem(value.target.value)
-    }
-    const apDungDiem = async () => {
-        if (diemTichLuy > auth?.discount_points) {
-            toast({
-                variant: 'destructive',
-                title: 'Bạn làm gì có nhiều điểm thế, nhập lại đi!'
-            })
-        } else if (diemTichLuy < 0) {
-            toast({
-                variant: 'destructive',
-                title: 'Sao lại nhập âm, nhập lại đi, nhập số lớn hơn 0 ý!'
-            })
-        } else {
-            setTongTienCanThanhToan(tongTienCanThanhToan - diemTichLuy)
-            toast({
-                variant: 'success',
-                title: 'Sử dụng điểm tích lũy thành công!'
-            })
-            auth.discount_points = auth?.discount_points - diemTichLuy
-            await instance.patch(`/auth/${userID}`, auth)
-        }
-    }
-
     const [data, setDataVoucherOne] = useState<any>() // Fix variable name
 
     const xetIdVoucher = () => {
@@ -261,7 +234,7 @@ const CartPage = () => {
                                                 <img src={cartItem?.typeProduct?.image} alt='prod1' />
                                                 <div className='sigma_cart-product-body'>
                                                     <h6 style={{ width: '100%' }}>
-                                                        <Link to={'/products/' + cartItem}>
+                                                        <Link to={'/products/' + cartItem.idpro}>
                                                             {cartItem?.product?.name}
                                                         </Link>
                                                     </h6>

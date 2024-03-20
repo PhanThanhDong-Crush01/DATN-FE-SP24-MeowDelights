@@ -6,19 +6,22 @@ import { formatPriceBootstrap } from '@/lib/utils'
 import instance from '@/services/core/api'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import ProductReviews from './ProductReviews'
 
 const ProductDetailPage = () => {
     const [data, setProductData] = useState<any>()
     const { id } = useParams()
-
+    const navigate = useNavigate()
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const { data } = await instance.get(`/products/${id}`)
-                setProductData(data)
-                console.log(data)
+                if (data?.data) {
+                    setProductData(data)
+                } else {
+                    navigate('/products')
+                }
             } catch (error) {
                 console.error('Error fetching product data:', error)
             }
@@ -226,6 +229,7 @@ const ProductDetailPage = () => {
                                             {uniqueColorsWithImage &&
                                                 uniqueColorsWithImage.map((item: any) => (
                                                     <img
+                                                        key={item.image}
                                                         {...register('imageTypePro')}
                                                         className=''
                                                         src={item.image}

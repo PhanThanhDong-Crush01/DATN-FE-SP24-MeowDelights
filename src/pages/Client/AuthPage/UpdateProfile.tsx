@@ -25,35 +25,33 @@ const UpdateProfile = (_props: Props) => {
     return (
         <>
             <div>
-                <Content style={{ padding: '10px 0px' }}>
+                <Content style={{ padding: '0px 0px' }}>
                     <Layout style={{ padding: '0px 0' }}>
                         <Content style={{ padding: '0 24px' }}>
-                            <main className=' gap-5 p-8'>
-                                <div>
-                                    <div className='border-b border-gray-300 flex flex-row gap-96  pb-2'>
-                                        <p className='text-2xl font-sans pb-3'>Hồ sơ của tôi</p>
+                            <main className=' gap-5 p-8' style={{ width: '200%' }}>
+                                <div className='border-b border-gray-300 flex flex-row gap-96  pb-2'>
+                                    <p className='text-2xl font-sans pb-3'>Hồ sơ của tôi</p>
+                                </div>
+
+                                <div
+                                    className='flex'
+                                    style={{ justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}
+                                >
+                                    <div style={{ width: '45%' }}>
+                                        <ImgUserForm data={data} />
+
+                                        <NameForm data={data} />
+
+                                        <PhoneForm data={data} />
+
+                                        <EmailForm data={data} />
                                     </div>
-
-                                    <div
-                                        className='flex'
-                                        style={{ justifyContent: 'space-evenly', alignItems: 'center' }}
-                                    >
-                                        <div style={{ width: '45%' }}>
-                                            <ImgUserForm data={data} />
-
-                                            <NameForm data={data} />
-
-                                            <PhoneForm data={data} />
-
-                                            <EmailForm data={data} />
-                                        </div>
-                                        <div style={{ width: '45%' }}>
-                                            <EmailForm data={data} />
-                                            <AgeForm data={data} />
-                                            <GenderForm data={data} />
-                                            <AddressForm data={data} />
-                                            {/* <AddressForm data={data} /> đổi mật khẩu */}
-                                        </div>
+                                    <div style={{ width: '45%' }}>
+                                        <EmailForm data={data} />
+                                        <AgeForm data={data} />
+                                        <GenderForm data={data} />
+                                        <AddressForm data={data} />
+                                        {/* <AddressForm data={data} /> đổi mật khẩu */}
                                     </div>
                                 </div>
                             </main>

@@ -12,7 +12,15 @@ import { Bs1Circle, Bs2Circle, Bs3Circle, Bs4Circle, Bs5Circle, BsEmojiTearFill 
 interface DataType {
     key: string
     _id: string
-    iduser: number
+    iduser: string
+    nameUser: string
+    email: string
+    tel: number
+    address: string
+    idvc: string
+    nameVc: string
+    decreaseVc: number
+    date: any
     money: number
     totalQuantity: number
     date: string
@@ -40,19 +48,9 @@ const ListBill = () => {
     useEffect(() => {
         if (data) {
             const dataBill = data?.datas.map((item: any) => {
-                const createdAtDate = new Date(item.createdAt)
-
-                const day = createdAtDate.getDate().toString().padStart(2, '0')
-                const month = (createdAtDate.getMonth() + 1).toString().padStart(2, '0')
-                const year = createdAtDate.getFullYear().toString().slice(-2)
-
-                const formattedDate = `${day}/${month}/${year}`
-
                 return {
                     ...item,
-                    key: item._id,
-                    dateTime: formattedDate, // Thêm biến date vào dataContact
-                    time: createdAtDate.toLocaleTimeString('en-GB', { hour12: false }) // Thêm biến time vào dataContact
+                    key: item._id
                 }
             })
             dataBill.sort((a: any, b: any) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -84,6 +82,19 @@ const ListBill = () => {
         confirm()
         setSearchText(selectedKeys[0])
         setSearchedColumn(dataIndex)
+    }
+
+    const TimeDate = (time: any) => {
+        const createdAtDate = new Date(time)
+        const day = createdAtDate.getDate().toString().padStart(2, '0')
+        const month = (createdAtDate.getMonth() + 1).toString().padStart(2, '0')
+        const year = createdAtDate.getFullYear().toString().slice(-2)
+
+        const formattedDate = `${day}/${month}/${year}`
+        const timeTmas = createdAtDate.toLocaleTimeString('en-GB', { hour12: false })
+
+        const inRa = timeTmas + ' - ' + formattedDate
+        return inRa
     }
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
@@ -124,8 +135,8 @@ const ListBill = () => {
         ),
         filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
         onFilter: (value: any, record: DataType) => {
-            const { user, adress, tel } = record
-            const userFields = [user?.name, user?.email, adress, tel]
+            const { nameUser, email, address, tel } = record
+            const userFields = [nameUser, email, address, tel]
             return userFields.some((field) => field && field.toString().toLowerCase().includes(value.toLowerCase()))
         },
         render: (text: any) => text
@@ -135,13 +146,13 @@ const ListBill = () => {
         {
             title: 'Thông tin đặt hàng',
             width: 180,
-            dataIndex: 'user',
-            key: 'user',
-            ...getColumnSearchProps('user'),
+            dataIndex: 'nameUser',
+            key: 'nameUser',
+            ...getColumnSearchProps('nameUser'),
             fixed: 'left',
             render: (_, record) => (
                 <div>
-                    <h1 style={{ fontSize: '18px' }}>{record?.user?.name}</h1>
+                    <h1 style={{ fontSize: '18px' }}>{record?.nameUser}</h1>
                     <p>
                         Sđt:{' '}
                         <a href={'tel:' + record?.tel} style={{ color: 'orange' }}>
@@ -149,7 +160,7 @@ const ListBill = () => {
                         </a>
                     </p>
                     <p>
-                        Email: <span style={{ color: 'gray' }}>{record?.user?.email}</span>
+                        Email: <span style={{ color: 'gray' }}>{record?.email}</span>
                     </p>
                     <p>
                         Đến: <i style={{ fontSize: '12px' }}>{record?.address}</i>
@@ -162,7 +173,7 @@ const ListBill = () => {
             width: 110,
             dataIndex: 'orderstatus',
             key: 'orderstatus',
-            fixed: 'left',
+            // fixed: 'left',
             filters: [
                 {
                     text: 'Chờ xác nhận',
@@ -232,7 +243,7 @@ const ListBill = () => {
                 }
             ],
             onFilter: (value: any, record) => record.paymentstatus.indexOf(value) === 0,
-            width: 120,
+            width: 100,
             render: (_, record) => (
                 <div>
                     {record?.paymentmethods === 'Thanh toán khi nhận hàng' ? (
@@ -259,7 +270,7 @@ const ListBill = () => {
                                         textAlign: 'center'
                                     }}
                                 >
-                                    Thanh toán thành công
+                                    Đã thanh toán
                                 </p>
                             )}
                         </>
@@ -287,7 +298,7 @@ const ListBill = () => {
                                         textAlign: 'center'
                                     }}
                                 >
-                                    Thanh toán thành công
+                                    Đã thanh toán
                                 </p>
                             )}
                         </>
@@ -299,7 +310,7 @@ const ListBill = () => {
             title: 'Phương thức thanh toán',
             dataIndex: 'paymentmethods',
             key: '2',
-            width: 160
+            width: 120
         },
         {
             title: 'Ngày đặt',
@@ -308,8 +319,7 @@ const ListBill = () => {
             width: 80,
             render: (_, record) => (
                 <div>
-                    <p>{record?.time}</p>
-                    <p>{record?.dateTime}</p>
+                    <p>{TimeDate(record?.createdAt)} </p>
                 </div>
             )
         },
@@ -317,7 +327,7 @@ const ListBill = () => {
             title: 'Tổng tiền',
             dataIndex: 'money',
             key: '4',
-            width: 120,
+            width: 80,
             sorter: (a, b) => a.money - b.money,
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
@@ -359,7 +369,7 @@ const ListBill = () => {
             title: '',
             key: 'operation',
             fixed: 'right',
-            width: 80,
+            width: '5%',
             render: (_, record) => (
                 <Link
                     to={'/admin/bill/' + record._id}

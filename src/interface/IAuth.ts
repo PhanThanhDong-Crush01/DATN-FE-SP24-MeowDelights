@@ -1,4 +1,5 @@
 export interface IAuth {
+    datas: any
     _id?: string
     name: string
     email: string

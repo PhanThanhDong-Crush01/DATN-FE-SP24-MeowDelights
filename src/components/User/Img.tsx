@@ -7,6 +7,7 @@ import { Button } from '../ui/button'
 import { Pencil } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
+import { Avatar } from 'antd'
 
 type ImgUserFormProps = {
     data: IAuth
@@ -49,8 +50,8 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
 
     return (
         <>
-            <div className='mt-6 border bg-slate-100 rounded-md p-3'>
-                <div className='font-medium flex items-center justify-between'>
+            <div className='mt-6 border bg-slate-100 rounded-md p-3 '>
+                <div className='font-medium flex items-center justify-between '>
                     Avatar
                     <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
                         {editAuth ? (
@@ -63,7 +64,6 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
                         )}
                     </Button>
                 </div>
-                {!editAuth && <img className='text-sm mt-2 rounded' src={data?.datas?.imgUser}></img>}
                 {editAuth && (
                     <Form {...form}>
                         <form

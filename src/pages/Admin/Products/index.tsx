@@ -158,14 +158,16 @@ const Product = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
-            width: '0.05%'
+            width: '2%',
+            fixed: 'left'
         },
 
         {
             title: 'Sản Phẩm',
             dataIndex: '_id',
             key: '_id',
-            width: '18%',
+            width: '7%',
+            fixed: 'left',
             ...getColumnSearchProps('name'),
             render: (_, record) => (
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -188,7 +190,7 @@ const Product = () => {
             title: 'Giá',
             dataIndex: 'minPrice',
             key: 'minPrice',
-            width: '1%',
+            width: '5%',
             sorter: (a, b) => a.averagePrice - b.averagePrice,
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
@@ -206,13 +208,13 @@ const Product = () => {
             title: 'Số lượng',
             dataIndex: 'totalQuantity',
             key: 'totalQuantity',
-            width: '5%'
+            width: '3%'
         },
         {
             title: 'Loại',
             dataIndex: 'color',
             key: 'color',
-            width: '7%',
+            width: '3%',
             render: (_, record) => (
                 <div className='flex'>
                     <p>
@@ -242,7 +244,7 @@ const Product = () => {
             title: 'Danh Mục',
             dataIndex: 'categoryName',
             key: 'categoryName',
-            width: '9%',
+            width: '4%',
             filters: [
                 {
                     text: 'Phụ kiện - đồ chơi',
@@ -259,7 +261,7 @@ const Product = () => {
             title: 'Đã bán',
             dataIndex: 'sold',
             key: 'sold',
-            width: '6%',
+            width: '3%',
             sorter: (a, b) => a.soldAmount - b.soldAmount,
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
@@ -499,7 +501,7 @@ const Product = () => {
                     </Link>
                 </div>
             </div>
-            <Table columns={columns} dataSource={dataProductTrue} />
+            <Table columns={columns} dataSource={dataProductTrue} scroll={{ x: 1300 }} />
         </div>
     )
 }

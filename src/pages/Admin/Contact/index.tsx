@@ -85,6 +85,7 @@ const ListContact = () => {
             dataIndex: 'name',
             key: 'name',
             width: '15%',
+            fixed: 'left',
             render: (_, record) => (
                 <div>
                     <h1 style={{ fontSize: '18px' }}>{record?.name.toUpperCase()}</h1>
@@ -97,7 +98,8 @@ const ListContact = () => {
             title: 'Ngày',
             dataIndex: 'date',
             key: 'date',
-            width: '4%',
+            width: '10%',
+            // fixed: 'left',
             render: (_, record) => (
                 <div>
                     <p>{record?.time}</p>
@@ -174,7 +176,7 @@ const ListContact = () => {
         {
             dataIndex: '',
             key: 'x',
-            width: '5%',
+            width: '7%',
             render: (_, record) => (
                 <Popconfirm
                     placement='topRight'
@@ -290,7 +292,7 @@ const ListContact = () => {
                     </button>
                 </div>
             </div>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={dataContact} />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={dataContact} scroll={{ x: 1300 }} />
         </div>
     )
 }

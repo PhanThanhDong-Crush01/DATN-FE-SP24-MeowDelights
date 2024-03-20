@@ -1,0 +1,18 @@
+@media (min-width: 768px) {
+    .md\:grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .md\:w-20 {
+        width: 5rem;
+    }
+    .btn.md\:flex.md\:flex-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .btn.md\:flex.md\:flex-row > * {
+        margin-right: 0.5rem; /* Khoảng cách giữa biểu tượng và văn bản */
+    }
+}

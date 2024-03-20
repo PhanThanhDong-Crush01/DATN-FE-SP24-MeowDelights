@@ -49,7 +49,6 @@ export const useVoucherMutation = ({
         defaultValues
     })
     const onSubmit: SubmitHandler<any> = (values) => {
-        console.log(values)
         mutate(values)
     }
     const onRemove = (voucher: IVoucher) => {

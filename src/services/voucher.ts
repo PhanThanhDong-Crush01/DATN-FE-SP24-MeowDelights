@@ -28,7 +28,7 @@ export const getOne = async (id: string) => {
 }
 export const update = async (voucher: IVoucher) => {
     try {
-        const response = await instance.put(`/voucher/${voucher._id}`, voucher)
+        const response = await instance.patch(`/voucher/${voucher._id}`, voucher)
         if (response.data) {
             toast({
                 variant: 'success',

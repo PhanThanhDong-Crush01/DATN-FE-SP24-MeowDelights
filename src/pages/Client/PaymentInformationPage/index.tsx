@@ -48,6 +48,13 @@ const PaymentInformationPage = () => {
     const navigate = useNavigate()
 
     const onHanldeSubmit = async (data: any) => {
+        const khachvanglai = {
+            name: data.name,
+            email: data.email,
+            password: '123@@@321',
+            phone: data.phone,
+            address: data.adress
+        }
         data.adress = data.adress + ', ' + data.country
         const { city, country, ...newData } = data
         const Order = { thongTinNhanHang: newData, thongTinDonHang: thongTinDonHang }
@@ -88,6 +95,7 @@ const PaymentInformationPage = () => {
             billdetails: billdetails
         }
         localStorage.setItem('donhang', JSON.stringify(addNew))
+        localStorage.setItem('khachvanglai', JSON.stringify(khachvanglai))
         await removeCartUser(userID)
         navigate('/check_order')
     }
@@ -193,7 +201,6 @@ const PaymentInformationPage = () => {
                                                 placeholder='Email'
                                                 className='form-control'
                                                 {...register('email', { required: true })}
-                                                disabled
                                             />
                                             {errors.email && <i className='text-danger'>Email là bắt buộc</i>}
                                         </div>

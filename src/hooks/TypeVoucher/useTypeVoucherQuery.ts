@@ -6,7 +6,7 @@ export const useTypeVoucherQuery = (typeVcId?: string) => {
         queryKey: typeVcId ? ['TYPEVOUCHER', typeVcId] : ['TYPEVOUCHER'],
         queryFn: () => (typeVcId ? getOne(typeVcId) : getAll())
     })
-
-    return { data, ...rest }
+    const dataTVC = data
+    return { dataTVC, ...rest }
 }
 //mẫu product

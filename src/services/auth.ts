@@ -19,6 +19,7 @@ export const getAll = async () => {
 export const getOneUser = async (id: string) => {
     try {
         const response = await instance.get(`/auth/${id}`)
+        console.log('🚀 ~ getOneUser ~ response.data:', response.data)
         return response.data
     } catch (error: any) {
         toast({
@@ -101,8 +102,6 @@ export const updateUserProfile = async (user: IAuth) => {
 }
 export const updateUserRole = async (user: IAuth) => {
     try {
-        console.log(user?._id)
-        console.log(user)
         const response = await instance.patch(`/auth/roleUser/${user._id}`, user)
         if (response.data) {
             toast({
@@ -123,6 +122,25 @@ export const updateUserRole = async (user: IAuth) => {
 export const createAuth = async (user: any) => {
     try {
         const response = await instance.post('/auth/createAuth', user)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Tạo tài khoản thành công!!',
+                description: 'Tạo tài khoản thành công!'
+            })
+        }
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['CREATE_AUTH_ERROR']`, error)
+    }
+}
+export const createKhachVangLai = async (user: any) => {
+    try {
+        const response = await instance.post('/auth/createKhachVangLai', user)
         if (response.data) {
             toast({
                 variant: 'success',

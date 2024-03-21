@@ -625,10 +625,10 @@ const OrderPage: React.FC = () => {
     ]
     return (
         <Content>
-            <main className=' px-8'>
+            <main className=''>
                 <div>
                     <div className='flex flex-col gap-5 '>
-                        <Tabs defaultActiveKey='1' items={items} onChange={onChangeTab} style={{ padding: '0 40px' }} />
+                        <Tabs defaultActiveKey='1' items={items} onChange={onChangeTab} style={{ padding: '0 30px' }} />
                         <Table columns={columns} dataSource={filteredData} />;
                     </div>
                 </div>

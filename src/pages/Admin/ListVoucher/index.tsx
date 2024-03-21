@@ -169,13 +169,15 @@ const Voucher = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
-            width: '2%'
+            width: '3%',
+            fixed: 'left'
         },
         {
             title: 'Tên voucher',
             dataIndex: 'name',
             key: 'name',
             width: '20%',
+            fixed: 'left',
             ...getColumnSearchProps('name'),
             render: (_, record) => (
                 <div>
@@ -320,7 +322,7 @@ const Voucher = () => {
             <Modal open={isModalOpen} onCancel={handleCancel}>
                 <AddVoucher />
             </Modal>
-            <Table columns={columns} dataSource={dataVoucher} rowClassName={rowClassName} />
+            <Table columns={columns} dataSource={dataVoucher} rowClassName={rowClassName} scroll={{ x: 1300 }} />
         </div>
     )
 }

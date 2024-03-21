@@ -170,7 +170,7 @@ const ListAuthPage = () => {
             title: 'Tên tài khoản',
             dataIndex: 'name',
             key: 'name',
-            width: '40%',
+            width: '35%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
                 <div>
@@ -185,8 +185,7 @@ const ListAuthPage = () => {
             dataIndex: 'email',
             key: 'email',
             width: '25%',
-            render: (_, record) => record.email,
-            fixed: 'left'
+            render: (_, record) => record.email
         },
 
         {

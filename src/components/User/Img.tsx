@@ -7,6 +7,7 @@ import { Button } from '../ui/button'
 import { Pencil } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
+import { Avatar } from 'antd'
 
 type ImgUserFormProps = {
     data: IAuth

@@ -164,7 +164,7 @@ const ListBill = () => {
             width: 110,
             dataIndex: 'orderstatus',
             key: 'orderstatus',
-            fixed: 'left',
+            // fixed: 'left',
             filters: [
                 {
                     text: 'Chờ xác nhận',
@@ -361,7 +361,7 @@ const ListBill = () => {
             title: '',
             key: 'operation',
             fixed: 'right',
-            width: 80,
+            width: '5%',
             render: (_, record) => (
                 <Link
                     to={'/admin/bill/' + record._id}

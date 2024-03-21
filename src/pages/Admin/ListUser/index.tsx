@@ -172,7 +172,7 @@ const ListUserPage = () => {
             title: 'Tên tài khoản',
             dataIndex: 'name',
             key: 'name',
-            width: '40%',
+            width: '35%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
                 <div>
@@ -187,8 +187,8 @@ const ListUserPage = () => {
             dataIndex: 'email',
             key: 'email',
             width: '25%',
-            render: (_, record) => record.email,
-            fixed: 'left'
+            render: (_, record) => record.email
+            // fixed: 'left'
         },
         {
             title: 'Vai trò',
@@ -201,7 +201,7 @@ const ListUserPage = () => {
             ],
             filteredValue: filteredInfo.role || null,
             onFilter: (value: string, record: any) => record.role.includes(value),
-            fixed: 'left',
+            // fixed: 'left',
             render: (_, record) => {
                 // Thay thế giá trị "member" bằng "Khách hàng" khi hiển thị
                 switch (record?.role) {
@@ -320,7 +320,7 @@ const ListUserPage = () => {
             title: 'Hành động',
             dataIndex: '',
             key: 'x',
-            width: '30%',
+            width: '23%',
             fixed: 'right',
             render: (_, record) => (
                 <Space size='middle'>

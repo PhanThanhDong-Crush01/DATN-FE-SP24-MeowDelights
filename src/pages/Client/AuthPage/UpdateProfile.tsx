@@ -25,7 +25,7 @@ const UpdateProfile = (_props: Props) => {
     return (
         <>
             <div>
-                <Content style={{ padding: '10px 0px' }}>
+                <Content style={{ padding: '0px 0px' }}>
                     <Layout style={{ padding: '0px 0' }}>
                         <Content style={{ padding: '0 24px' }}>
                             <main className=' gap-5 p-8' style={{ width: '200%' }}>

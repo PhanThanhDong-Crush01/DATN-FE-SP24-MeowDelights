@@ -8,6 +8,10 @@ export const getAll = async () => {
         const response = await instance.get(`/comment`)
         return response.data
     } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
         console.log(`['GETALL_COMMENT_ERROR']`, error)
     }
 }
@@ -85,5 +89,13 @@ export const remove = async (comment: IComment) => {
             title: error?.response?.data?.message + '!'
         })
         console.log(`['DELETE_COMMENT_ERROR']`, error)
+    }
+}
+export const statisticsComment = async (id: string) => {
+    try {
+        const response = await instance.get(`/comment/star/product/${id}`)
+        return response.data
+    } catch (error: any) {
+        console.log(`['GETONE_COMMENT_ERROR']`, error)
     }
 }

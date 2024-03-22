@@ -17,6 +17,38 @@ const ListProduct = () => {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(9)
     const [searchTerm, setSearchTerm] = useState<string>('')
+    const renderStars = (starCount: number) => {
+        // Làm tròn số lượng sao
+        const roundedStars = Math.round(starCount)
+
+        // Phần nguyên của số sao
+        const fullStars = Math.floor(starCount)
+
+        // Phần dư
+        const remainder = starCount - fullStars
+
+        // Mảng sao đầy đủ
+        const starsArray = []
+
+        // Thêm số lượng sao nguyên
+        for (let i = 0; i < fullStars; i++) {
+            starsArray.push(<i key={i} className='fa fa-star active text-yellow-400'></i>)
+        }
+
+        // Thêm nửa sao nếu có phần dư >= 0.5
+        if (remainder >= 0.5) {
+            starsArray.push(<i key='half-star' className='fa fa-star-half active text-yellow-400'></i>)
+        }
+
+        // Thêm sao rỗng cho các sao còn lại
+        const remainingStars = 5 - starsArray.length
+        for (let i = 0; i < remainingStars; i++) {
+            starsArray.push(<i key={`empty-star-${i}`} className='fa fa-star text-gray-200'></i>)
+        }
+
+        // Trả về mảng sao
+        return starsArray
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -308,7 +340,7 @@ const ListProduct = () => {
                                                         {product.name}
                                                     </Link>{' '}
                                                 </h5>
-                                                <div className='sigma_rating'>
+                                                {/* <div className='sigma_rating'>
                                                     <div className='flex'>
                                                         <p
                                                             style={{ fontWeight: 700 }}
@@ -317,9 +349,9 @@ const ListProduct = () => {
                                                             }}
                                                         ></p>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                                 <div className='sigma_product-price'>
-                                                    <span></span>
+                                                    <span>{renderStars(product?.averageStars)}</span>
                                                 </div>
                                                 <Dialog key={product?._id}>
                                                     <DialogTrigger asChild>

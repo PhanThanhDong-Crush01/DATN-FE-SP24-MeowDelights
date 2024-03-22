@@ -9,8 +9,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 const AddVoucher = () => {
     const navigate = useNavigate()
-    const { data } = useTypeVoucherQuery()
-    const typeVoucher = data?.datas
+    const { dataTVC } = useTypeVoucherQuery()
+    const typeVoucher = dataTVC?.datas
     const { onSubmit } = useVoucherMutation({
         action: 'ADD',
         onSuccess: () => {
@@ -27,24 +27,23 @@ const AddVoucher = () => {
 
     const onHandleSubmit = (data: any) => {
         const dataNew = {
-            voucher: {
-                name: data.name,
-                status: true,
-                quantity: data.quantity,
-                decrease: data.decrease,
-                startDate: data.startDate,
-                expiry: data.expiry,
-                conditions: data.conditions,
-                idTypeVoucher: data.idTypeVoucher
-            },
-            phanPhatVoucher: [
-                { minTotalBil: data.minTotalBill1, quantity: data.quantity1 },
-                { minTotalBil: data.minTotalBill2, quantity: data.quantity2 },
-                { minTotalBil: data.minTotalBill3, quantity: data.quantity3 },
-                { minTotalBil: data.minTotalBill4, quantity: data.quantity4 }
-            ]
+            name: data.name,
+            status: true,
+            quantity: data.quantity,
+            decrease: data.decrease,
+            startDate: data.startDate,
+            expiry: data.expiry,
+            conditions: data.conditions,
+            idTypeVoucher: data.idTypeVoucher,
+            minTotalBill1: data.minTotalBill1,
+            quantity1: data.quantity1,
+            minTotalBill2: data.minTotalBill2,
+            quantity2: data.quantity2,
+            minTotalBill3: data.minTotalBill3,
+            quantity3: data.quantity3,
+            minTotalBill4: data.minTotalBill4,
+            quantity4: data.quantity4
         }
-        console.log('🚀 ~ onHandleSubmit ~ dataNew:', dataNew)
         onSubmit(dataNew)
     }
     return (

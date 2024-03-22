@@ -53,7 +53,7 @@ const MyVoucher = (_props: Props) => {
             <div>
                 <Content style={{ padding: '10px 0px' }}>
                     <Layout style={{ padding: '0px 0' }}>
-                        <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                        <Content style={{ padding: '0', minHeight: 280 }}>
                             <main className=' gap-5 p-8'>
                                 <h1 style={{ fontSize: '30px' }}>Danh sách voucher của tôi</h1>
 
@@ -68,6 +68,7 @@ const MyVoucher = (_props: Props) => {
                                 >
                                     {dataMyVoucher.map((item) => (
                                         <div
+                                            key={item?._id}
                                             className={item?.voucher?.status === true ? 'statusTrue' : 'statusFalse'}
                                             style={{
                                                 width: '600px',

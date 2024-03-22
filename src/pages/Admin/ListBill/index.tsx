@@ -23,15 +23,9 @@ interface DataType {
     date: any
     money: number
     totalQuantity: number
-    date: string
-    address: string
-    tel: string
-    idvc: number
     paymentmethods: string
     paymentstatus: string
     orderstatus: string
-    nameVc: string
-    decreaseVc: number
     user: {
         name: any
         email: any

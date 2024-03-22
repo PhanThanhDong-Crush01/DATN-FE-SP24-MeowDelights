@@ -28,15 +28,12 @@ const UpdateProfile = (_props: Props) => {
                 <Content style={{ padding: '0px 0px' }}>
                     <Layout style={{ padding: '0px 0' }}>
                         <Content style={{ padding: '0 24px' }}>
-                            <main className=' gap-5 p-8' style={{ width: '200%' }}>
-                                <div className='border-b border-gray-300 flex flex-row gap-96  pb-2'>
+                            <main className=' gap-5 p-8' style={{}}>
+                                <div className='border-b border-gray-300  pb-2'>
                                     <p className='text-2xl font-sans pb-3'>Hồ sơ của tôi</p>
                                 </div>
 
-                                <div
-                                    className='flex'
-                                    style={{ justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}
-                                >
+                                <div className='flex gap-2' style={{}}>
                                     <div style={{ width: '45%' }}>
                                         <ImgUserForm data={data} />
 

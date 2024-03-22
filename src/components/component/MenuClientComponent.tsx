@@ -6,6 +6,7 @@ import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { useEffect, useState } from 'react'
 import instance from '@/services/core/api'
 import { Menu, MenuProps } from 'antd'
+import '@/styles/MenuClient.css'
 import { AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
 import { MessageOutlined, SettingOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import MenuItem from 'antd/es/menu/MenuItem'
@@ -367,7 +368,44 @@ const MenuClientComponent = () => {
                                         </a>
                                     </li>
                                     <li className='aside-toggle aside-trigger'>
-                                        <Menu style={{}} items={items} onClick={onClick} />
+                                        {/* <Menu style={{ fontSize: '20px' }} items={items} onClick={onClick} /> */}
+                                        <svg
+                                            xmlns='http://www.w3.org/2000/svg'
+                                            width='30'
+                                            height='30'
+                                            fill='currentColor'
+                                            className='bi bi-list'
+                                            viewBox='0 0 16 16'
+                                        >
+                                            <path
+                                                fill-rule='evenodd'
+                                                d='M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5'
+                                            />
+                                        </svg>
+                                        <div className='menu '>
+                                            <ul className=''>
+                                                <Link to={'/'}>Trang chủ</Link>
+                                            </ul>
+
+                                            <ul className='submenu'>
+                                                Cửa hàng
+                                                <div className='dropdown-content'>
+                                                    <Link to={'/products'} className='item'>
+                                                        Đồ ăn
+                                                    </Link>
+                                                    <Link to={'/products'} className='item'>
+                                                        Phụ kiện
+                                                    </Link>
+                                                </div>
+                                            </ul>
+                                            <ul>
+                                                <Link to={'/'}>Gioi thiệu</Link>
+                                            </ul>
+                                            <ul>
+                                                <Link to={'/contact'}>Liên hệ </Link>
+                                            </ul>
+                                        </div>
+
                                         {/* d-block d-sm-none */}
                                     </li>
                                 </ul>

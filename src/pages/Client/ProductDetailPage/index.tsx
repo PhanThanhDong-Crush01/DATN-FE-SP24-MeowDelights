@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import ProductReviews from './ProductReviews'
+import { statisticsComment } from '@/services/comment'
 
 const ProductDetailPage = () => {
     const [data, setProductData] = useState<any>()
@@ -29,8 +30,24 @@ const ProductDetailPage = () => {
 
         fetchData()
     }, [id])
-    const { register, handleSubmit } = useForm()
+    const [dataStar, setDataStar] = useState<any>()
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const dataStar = await statisticsComment(id || '')
+                setDataStar(dataStar)
+                console.log(data)
+            } catch (error) {
+                console.error('Error:', error)
+            }
+        }
 
+        getData()
+    }, [id])
+
+    const { register, handleSubmit } = useForm()
+    const star = dataStar?.datas ? dataStar.datas : []
+    console.log(star)
     const productId = data?.data?._id
     const name = data?.data?.name
     console.log(productId)
@@ -173,6 +190,36 @@ const ProductDetailPage = () => {
             }
         }
     }
+    const renderStars = (starCount: number) => {
+        // Làm tròn số lượng sao
+        const roundedStars = Math.round(starCount)
+
+        // Phần nguyên của số sao
+        const fullStars = Math.floor(starCount)
+
+        // Phần dư
+        const remainder = starCount - fullStars
+
+        // Mảng sao đầy đủ
+        const starsArray = []
+
+        // Thêm số lượng sao nguyên
+        for (let i = 0; i < fullStars; i++) {
+            starsArray.push(<i key={i} className='fa fa-star active text-yellow-400'></i>)
+        }
+
+        // Thêm nửa sao nếu có phần dư >= 0.5
+        if (remainder >= 0.5) {
+            starsArray.push(<i key='half-star' className='fa fa-star-half active text-yellow-400'></i>)
+        } else if (remainder > 0) {
+            // Thêm một sao nếu phần dư > 0 nhưng < 0.5
+            starsArray.push(<i key='half-star' className='fa fa-star active text-yellow-400'></i>)
+        }
+
+        // Trả về mảng sao
+        return starsArray
+    }
+
     return (
         <>
             <div className='btn-style-5 sigma_header-absolute btn-rounded sidebar-style-8'>
@@ -287,15 +334,17 @@ const ProductDetailPage = () => {
                                                 </p>
                                             )}
                                         </div>
-                                        <div className='sigma_rating-wrapper'>
-                                            <div className='sigma_rating'>
+                                        <div className='flex flex-row gap-1'>
+                                            <div className='font-bold text-yellow-400 border-b-yellow-400 border-b-2'>
+                                                {dataStar?.datas}
+                                                {/* <i className='fas fa-star active'></i>
                                                 <i className='fas fa-star active'></i>
                                                 <i className='fas fa-star active'></i>
                                                 <i className='fas fa-star active'></i>
-                                                <i className='fas fa-star active'></i>
-                                                <i className='fas fa-star'></i>
+                                                <i className='fas fa-star'></i> */}
                                             </div>
-                                            <span>255 Đánh giá</span>
+
+                                            <span className='text-base'>{renderStars(dataStar?.datas)}</span>
                                         </div>
 
                                         <hr />
@@ -313,7 +362,7 @@ const ProductDetailPage = () => {
                                             <p>
                                                 <strong className='flex items-baseline mb-3 pb-3 mt-3 pt-2 border-slate-200'>
                                                     <div className='space-x-2 flex text-sm'>
-                                                        <span className='pt-1 text-base font-sans pr-7'>Màu sắc</span>
+                                                        <span className='pt-1 text-xl font-sans pr-7'>Loại</span>
                                                         {uniqueColorsWithImage &&
                                                             uniqueColorsWithImage.map((itemColor: any) => (
                                                                 <label key={itemColor.color}>
@@ -442,7 +491,7 @@ const ProductDetailPage = () => {
                     </div>
                 </div>
 
-                <div className='' style={{ marginTop: '-5%' }}>
+                <div className='px-40' style={{ marginTop: '-5%' }}>
                     <div className='container'>
                         <div className='tab-content pt-5' id='bordered-tabContent'>
                             <div
@@ -451,12 +500,17 @@ const ProductDetailPage = () => {
                                 role='tabpanel'
                                 aria-labelledby='tab-product-desc-tab'
                             >
-                                <h2 className='text-2xl pt-3'>Mô tả</h2>
+                                <h3 className='text-2xl py-2 px-2 text-black font-serif  bg-gray-50 text-justify rounded'>
+                                    MÔ TẢ SẢN PHẨM
+                                </h3>
+                                <hr className='' />
                                 <p
-                                    style={{ width: '50%' }}
-                                    className='sigma_productnp-excerpt'
+                                    style={{ width: '100%' }}
+                                    className='sigma_productnp-excerpt pt-3'
                                     dangerouslySetInnerHTML={{ __html: data?.data?.description }}
-                                ></p>
+                                >
+                                    {}
+                                </p>
                             </div>
                         </div>
                     </div>

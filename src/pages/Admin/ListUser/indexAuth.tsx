@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import { DeleteOutlined, FormOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType, TableProps } from 'antd'
-import { Avatar, Button, Input, Space, Table } from 'antd'
+import { Avatar, Button, Input, Popconfirm, Space, Table } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 import { Link } from 'react-router-dom'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { deleteEmployee } from '@/services/auth'
 import { formatPriceBootstrap } from '@/lib/utils'
+import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -33,15 +34,20 @@ type DataIndex = keyof DataType
 
 const ListAuthPage = () => {
     const { data }: any = useAuthQuery()
+    console.log(data)
     const [dataUser, setDataUser] = useState<any>()
+    console.log(dataUser)
     useEffect(() => {
         if (data?.users) {
             setDataUser(data.users.filter((user: any) => user.role === 'member'))
         }
     }, [data])
-    const handleDelete = (record: any) => {
-        deleteEmployee(record)
-    }
+    const { onRemove } = useAuthMutation({
+        action: 'DELETE'
+    })
+    // const handleDelete = (record: any) => {
+    //     deleteEmployee(record)
+    // }
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -216,38 +222,41 @@ const ListAuthPage = () => {
                 ></div>
             )
             // fixed: 'right'
-        }
-        // {
-        //     title: 'Hành động',
-        //     dataIndex: '',
-        //     key: 'x',
-        //     width: '30%',
-        //     fixed: 'right',
-        //     render: (_, record) => (
-        //         <Space size='middle'>
-        //             <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
-        //                 <EditOutlined style={{ display: 'inline-flex' }} />
-        //             </Link>
-        //             <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
-        //                 <FormOutlined style={{ display: 'inline-flex' }} />
-        //             </Link>
+        },
+        {
+            title: 'Hành động',
+            dataIndex: '',
+            key: 'x',
+            width: '15%',
+            fixed: 'right',
+            render: (_, record) => (
+                <Space size='middle'>
+                    {/* <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
+                        <EditOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
+                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+                        <FormOutlined style={{ display: 'inline-flex' }} />
+                    </Link> */}
+                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+                        <FormOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
 
-        //             <Popconfirm
-        //                 placement='topRight'
-        //                 title='Xóa mã nhân viên?'
-        //                 description='Bạn có chắc chắn xóa mã nhân viên này không?'
-        //                 onConfirm={() => handleDelete(record)}
-        //                 onCancel={cancel}
-        //                 okText='Đồng ý'
-        //                 cancelText='Không'
-        //             >
-        //                 <Button type='primary' danger>
-        //                     <DeleteOutlined style={{ display: 'inline-flex' }} />
-        //                 </Button>
-        //             </Popconfirm>
-        //         </Space>
-        //     )
-        // }
+                    <Popconfirm
+                        placement='topRight'
+                        title='Xóa mã nhân viên?'
+                        description='Bạn có chắc chắn xóa mã nhân viên này không?'
+                        onConfirm={() => onRemove(record)}
+                        // onCancel={cancel}
+                        okText='Đồng ý'
+                        cancelText='Không'
+                    >
+                        <Button type='primary' danger>
+                            <DeleteOutlined style={{ display: 'inline-flex' }} />
+                        </Button>
+                    </Popconfirm>
+                </Space>
+            )
+        }
     ]
 
     return (

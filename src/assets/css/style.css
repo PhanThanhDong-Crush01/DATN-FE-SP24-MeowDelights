@@ -2256,8 +2256,8 @@ body .sigma_header.style-5 .sigma_header-top-contacts .sigma_header-top-nav li a
 }
 
 .sigma_header.style-5 .sigma_header-controls ul li.header-controls-item > a,
-.sigma_header.style-5,
-.sigma_header.style-5 .desktop-toggler {
+.sigma_header.style-5 .aside-toggle,
+.sigma_header.style-5 .aside-toggle.desktop-toggler {
     background-color: var(--thm-base);
     border-color: var(--thm-base);
 }
@@ -2268,11 +2268,11 @@ body .sigma_header.style-5 .sigma_header-top-contacts .sigma_header-top-nav li a
 }
 
 .sigma_header.style-5 .sigma_header-controls ul li.header-controls-item > a:hover,
-/* .sigma_header.style-5 .aside-toggle:hover,
+.sigma_header.style-5 .aside-toggle:hover,
 .sigma_header.style-5 .aside-toggle.desktop-toggler:hover {
     background-color: var(--thm-base-hover);
     border-color: var(--thm-base-hover);
-} */
+}
 
 /* Style 6 */
 

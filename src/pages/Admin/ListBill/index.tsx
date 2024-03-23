@@ -22,13 +22,16 @@ interface DataType {
     decreaseVc: number
     date: any
     money: number
+    totalQuantity: number
     paymentmethods: string
     paymentstatus: string
     orderstatus: string
-    createdAt: any
-    updatedAt: any
-    totalQuantity: number
-    billDetails: any[]
+    user: {
+        name: any
+        email: any
+    }
+    time: any
+    dateTime: any
 }
 type DataIndex = keyof DataType
 

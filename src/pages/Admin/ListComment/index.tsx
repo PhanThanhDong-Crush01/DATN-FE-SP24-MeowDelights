@@ -46,6 +46,7 @@ const ListCommentPage = () => {
         ...item,
         key: index + 1
     }))
+    console.log(dataWithKeys)
     const [filteredInfo, setFilteredInfo] = useState<Filters>({})
     const [sortedInfo, setSortedInfo] = useState<Sorts>()
 
@@ -202,6 +203,7 @@ const ListCommentPage = () => {
                     <div>
                         <h1 style={{ fontSize: '16px', color: '' }}>Tên: {record?.userInfo?.name}</h1>
                         <h2 style={{ fontSize: '16px' }}>Email: {record?.userInfo?.email}</h2>
+
                         <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>Mã: {record?.userId}</p>
                     </div>
                 )

@@ -54,9 +54,6 @@ const LayoutUserPage = () => {
                         <Menu.Item key='4' icon={<AiOutlineAim />}>
                             <Link to='/my_voucher'>Kho voucher</Link>
                         </Menu.Item>
-                        <Menu.Item key='5' icon={<MessageOutlined />}>
-                            <Link to='/admin/product'>Thông báo</Link>
-                        </Menu.Item>
                     </Menu>
                 </Sider>
 

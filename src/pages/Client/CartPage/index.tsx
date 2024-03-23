@@ -1,6 +1,5 @@
 import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
-import { toast } from '@/components/ui/use-toast'
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
@@ -91,7 +90,7 @@ const CartPage = () => {
             phiVanChuyen: phiVanChuyen,
             voucher: {
                 idVc: data?._id || '',
-                nameVc: data?.name || 'Không có',
+                nameVc: data?.name || '',
                 decreaseVc: voucherGiamGia || 0
             },
             tongTien: tongTienCanThanhToan
@@ -151,7 +150,6 @@ const CartPage = () => {
     }, [userID, tongTienCanThanhToan])
 
     const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
-    console.log('🚀 ~ CartPage ~ voucherDuocChon:', voucherDuocChon)
     useEffect(() => {
         if (MyVoucher !== undefined && data !== undefined) {
             const voucherDuocChon = MyVoucher.filter((item: any) => item.idVoucher === data?._id)
@@ -290,44 +288,6 @@ const CartPage = () => {
                     }}
                 >
                     <div className='row' style={{ width: '30%', display: 'flex', flexDirection: 'column' }}>
-                        {auth?.discount_points > 0 ? (
-                            <div className='form-group mb-3'>
-                                <h1 style={{ fontSize: '19px', marginBottom: '5px' }}>
-                                    Số điểm tích lũy của bạn:{' '}
-                                    <span style={{ color: 'gray' }}>{auth?.discount_points} VNĐ</span>
-                                </h1>
-                                <div className='input-group mb-0' style={{ display: 'flex' }}>
-                                    <input
-                                        style={{
-                                            width: '75%',
-                                            height: '40px',
-                                            border: '1px solid #d2d2d2',
-                                            borderRadius: '10px'
-                                        }}
-                                        type='mumber'
-                                        className='form-control'
-                                        aria-label='Coupon Code'
-                                        defaultValue={1}
-                                        min={1}
-                                        max={auth?.discount_points}
-                                        onChange={handleChangeDiamTichLuy}
-                                    />
-                                    <div className='input-group-append'>
-                                        <button
-                                            className='sigma_btn-custom shadow-none  btn mt-3'
-                                            type='button'
-                                            style={{ backgroundColor: '#FFCC01' }}
-                                            onClick={apDungDiem}
-                                        >
-                                            Áp dụng
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            ''
-                        )}
-
                         <div className='form-group mb-0'>
                             <div className='input-group mb-0' style={{ display: 'flex' }}>
                                 <Select
@@ -342,7 +302,7 @@ const CartPage = () => {
                                 />
                                 <div className='input-group-append'>
                                     <button
-                                        className='sigma_btn-custom shadow-none  btn mt-3'
+                                        className='sigma_btn-custom shadow-none  btn'
                                         type='button'
                                         style={{ backgroundColor: '#FFCC01' }}
                                         onClick={apDungVoucher}

@@ -34,7 +34,7 @@ const items: MenuItem[] = [
             getItem('Phụ kiện mèo', '3', <Link to='/products'></Link>),
             getItem('Đồ ăn mèo', '4', <Link to='/products'></Link>)
         ]),
-        getItem('Gioi thiệu', '5', <Link to='/introduce'></Link>),
+        getItem('Giới thiệu', '5', <Link to='/introduce'></Link>),
         getItem('Liên hệ', '6', <Link to='/contact'></Link>)
     ])
 ]
@@ -53,36 +53,11 @@ const MenuClientComponent = () => {
     const { dataCart } = useCartQuery()
 
     const [dataCarts, setDataCart] = useState<any>()
-    const localStorageDataCart = JSON.parse(localStorage.getItem('Cart_virtual_users') || '[]')
     useEffect(() => {
-        const fetchData = async () => {
-            if (localStorageDataCart.length > 0) {
-                let totalAmount = 0
-                const datanew = await Promise.all(
-                    localStorageDataCart.map(async (item: any) => {
-                        const idpro = item.idpro
-                        const idprotype = item.idprotype
-                        const product = await instance.get('/products/' + idpro)
-                        const type_product = await instance.get('/type_product/' + idprotype)
-                        const money = item.quantity * type_product?.data?.data?.price
-                        totalAmount += money
-                        return {
-                            ...item,
-                            product: product?.data?.data,
-                            typeProduct: type_product?.data?.data,
-                            money: money
-                        }
-                    })
-                )
-                setDataCart({ data: datanew, totalAmount })
-            }
-        }
         if (userID) {
             setDataCart(dataCart)
-        } else {
-            fetchData()
         }
-    }, [localStorageDataCart])
+    }, [dataCarts])
 
     const { onRemove } = useCartMutation({
         action: 'DELETE',
@@ -101,7 +76,7 @@ const MenuClientComponent = () => {
     const handleLogout = () => {
         localStorage.removeItem('userID')
         localStorage.removeItem('user')
-        navigate('/signin')
+        navigate('/')
     }
 
     return (

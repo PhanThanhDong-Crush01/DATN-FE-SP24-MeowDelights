@@ -17,10 +17,8 @@ const SigninPage = () => {
         }
         try {
             const response = await signin(values)
-            console.log('🚀 ~ onSubmit ~ response:', response)
             if (response?.user) {
                 const user = JSON.stringify(response?.user)
-                // Lưu thông tin người dùng vào Local Storage
                 localStorage.setItem('user', user)
                 localStorage.setItem('userID', response?.user?._id)
                 if (response?.user?.role !== 'member') {
@@ -29,66 +27,28 @@ const SigninPage = () => {
                 }
                 if (response?.user?.role === 'member') {
                     message.success('Đăng nhập thành công !')
-
-                    // if (Auth !== null) {
-                    //     const storedUser: any = JSON.parse(Auth)
-                    //     console.log('🚀 ~ UpdateProfile ~ storedUser:', storedUser)
-                    //     console.log('User ID:', storedUser._id)
-                    //     navigate(`/updateProfile/${storedUser._id}`)
-                    // } else {
-                    //     console.log('User data not found in localStorage')
-                    // }
                     navigate(`/updateProfile`)
-                    // navigate(`/`)
                 }
             }
         } catch (error: any) {
             console.log(error)
             message.warning(error?.response?.message)
-            // navigate('/signup')
         }
-
-        // Thực hiện xử lý đăng ký tài khoản tại đây
     }
-    // const Auth = localStorage.getItem('user')
-    // console.log(Auth)
-    return (
-        <div>
-            <MenuClientComponent />
-            <div className='sigma_subheader style-5 bg-gray'>
-                <div className='container'>
-                    <div className='sigma_subheader-inner'>
-                        <h1>Trang đăng nhập</h1>
-                    </div>
-                    <ol className='breadcrumb'>
-                        <li className='breadcrumb-item'>
-                            <a className='btn-link' href='#'>
-                                Trang chủ
-                            </a>
-                        </li>
-                        <li className='breadcrumb-item active' aria-current='page'>
-                            Đăng nhập
-                        </li>
-                    </ol>
-                </div>
 
-                <img src='src/assets/img/subheader-br.png' className='br' alt='subheader' />
-                <img src='src/assets/img/subheader-bl.png' className='bl' alt='subheader' />
-                <img src='src/assets/img/subheader-tr.png' className='tr' alt='subheader' />
-            </div>
+    return (
+        <div className='flex flex-1 flex-col justify-center px-6 mt-10 lg:px-8 rounded-md shadow-lg relative z-10 '>
             <div
-                className='flex min-h-full flex-1 flex-col justify-center px-6 mt-10 lg:px-8 rounded-md shadow-lg relative z-10 '
                 style={{
+                    width: '50%',
+                    margin: '0 auto',
+                    borderRadius: '10%',
+                    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                     backgroundImage:
                         "url('https://res.cloudinary.com/difmqasye/image/upload/v1710874415/samples/da/unnamed_qe3fnu.jpg')"
                 }}
             >
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
-                    {/* <img
-                        className='mx-auto h-10 w-auto'
-                        src='https://matpetfamily.com/wp-content/uploads/2019/11/m%E1%BA%ADt-pet-logo-300x297.png'
-                        alt='Your Company'
-                    /> */}
                     <h2 className='mt-10 text-center text-4xl font-bold leading-9 tracking-tight text-white'>
                         Đăng nhập với MeowDelights
                     </h2>
@@ -162,7 +122,6 @@ const SigninPage = () => {
                     </p>
                 </div>
             </div>
-            <FooterTemplate />
         </div>
     )
 }

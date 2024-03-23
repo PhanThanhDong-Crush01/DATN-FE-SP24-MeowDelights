@@ -1,6 +1,6 @@
 import { IAuth } from '@/interface/IAuth'
 import AddAuth from '@/pages/Admin/ListUser/AddAuth'
-import { createAuth, deleteEmployee, editAuth, updateUserProfile, updateUserRole } from '@/services/auth'
+import { createAuth, deleteEmployee, editAuth, remove, updateUserProfile, updateUserRole } from '@/services/auth'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -16,7 +16,7 @@ const formSchema = Joi.object({
 })
 
 type useAuthMutationProps = {
-    action: 'UPDATE' | 'UPDATEROLE' | 'ADD' | 'UPDATEAUTH'
+    action: 'UPDATE' | 'UPDATEROLE' | 'ADD' | 'UPDATEAUTH' | 'DELETE'
     defaultValues?: IAuth
     onSuccess?: (data: any) => void
 }
@@ -49,6 +49,8 @@ export const useAuthMutation = ({
                     return await createAuth(user)
                 case 'UPDATEAUTH':
                     return await editAuth(user)
+                case 'DELETE':
+                    return await remove(user)
 
                 default:
                     return null
@@ -70,8 +72,11 @@ export const useAuthMutation = ({
     const onSubmit: SubmitHandler<any> = (values) => {
         mutate(values)
     }
-
+    const onRemove = (auth: IAuth) => {
+        mutate(auth)
+    }
     return {
+        onRemove,
         form,
         onSubmit,
         ...rest

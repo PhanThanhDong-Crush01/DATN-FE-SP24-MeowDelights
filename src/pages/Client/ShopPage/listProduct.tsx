@@ -1,16 +1,18 @@
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import { IProduct } from '@/interface/IProduct'
 import { formatPriceBootstrap } from '@/lib/utils'
 import instance from '@/services/core/api'
+import { Label } from '@radix-ui/react-label'
 import { Button } from 'antd'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
-
+import ProductDialogPage from './productDialog'
 const ListProduct = () => {
     const [data, setDataProduct] = useState<any>()
     const [products, setProducts] = useState<IProduct[] | null>(null)
@@ -105,192 +107,6 @@ const ListProduct = () => {
     const endIndex = startIndex + pageSize
     const currentPageData = products?.slice(startIndex, endIndex) || []
     console.log(currentPageData)
-
-    const [selectedProductId, setSelectedProductId] = useState('')
-
-    // Hàm xử lý khi nhấn vào nút "Thêm vào giỏ hàng"
-    const [dataDialog, setDataDialog] = useState<any>()
-    const addToCart = (productId: any) => {
-        // Tìm sản phẩm trong danh sách sản phẩm dựa trên productId
-        const selectedProduct = data.find((product) => product._id === productId)
-        // const id = selectedProduct?._id;
-        console.log(productId)
-        if (selectedProduct) {
-            // Xử lý logic thêm sản phẩm vào giỏ hàng ở đây
-            console.log('Sản phẩm được chọn:', selectedProduct)
-            // Gán ID của sản phẩm cho biến selectedProductId
-            setSelectedProductId(productId)
-            // Bạn có thể gọi hàm hoặc thực hiện các thao tác cần thiết để thêm sản phẩm vào giỏ hàng ở đây
-        } else {
-            console.error('Không tìm thấy sản phẩm với ID:', productId)
-        }
-    }
-
-    const productDialogId = selectedProductId
-    console.log(productDialogId)
-
-    useEffect(() => {
-        const fetchDatas = async () => {
-            try {
-                const response = await instance.get(`/products/${productDialogId}`)
-                console.log(response)
-                const dataDialog = response?.data || []
-                console.log(dataDialog)
-                setDataDialog(dataDialog)
-                // Sort products by createdAt (newest to oldest)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
-
-        fetchDatas()
-    }, [])
-    // const { register, handleSubmit } = useForm()
-
-    // const uniqueColorsWithImage = dataDialog?.typeProduct.reduce((unique: any, item: any) => {
-    //     if (!unique.some((color: any) => color.color === item.color)) {
-    //         unique.push({
-    //             color: item.color,
-    //             image: item.image // Thêm link ảnh vào đây
-    //         })
-    //     }
-    //     return unique
-    // }, [])
-    // console.log(uniqueColorsWithImage)
-    // const uniqueSizes = [...new Set(dataDialog?.typeProduct.map((itemSize: any) => itemSize.size))]
-
-    // const [selectedColor, setSelectedColor] = useState('')
-    // const [selectedSize, setSelectedSize] = useState('')
-    // const [selectedQuantity, setSelectedQuantity] = useState<number>(1)
-    // const [selectedPrice, setSelectedPrice] = useState<number | null>(0)
-    // const [TypeProductID, setTypeProductID] = useState<string | null>(null)
-    // const [imageChinh, setImageChinh] = useState<any>('')
-    // useEffect(() => {
-    //     setImageChinh(dataDialog?.image)
-    //     setSelectedPrice(dataDialog?.minPrice)
-    // }, [dataDialog])
-    // const handleColorChange = (color: string, image: string) => {
-    //     setSelectedColor(color)
-    //     setImageChinh(image)
-    //     updatePrice(color, selectedSize)
-    //     updateQuantily(color, selectedSize)
-    // }
-
-    // const handleSizeChange = (size: string) => {
-    //     setSelectedSize(size)
-    //     updatePrice(selectedColor, size)
-    //     updateQuantily(selectedColor, size)
-    // }
-    // const updatePrice = (color: string, size: string) => {
-    //     const selectedTypeProduct = dataDialog?.typeProduct.find(
-    //         (item: any) => item.color === color && item.size === size
-    //     )
-
-    //     if (selectedTypeProduct) {
-    //         setSelectedPrice(selectedTypeProduct.price)
-    //         setTypeProductID(selectedTypeProduct._id)
-    //     } else {
-    //         setSelectedPrice(null)
-    //     }
-    // }
-    // const [selectedTypeProductDaChon, setSelectedTypeProductDaChon] = useState<any>()
-    // const updateQuantily = (color: string, size: string) => {
-    //     const selectedTypeProduct = dataDialog?.typeProduct.find(
-    //         (item: any) => item.color === color && item.size === size
-    //     )
-
-    //     if (selectedTypeProduct) {
-    //         setSelectedQuantity(selectedTypeProduct.quantity)
-    //         setTypeProductID(selectedTypeProduct._id)
-    //         setSelectedTypeProductDaChon(selectedTypeProduct)
-    //     } else {
-    //         setSelectedQuantity(0)
-    //     }
-    // }
-
-    const { onSubmit } = useCartMutation({
-        action: 'ADD',
-        onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Thêm sản phẩm vào giỏ hàng thành công!!',
-                description: 'Hãy kiểm tra giỏ hàng và đi đến trang thanh toán để mang đồ về cho boss nào!'
-            })
-        }
-    })
-
-    const storedUserID = localStorage.getItem('userID')
-
-    const onHandleSubmit = (data: any) => {
-        if (selectedColor == '') {
-            toast({
-                variant: 'destructive',
-                title: 'Mời bạn chọn màu!!',
-                description: 'Bạn phải chọn 1 màu để thêm vào giỏ hàng !'
-            })
-        } else if (selectedSize == '') {
-            toast({
-                variant: 'destructive',
-                title: 'Mời bạn chọn kích cỡ!!',
-                description: 'Bạn phải chọn 1 size để thêm vào giỏ hàng !'
-            })
-        } else if (data.quantity > selectedQuantity) {
-            toast({
-                variant: 'destructive',
-                title: 'Mời bạn chọn số lượng ít hơn!',
-                description: 'Tồn kho không đủ số lượng bạn chọn!'
-            })
-        } else {
-            const cart = {
-                iduser: storedUserID || '',
-                idpro: selectedProductId,
-                idprotype: TypeProductID,
-                quantity: data.quantity
-            }
-
-            if (storedUserID) {
-                onSubmit(cart)
-            } else {
-                // Lấy danh sách sản phẩm từ localStorage
-                let cartItems = JSON.parse(localStorage.getItem('Cart_virtual_users') || '[]')
-
-                // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-                const existingCartItemIndex = cartItems.findIndex(
-                    (item: any) => item.idpro === selectedProductId && item.idprotype === TypeProductID
-                )
-
-                if (existingCartItemIndex !== -1) {
-                    // Nếu sản phẩm đã tồn tại trong giỏ hàng
-                    const updatedQuantity = Number(cartItems[existingCartItemIndex].quantity) + Number(data.quantity)
-
-                    // Kiểm tra xem số lượng mới có vượt quá số lượng tối đa cho phép hay không
-                    if (updatedQuantity <= selectedTypeProductDaChon.quantity) {
-                        // Nếu không vượt quá, cập nhật số lượng
-                        cartItems[existingCartItemIndex].quantity = updatedQuantity
-                    } else {
-                        // Nếu vượt quá, thông báo lỗi và không thực hiện thêm sản phẩm vào giỏ hàng
-                        toast({
-                            variant: 'destructive',
-                            title: 'Số lượng vượt quá giới hạn!!',
-                            description: `Vì trong giỏ hàng bạn, loại sản phẩm này đã có ${cartItems[existingCartItemIndex].quantity} số sản phẩm`
-                        })
-                        return // Return early to prevent further execution
-                    }
-                } else {
-                    // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm sản phẩm mới vào danh sách
-                    cartItems.push(cart)
-                }
-
-                // Lưu danh sách sản phẩm mới vào localStorage
-                localStorage.setItem('Cart_virtual_users', JSON.stringify(cartItems))
-                toast({
-                    variant: 'success',
-                    title: 'Thêm sản phẩm vào giỏ hàng thành công!!',
-                    description: 'Hãy kiểm tra giỏ hàng và đi đến trang thanh toán để mang đồ về cho boss nào!'
-                })
-            }
-        }
-    }
     return (
         <>
             <div className='section section-padding'>
@@ -353,53 +169,15 @@ const ListProduct = () => {
                                                 <div className='sigma_product-price'>
                                                     <span>{renderStars(product?.averageStars)}</span>
                                                 </div>
-                                                <Dialog key={product?._id}>
+                                                <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <Button onClick={() => addToCart(product._id)}>
-                                                            Thêm giỏ hàng
-                                                        </Button>
+                                                        <Button>Thêm giỏ hàng</Button>
                                                     </DialogTrigger>
-                                                    <DialogContent className='sm:max-w-[800px] sm:max-h-[800px]'>
-                                                        <div className='grid gap px-10'>
-                                                            <div className='section section-padding sigma_product-single'>
-                                                                <div className='container'>
-                                                                    <div className='row'>
-                                                                        <div className='col-lg-5 col-md-6'>
-                                                                            <div className='sigma_product-single-thumb mb-lg-30'>
-                                                                                <div className='slider'>
-                                                                                    <img
-                                                                                        style={{}}
-                                                                                        src={product?.image}
-                                                                                        alt='product'
-                                                                                    />
-                                                                                </div>
-                                                                                <div className='slider-nav flex flex-row gap-2'></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <img src={product?.productType?.image} alt='' />
-                                                                        <div className='col-lg-7 col-md-6'>
-                                                                            <div className='sigma_product-single-content'>
-                                                                                <div
-                                                                                    className='sigma_product-price'
-                                                                                    style={{ textAlign: 'left' }}
-                                                                                >
-                                                                                    <span
-                                                                                        style={{
-                                                                                            display: 'block',
-                                                                                            width: '100%',
-                                                                                            fontSize: '17px'
-                                                                                        }}
-                                                                                    >
-                                                                                        {product?.name}
-                                                                                    </span>
-                                                                                </div>
-                                                                                <hr />{' '}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <DialogContent
+                                                        className='sm:max-w-[900px] sm:max-h-[800px] overflow-y-auto '
+                                                        style={{}}
+                                                    >
+                                                        <ProductDialogPage id={product._id} />
                                                     </DialogContent>
                                                 </Dialog>
                                                 {/* </a> */}

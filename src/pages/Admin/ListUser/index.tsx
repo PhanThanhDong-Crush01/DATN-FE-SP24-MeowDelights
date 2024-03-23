@@ -35,12 +35,14 @@ type DataIndex = keyof DataType
 
 const ListUserPage = () => {
     const { data }: any = useAuthQuery()
+    console.log(data)
     const [dataUser, setDataUser] = useState<any>()
     useEffect(() => {
         if (data?.users) {
             setDataUser(data.users.filter((user: any) => user.role !== 'member'))
         }
     }, [data])
+
     const handleDelete = (record: any) => {
         deleteEmployee(record)
     }

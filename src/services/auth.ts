@@ -6,7 +6,7 @@ import instance from './core/api'
 import { toast } from '@/components/ui/use-toast'
 export const getAll = async () => {
     try {
-        const response = await instance.get('/auth')
+        const response = await instance.get(`/auth`)
         return response.data
     } catch (error: any) {
         toast({
@@ -186,5 +186,22 @@ export const deleteEmployee = async (user: IAuth) => {
             title: error?.response?.data?.message + '!'
         })
         console.log(`['delete_Employee']`, error)
+    }
+}
+export const remove = async (auth: IAuth) => {
+    try {
+        await instance.delete(`/auth/${auth._id}`)
+
+        toast({
+            variant: 'success',
+            title: 'Xóa thành công!!',
+            description: 'Xóa thành công!'
+        })
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['DELETE_AUTH_ERROR']`, error)
     }
 }

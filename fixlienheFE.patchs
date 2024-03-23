@@ -1,0 +1,212 @@
+diff --git a/src/components/component/MenuClientComponent.tsx b/src/components/component/MenuClientComponent.tsx
+index ead9ee4..39962ca 100644
+--- a/src/components/component/MenuClientComponent.tsx
++++ b/src/components/component/MenuClientComponent.tsx
+@@ -4,12 +4,11 @@ import { Link, useNavigate } from 'react-router-dom'
+ import { toast } from '../ui/use-toast'
+ import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
+ import { useEffect, useState } from 'react'
+-import instance from '@/services/core/api'
+-import { Menu, MenuProps } from 'antd'
++import { MenuProps } from 'antd'
+ import '@/styles/MenuClient.css'
+-import { AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
+-import { MessageOutlined, SettingOutlined, UnorderedListOutlined } from '@ant-design/icons'
++import { UnorderedListOutlined } from '@ant-design/icons'
+ import MenuItem from 'antd/es/menu/MenuItem'
++import instance from '@/services/core/api'
+ type MenuItem = Required<MenuProps>['items'][number]
+ 
+ function getItem(
+@@ -50,14 +49,16 @@ const MenuClientComponent = () => {
+         }
+     }, [])
+ 
+-    const { dataCart } = useCartQuery()
+-
+     const [dataCarts, setDataCart] = useState<any>()
+     useEffect(() => {
+-        if (userID) {
+-            setDataCart(dataCart)
++        const fetch = async () => {
++            if (userID) {
++                const response = await instance.get('/cart/user/' + userID)
++                setDataCart(response?.data)
++            }
+         }
+-    }, [dataCarts])
++        fetch()
++    }, [userID])
+ 
+     const { onRemove } = useCartMutation({
+         action: 'DELETE',
+@@ -343,7 +344,6 @@ const MenuClientComponent = () => {
+                                         </a>
+                                     </li>
+                                     <li className='aside-toggle aside-trigger'>
+-                                        {/* <Menu style={{ fontSize: '20px' }} items={items} onClick={onClick} /> */}
+                                         <svg
+                                             xmlns='http://www.w3.org/2000/svg'
+                                             width='30'
+@@ -374,7 +374,7 @@ const MenuClientComponent = () => {
+                                                 </div>
+                                             </ul>
+                                             <ul>
+-                                                <Link to={'/'}>Gioi thiệu</Link>
++                                                <Link to={'/'}>Giới thiệu</Link>
+                                             </ul>
+                                             <ul>
+                                                 <Link to={'/contact'}>Liên hệ </Link>
+diff --git a/src/hooks/Cart/useCartQuery.ts b/src/hooks/Cart/useCartQuery.ts
+index e80dbe8..933fe31 100644
+--- a/src/hooks/Cart/useCartQuery.ts
++++ b/src/hooks/Cart/useCartQuery.ts
+@@ -4,6 +4,5 @@ import { useQuery } from 'react-query'
+ export const useCartQuery = () => {
+     const ID_USER = localStorage.getItem('userID')
+     const { data, ...rest } = useQuery(['CART', ID_USER], () => (ID_USER ? getAll(ID_USER) : null))
+-    const dataCart = data
+-    return { dataCart, ...rest }
++    return { dataCart: data, ...rest }
+ }
+diff --git a/src/pages/Admin/Contact/index.tsx b/src/pages/Admin/Contact/index.tsx
+index 5a4883e..ae041fe 100644
+--- a/src/pages/Admin/Contact/index.tsx
++++ b/src/pages/Admin/Contact/index.tsx
+@@ -1,12 +1,14 @@
+ import React, { useEffect, useState } from 'react'
+-import { Button, Popconfirm, Select, Table } from 'antd'
++import { Button, Modal, Popconfirm, Select, Table } from 'antd'
+ import type { TableColumnsType } from 'antd'
+ import { useContactQuery } from '@/hooks/Contact/useContactQuery'
+ import { formatPriceBootstrap } from '@/lib/utils'
+-import { DeleteOutlined } from '@ant-design/icons'
++import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+ import { toast } from '@/components/ui/use-toast'
+ import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
+ import { useContactMutation } from '@/hooks/Contact/useContactMutation'
++import UpdateContact_note_idOrder from './updateContact_note_idOrder'
++import { Sheet, SheetTrigger } from '@/components/ui/sheet'
+ 
+ interface DataType {
+     key: React.Key
+@@ -178,18 +180,28 @@ const ListContact = () => {
+             key: 'x',
+             width: '7%',
+             render: (_, record) => (
+-                <Popconfirm
+-                    placement='topRight'
+-                    title='Xóa liên hệ?'
+-                    description='Bạn có chắc chắn xóa liên hệ này không?'
+-                    //onConfirm={() => onRemove(record)}
+-                    okText='Đồng ý'
+-                    cancelText='Không'
+-                >
+-                    <Button type='primary' danger>
+-                        <DeleteOutlined style={{ display: 'inline-flex' }} />
+-                    </Button>
+-                </Popconfirm>
++                <>
++                    <Sheet>
++                        <SheetTrigger>
++                            <Button type='primary' ghost>
++                                <EditOutlined style={{ display: 'inline-flex' }} />
++                            </Button>
++                        </SheetTrigger>
++                        <UpdateContact_note_idOrder id={record._id} />
++                    </Sheet>
++                    <Popconfirm
++                        placement='topRight'
++                        title='Xóa liên hệ?'
++                        description='Bạn có chắc chắn xóa liên hệ này không?'
++                        //onConfirm={() => onRemove(record)}
++                        okText='Đồng ý'
++                        cancelText='Không'
++                    >
++                        <Button type='primary' danger>
++                            <DeleteOutlined style={{ display: 'inline-flex' }} />
++                        </Button>
++                    </Popconfirm>
++                </>
+             )
+         }
+     ]
+@@ -294,6 +306,7 @@ const ListContact = () => {
+                     </button>
+                 </div>
+             </div>
++
+             <Table rowSelection={rowSelection} columns={columns} dataSource={dataContact} scroll={{ x: 1300 }} />
+         </div>
+     )
+diff --git a/src/pages/Admin/ListVoucher/EditVoucher.tsx b/src/pages/Admin/ListVoucher/EditVoucher.tsx
+index f656e00..1c78dd4 100644
+--- a/src/pages/Admin/ListVoucher/EditVoucher.tsx
++++ b/src/pages/Admin/ListVoucher/EditVoucher.tsx
+@@ -241,6 +241,7 @@ const EditVoucher = () => {
+                                         <p>Loại mã</p>
+                                         <select
+                                             className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-1'
++                                            style={{ width: '100%' }}
+                                             id='typeVoucher'
+                                             {...register('idTypeVoucher', { required: true })}
+                                             // onChange={(e) => setValue('idTypeVoucher', e.target.value)}
+@@ -249,7 +250,6 @@ const EditVoucher = () => {
+                                                 setValue('idTypeVoucher', e.target.options[selectedIndex].value),
+                                                     setSelectTypeVc(e.target.options[selectedIndex].value)
+                                             }}
+-                                            style={{ width: '100%' }}
+                                         >
+                                             <option value=''>Chọn loại voucher</option>
+                                             {typeVoucher &&
+diff --git a/src/pages/Client/CartPage/index.tsx b/src/pages/Client/CartPage/index.tsx
+index 74c18d1..3265f0a 100644
+--- a/src/pages/Client/CartPage/index.tsx
++++ b/src/pages/Client/CartPage/index.tsx
+@@ -326,6 +326,16 @@ const CartPage = () => {
+                                             width: '100%'
+                                         }}
+                                     >
++                                        <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
++                                            Điều kiện sử dụng: &nbsp;
++                                            <span
++                                                dangerouslySetInnerHTML={{
++                                                    __html: formatPriceBootstrap(
++                                                        voucherDuocChon?.[0]?.voucher?.conditions
++                                                    )
++                                                }}
++                                            ></span>
++                                        </h2>
+                                         <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
+                                             Số tiền bạn được giảm: &nbsp;
+                                             <span
+diff --git a/src/services/contact.ts b/src/services/contact.ts
+index 1a1fef0..bedf049 100644
+--- a/src/services/contact.ts
++++ b/src/services/contact.ts
+@@ -44,6 +44,25 @@ export const update = async (contact: any) => {
+         console.log(`['UPDATE_CONTACT_ERROR']`, error.response.data.message)
+     }
+ }
++export const api_updateContact_note_idOrder = async (contact: any) => {
++    try {
++        const response = await instance.patch(`/contact/${contact.id}/updateContact_note_idOrder`, contact)
++        if (response.data) {
++            toast({
++                variant: 'success',
++                title: 'Cập nhật liên hệ thành công!!',
++                description: 'Cập nhật liên hệ thành công!'
++            })
++        }
++        return response.data
++    } catch (error: any) {
++        toast({
++            variant: 'destructive',
++            title: error?.response?.data?.message + '!'
++        })
++        console.log(`['UPDATE_CONTACT_ERROR']`, error.response.data.message)
++    }
++}
+ export const setStaffWithContact = async (contact: any) => {
+     try {
+         const response = await instance.patch(`/contact/1/staff`, contact)

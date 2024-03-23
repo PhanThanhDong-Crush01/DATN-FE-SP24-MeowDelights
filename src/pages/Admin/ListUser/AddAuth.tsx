@@ -97,6 +97,7 @@ const AddAuth = () => {
                     <div>
                         <p className='font-medium text-base pb-2'>Mật khẩu</p>
                         <Input
+                            autoComplete='new-password'
                             className='border-spacing-1 border-gray-200   pl-3 mb-1'
                             type='password'
                             style={{ borderRadius: '8px', height: '40px' }}
@@ -119,6 +120,7 @@ const AddAuth = () => {
                     <div>
                         <p className='font-medium text-base pb-2'>Nhập lại mật khẩu</p>
                         <Input
+                            autoComplete='new-password'
                             className='border-spacing-1 border-gray-200  rounded-md h-14'
                             type='password'
                             style={{ borderRadius: '8px', height: '40px' }}

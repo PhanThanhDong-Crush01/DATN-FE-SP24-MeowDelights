@@ -17,8 +17,13 @@ const EditVoucher = () => {
     const typeVoucher = dataTVC?.datas
     const { id } = useParams()
     const { data } = useVoucherQuery(id)
-    const voucher = data?.datas
-
+    const [voucher, setVoucher] = useState<any>()
+    const [selectTypeVc, setSelectTypeVc] = useState<any>()
+    useEffect(() => {
+        setVoucher(data?.datas)
+        setSelectTypeVc(data?.datas?.idTypeVoucher)
+    }, [data])
+    console.log('🚀 ~ EditVoucher ~ selectTypeVc:', selectTypeVc)
     // console.log(data)
     const { onSubmit } = useVoucherMutation({
         action: 'UPDATE',
@@ -241,7 +246,8 @@ const EditVoucher = () => {
                                             // onChange={(e) => setValue('idTypeVoucher', e.target.value)}
                                             onChange={(e) => {
                                                 const selectedIndex = e.target.selectedIndex
-                                                setValue('idTypeVoucher', e.target.options[selectedIndex].value)
+                                                setValue('idTypeVoucher', e.target.options[selectedIndex].value),
+                                                    setSelectTypeVc(e.target.options[selectedIndex].value)
                                             }}
                                             style={{ width: '100%' }}
                                         >
@@ -264,169 +270,171 @@ const EditVoucher = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='themPhanPhatVoucher'>
-                                <h1 style={{ fontSize: '20px', marginTop: '20px' }}>
-                                    Phân phát voucher cho người dùng
-                                </h1>
-                                <i className='text-danger'>
-                                    minTotalBill là tổng tiền tất cả hóa đơn của người dùng nhỏ nhất để nhận số lượt sử
-                                    dụng voucher tương ứng
-                                </i>
-                                <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
-                                    <div>
-                                        <Label>Tổng tiền hóa đơn </Label>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
-                                            type='number'
-                                            id='name'
-                                            {...register('minTotalBill1', { required: true, min: 100000 })}
-                                            onChange={(e) => setValue('minTotalBill1', e.target.value)}
-                                            defaultValue={100000}
-                                        />
-                                        {errors.minTotalBill1 && (
-                                            <p className='text-red-500'>minTotalBill 1 là bắt buộc.</p>
-                                        )}
-                                        {errors.minTotalBill1 && errors.minTotalBill1.type === 'min' && (
-                                            <p className='text-red-500'>minTotalBill 1 lớn hơn 100000 VNĐ</p>
-                                        )}
+                            {selectTypeVc !== '65ba03f7cb1e0ffc78158c55' && selectTypeVc !== undefined && (
+                                <div className='themPhanPhatVoucher'>
+                                    <h1 style={{ fontSize: '20px', marginTop: '20px' }}>
+                                        Phân phát voucher cho người dùng
+                                    </h1>
+                                    <i className='text-danger'>
+                                        minTotalBill là tổng tiền tất cả hóa đơn của người dùng nhỏ nhất để nhận số lượt
+                                        sử dụng voucher tương ứng
+                                    </i>
+                                    <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
+                                        <div>
+                                            <Label>Tổng tiền hóa đơn </Label>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
+                                                type='number'
+                                                id='name'
+                                                {...register('minTotalBill1', { required: true, min: 100000 })}
+                                                onChange={(e) => setValue('minTotalBill1', e.target.value)}
+                                                defaultValue={100000}
+                                            />
+                                            {errors.minTotalBill1 && (
+                                                <p className='text-red-500'>minTotalBill 1 là bắt buộc.</p>
+                                            )}
+                                            {errors.minTotalBill1 && errors.minTotalBill1.type === 'min' && (
+                                                <p className='text-red-500'>minTotalBill 1 lớn hơn 100000 VNĐ</p>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <Label>Số lượt dùng nhận được</Label>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 pl-3 mb-1'
+                                                type='number'
+                                                id='quantity1'
+                                                placeholder='1'
+                                                {...register('quantity1', { required: true, min: 1 })}
+                                                onChange={(e) => setValue('quantity1', e.target.value)}
+                                            />
+                                            {errors.quantity1 && errors.quantity1.type === 'required' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được bắt buộc không để trống.
+                                                </p>
+                                            )}
+                                            {errors.quantity1 && errors.quantity1.type === 'min' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div>
-                                        <Label>Số lượt dùng nhận được</Label>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 pl-3 mb-1'
-                                            type='number'
-                                            id='quantity1'
-                                            placeholder='1'
-                                            {...register('quantity1', { required: true, min: 1 })}
-                                            onChange={(e) => setValue('quantity1', e.target.value)}
-                                        />
-                                        {errors.quantity1 && errors.quantity1.type === 'required' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được bắt buộc không để trống.
-                                            </p>
-                                        )}
-                                        {errors.quantity1 && errors.quantity1.type === 'min' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
-                                            </p>
-                                        )}
+                                    <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
+                                        <div>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
+                                                type='number'
+                                                id='name'
+                                                {...register('minTotalBill2', { required: true, min: 100000 })}
+                                                onChange={(e) => setValue('minTotalBill2', e.target.value)}
+                                                defaultValue={400000}
+                                            />
+                                            {errors.minTotalBill2 && (
+                                                <p className='text-red-500'>minTotalBill 2 là bắt buộc.</p>
+                                            )}
+                                            {errors.minTotalBill2 && errors.minTotalBill2.type === 'min' && (
+                                                <p className='text-red-500'>minTotalBill 2 lớn hơn 100000 VNĐ</p>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 pl-3 mb-1'
+                                                type='number'
+                                                id='quantity2'
+                                                placeholder='2'
+                                                {...register('quantity2', { required: true, min: 1 })}
+                                                onChange={(e) => setValue('quantity2', e.target.value)}
+                                            />
+                                            {errors.quantity2 && errors.quantity2.type === 'required' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được bắt buộc không để trống.
+                                                </p>
+                                            )}
+                                            {errors.quantity2 && errors.quantity2.type === 'min' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
+                                        <div>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
+                                                type='number'
+                                                id='name'
+                                                {...register('minTotalBill3', { required: true, min: 100000 })}
+                                                onChange={(e) => setValue('minTotalBill3', e.target.value)}
+                                                defaultValue={800000}
+                                            />
+                                            {errors.minTotalBill3 && (
+                                                <p className='text-red-500'>minTotalBill 3 là bắt buộc.</p>
+                                            )}
+                                            {errors.minTotalBill3 && errors.minTotalBill3.type === 'min' && (
+                                                <p className='text-red-500'>minTotalBill 3 lớn hơn 100000 VNĐ</p>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 pl-3 mb-1'
+                                                type='number'
+                                                id='quantity2'
+                                                placeholder='3'
+                                                {...register('quantity3', { required: true, min: 1 })}
+                                                onChange={(e) => setValue('quantity3', e.target.value)}
+                                            />
+                                            {errors.quantity3 && errors.quantity3.type === 'required' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được bắt buộc không để trống.
+                                                </p>
+                                            )}
+                                            {errors.quantity3 && errors.quantity3.type === 'min' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
+                                        <div>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
+                                                type='number'
+                                                id='name'
+                                                {...register('minTotalBill4', { required: true, min: 100000 })}
+                                                onChange={(e) => setValue('minTotalBill4', e.target.value)}
+                                                defaultValue={1200000}
+                                            />
+                                            {errors.minTotalBill4 && (
+                                                <p className='text-red-500'>minTotalBill 4 là bắt buộc.</p>
+                                            )}
+                                            {errors.minTotalBill4 && errors.minTotalBill4.type === 'min' && (
+                                                <p className='text-red-500'>minTotalBill 4 lớn hơn 100000 VNĐ</p>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <Input
+                                                className='border-spacing-1 border-gray-200 pl-3 mb-1'
+                                                type='number'
+                                                id='quantity2'
+                                                placeholder='4'
+                                                {...register('quantity4', { required: true, min: 1 })}
+                                                onChange={(e) => setValue('quantity4', e.target.value)}
+                                            />
+                                            {errors.quantity4 && errors.quantity4.type === 'required' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được bắt buộc không để trống.
+                                                </p>
+                                            )}
+                                            {errors.quantity4 && errors.quantity4.type === 'min' && (
+                                                <p className='text-red-500'>
+                                                    Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
-                                    <div>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
-                                            type='number'
-                                            id='name'
-                                            {...register('minTotalBill2', { required: true, min: 100000 })}
-                                            onChange={(e) => setValue('minTotalBill2', e.target.value)}
-                                            defaultValue={400000}
-                                        />
-                                        {errors.minTotalBill2 && (
-                                            <p className='text-red-500'>minTotalBill 2 là bắt buộc.</p>
-                                        )}
-                                        {errors.minTotalBill2 && errors.minTotalBill2.type === 'min' && (
-                                            <p className='text-red-500'>minTotalBill 2 lớn hơn 100000 VNĐ</p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 pl-3 mb-1'
-                                            type='number'
-                                            id='quantity2'
-                                            placeholder='2'
-                                            {...register('quantity2', { required: true, min: 1 })}
-                                            onChange={(e) => setValue('quantity2', e.target.value)}
-                                        />
-                                        {errors.quantity2 && errors.quantity2.type === 'required' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được bắt buộc không để trống.
-                                            </p>
-                                        )}
-                                        {errors.quantity2 && errors.quantity2.type === 'min' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
-                                    <div>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
-                                            type='number'
-                                            id='name'
-                                            {...register('minTotalBill3', { required: true, min: 100000 })}
-                                            onChange={(e) => setValue('minTotalBill3', e.target.value)}
-                                            defaultValue={800000}
-                                        />
-                                        {errors.minTotalBill3 && (
-                                            <p className='text-red-500'>minTotalBill 3 là bắt buộc.</p>
-                                        )}
-                                        {errors.minTotalBill3 && errors.minTotalBill3.type === 'min' && (
-                                            <p className='text-red-500'>minTotalBill 3 lớn hơn 100000 VNĐ</p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 pl-3 mb-1'
-                                            type='number'
-                                            id='quantity2'
-                                            placeholder='3'
-                                            {...register('quantity3', { required: true, min: 1 })}
-                                            onChange={(e) => setValue('quantity3', e.target.value)}
-                                        />
-                                        {errors.quantity3 && errors.quantity3.type === 'required' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được bắt buộc không để trống.
-                                            </p>
-                                        )}
-                                        {errors.quantity3 && errors.quantity3.type === 'min' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className='flex flex-row gap-5' style={{ marginTop: '20px' }}>
-                                    <div>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 rounded-md pl-2 -mr-4 mb-1'
-                                            type='number'
-                                            id='name'
-                                            {...register('minTotalBill4', { required: true, min: 100000 })}
-                                            onChange={(e) => setValue('minTotalBill4', e.target.value)}
-                                            defaultValue={1200000}
-                                        />
-                                        {errors.minTotalBill4 && (
-                                            <p className='text-red-500'>minTotalBill 4 là bắt buộc.</p>
-                                        )}
-                                        {errors.minTotalBill4 && errors.minTotalBill4.type === 'min' && (
-                                            <p className='text-red-500'>minTotalBill 4 lớn hơn 100000 VNĐ</p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <Input
-                                            className='border-spacing-1 border-gray-200 pl-3 mb-1'
-                                            type='number'
-                                            id='quantity2'
-                                            placeholder='4'
-                                            {...register('quantity4', { required: true, min: 1 })}
-                                            onChange={(e) => setValue('quantity4', e.target.value)}
-                                        />
-                                        {errors.quantity4 && errors.quantity4.type === 'required' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được bắt buộc không để trống.
-                                            </p>
-                                        )}
-                                        {errors.quantity4 && errors.quantity4.type === 'min' && (
-                                            <p className='text-red-500'>
-                                                Số lượt dùng nhận được phải lớn hơn hoặc bằng 0.
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </form>
                 </div>

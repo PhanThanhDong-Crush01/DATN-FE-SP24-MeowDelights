@@ -1,6 +1,5 @@
 import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
-import { toast } from '@/components/ui/use-toast'
 import { useCartMutation } from '@/hooks/Cart/useCartMutation'
 import { useCartQuery } from '@/hooks/Cart/useCartQuery'
 import { formatPriceBootstrap } from '@/lib/utils'

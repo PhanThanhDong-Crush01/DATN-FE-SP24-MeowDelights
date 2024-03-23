@@ -6,6 +6,7 @@ import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { useEffect, useState } from 'react'
 import instance from '@/services/core/api'
 import { Menu, MenuProps } from 'antd'
+import '@/styles/MenuClient.css'
 import { AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
 import { MessageOutlined, SettingOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import MenuItem from 'antd/es/menu/MenuItem'
@@ -33,7 +34,7 @@ const items: MenuItem[] = [
             getItem('Phụ kiện mèo', '3', <Link to='/products'></Link>),
             getItem('Đồ ăn mèo', '4', <Link to='/products'></Link>)
         ]),
-        getItem('Gioi thiệu', '5', <Link to='/introduce'></Link>),
+        getItem('Giới thiệu', '5', <Link to='/introduce'></Link>),
         getItem('Liên hệ', '6', <Link to='/contact'></Link>)
     ])
 ]
@@ -52,36 +53,11 @@ const MenuClientComponent = () => {
     const { dataCart } = useCartQuery()
 
     const [dataCarts, setDataCart] = useState<any>()
-    const localStorageDataCart = JSON.parse(localStorage.getItem('Cart_virtual_users') || '[]')
     useEffect(() => {
-        const fetchData = async () => {
-            if (localStorageDataCart.length > 0) {
-                let totalAmount = 0
-                const datanew = await Promise.all(
-                    localStorageDataCart.map(async (item: any) => {
-                        const idpro = item.idpro
-                        const idprotype = item.idprotype
-                        const product = await instance.get('/products/' + idpro)
-                        const type_product = await instance.get('/type_product/' + idprotype)
-                        const money = item.quantity * type_product?.data?.data?.price
-                        totalAmount += money
-                        return {
-                            ...item,
-                            product: product?.data?.data,
-                            typeProduct: type_product?.data?.data,
-                            money: money
-                        }
-                    })
-                )
-                setDataCart({ data: datanew, totalAmount })
-            }
-        }
         if (userID) {
             setDataCart(dataCart)
-        } else {
-            fetchData()
         }
-    }, [localStorageDataCart])
+    }, [dataCarts])
 
     const { onRemove } = useCartMutation({
         action: 'DELETE',
@@ -100,7 +76,7 @@ const MenuClientComponent = () => {
     const handleLogout = () => {
         localStorage.removeItem('userID')
         localStorage.removeItem('user')
-        navigate('/signin')
+        navigate('/')
     }
 
     return (
@@ -367,7 +343,44 @@ const MenuClientComponent = () => {
                                         </a>
                                     </li>
                                     <li className='aside-toggle aside-trigger'>
-                                        <Menu style={{}} items={items} onClick={onClick} />
+                                        {/* <Menu style={{ fontSize: '20px' }} items={items} onClick={onClick} /> */}
+                                        <svg
+                                            xmlns='http://www.w3.org/2000/svg'
+                                            width='30'
+                                            height='30'
+                                            fill='currentColor'
+                                            className='bi bi-list'
+                                            viewBox='0 0 16 16'
+                                        >
+                                            <path
+                                                fill-rule='evenodd'
+                                                d='M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5'
+                                            />
+                                        </svg>
+                                        <div className='menu '>
+                                            <ul className=''>
+                                                <Link to={'/'}>Trang chủ</Link>
+                                            </ul>
+
+                                            <ul className='submenu'>
+                                                Cửa hàng
+                                                <div className='dropdown-content'>
+                                                    <Link to={'/products'} className='item'>
+                                                        Đồ ăn
+                                                    </Link>
+                                                    <Link to={'/products'} className='item'>
+                                                        Phụ kiện
+                                                    </Link>
+                                                </div>
+                                            </ul>
+                                            <ul>
+                                                <Link to={'/'}>Gioi thiệu</Link>
+                                            </ul>
+                                            <ul>
+                                                <Link to={'/contact'}>Liên hệ </Link>
+                                            </ul>
+                                        </div>
+
                                         {/* d-block d-sm-none */}
                                     </li>
                                 </ul>

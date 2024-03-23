@@ -26,7 +26,7 @@ const LayoutUserPage = () => {
             <MenuClientComponent />
 
             <Layout style={{ padding: '8px 0' }} className='h-max'>
-                <Sider theme='light' trigger={null} collapsible collapsed={collapsed}>
+                <Sider theme='light' trigger={null} collapsible collapsed={collapsed} className=''>
                     <div className='demo-logo-vertical ' style={{ padding: '10px 25px', textAlign: 'center' }}>
                         <Avatar
                             className='rounded-5xl'
@@ -44,7 +44,7 @@ const LayoutUserPage = () => {
                         </Menu>
                     </div>
 
-                    <Menu theme='light' mode='vertical' defaultSelectedKeys={['1']}>
+                    <Menu theme='light' mode='vertical' defaultSelectedKeys={['2']}>
                         <Menu.Item key='2' icon={<AiOutlineUser />}>
                             <Link to='/updateProfile'>Hồ sơ của tôi</Link>
                         </Menu.Item>
@@ -53,9 +53,6 @@ const LayoutUserPage = () => {
                         </Menu.Item>
                         <Menu.Item key='4' icon={<AiOutlineAim />}>
                             <Link to='/my_voucher'>Kho voucher</Link>
-                        </Menu.Item>
-                        <Menu.Item key='5' icon={<MessageOutlined />}>
-                            <Link to='/admin/product'>Thông báo</Link>
                         </Menu.Item>
                     </Menu>
                 </Sider>

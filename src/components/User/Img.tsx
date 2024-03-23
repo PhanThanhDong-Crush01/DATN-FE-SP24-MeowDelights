@@ -65,6 +65,7 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
                         )}
                     </Button>
                 </div>
+                {!editAuth && <Avatar src={data?.datas?.imgUser}></Avatar>}
                 {editAuth && (
                     <Form {...form}>
                         <form

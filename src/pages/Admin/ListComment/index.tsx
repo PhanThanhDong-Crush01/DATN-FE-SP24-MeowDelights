@@ -21,6 +21,7 @@ type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 interface DataType {
+    datas: any
     key: string
     _id: string
     productId: string
@@ -40,34 +41,11 @@ type DataIndex = keyof DataType
 const ListCommentPage = () => {
     const { data }: any = useCommentQuery()
     console.log(data)
-
-    const [dataComment, setDataComment] = useState<any>()
-    const [dataProducts, setDataProducts] = useState([])
-    const [productInfo, setProductInfo] = useState({})
-    const [productTypeInfo, setProductTypeInfo] = useState({})
-    const [userInfo, setUserInfo] = useState({})
-    useEffect(() => {
-        const fetchData = async () => {
-            if (data?.datas) {
-                const updatedData = await Promise.all(
-                    data.datas.map(async (item: { productId: any; userId: any; productTypeId: any }) => {
-                        const productInfo = await getOne(item.productId)
-                        console.log(productInfo)
-                        const productTypeInfo = productInfo?.typeProduct.find(
-                            (type: any) => type._id === item.productTypeId
-                        )
-                        console.log(productTypeInfo)
-                        const userInfo = await getOneUser(item.userId)
-                        console.log(userInfo)
-                        return { ...item, productInfo, userInfo, productTypeInfo }
-                    })
-                )
-                setDataComment(updatedData)
-            }
-        }
-        fetchData()
-    }, [data])
-
+    const dataWithKeys = data?.datas.map((item: any, index: any) => ({
+        ...item,
+        key: index + 1
+    }))
+    console.log(dataWithKeys)
     const [filteredInfo, setFilteredInfo] = useState<Filters>({})
     const [sortedInfo, setSortedInfo] = useState<Sorts>()
 
@@ -194,9 +172,9 @@ const ListCommentPage = () => {
                 return (
                     <div>
                         {/* <h1 style={{ fontSize: '18px' }}>{record?.productId}</h1> */}
-                        <h1 style={{ fontSize: '16px' }}>{record?.productInfo?.data?.name}</h1>
-                        <img src={record?.productInfo?.data?.image} alt='' />
-                        <p style={{ fontSize: '12px' }}>Mã: {record?.productInfo?.data?._id}</p>
+                        <h1 style={{ fontSize: '16px' }}>{record?.productInfo?.name}</h1>
+                        <img src={record?.productInfo?.image} alt='' />
+                        <p style={{ fontSize: '12px' }}>Mã: {record?.productInfo?._id}</p>
                         {/* Hiển thị thông tin sản phẩm nếu có */}
                     </div>
                 )
@@ -227,8 +205,8 @@ const ListCommentPage = () => {
             render: (_, record) => {
                 return (
                     <div>
-                        <h1 style={{ fontSize: '16px', color: '' }}>Tên: {record?.userInfo?.datas?.name}</h1>
-                        <h2 style={{ fontSize: '16px' }}>Email: {record?.userInfo?.datas?.email}</h2>
+                        <h1 style={{ fontSize: '16px', color: '' }}>Tên: {record?.userInfo?.name}</h1>
+                        <h2 style={{ fontSize: '16px' }}>Email: {record?.userInfo?.email}</h2>
                         <p style={{ fontSize: '12px', color: '' }}>Mã: {record?.userId}</p>
                     </div>
                 )
@@ -248,7 +226,7 @@ const ListCommentPage = () => {
             dataIndex: 'title',
             key: 'title',
             width: '20%',
-            render: (_, record) => record.title
+            render: (_, record) => record?.title
         },
         {
             title: 'Số sao',
@@ -258,15 +236,15 @@ const ListCommentPage = () => {
             filters: [
                 {
                     text: '1-2 sao',
-                    value: '1-2'
+                    value: '1-<2'
                 },
                 {
                     text: '2-3 sao',
-                    value: '2-3'
+                    value: '2-<3'
                 },
                 {
                     text: '3-4 sao',
-                    value: '3-4'
+                    value: '3-<4'
                 },
                 {
                     text: '4-5 sao',
@@ -334,7 +312,7 @@ const ListCommentPage = () => {
             <div className='flex justify-between items-center '>
                 <p className='text-[30px] pb-4'>Danh sách đánh giá sản phẩm </p>
             </div>
-            <Table columns={columns} dataSource={dataComment} scroll={{ x: 1300 }} onChange={onChange} />
+            <Table columns={columns} dataSource={dataWithKeys} scroll={{ x: 1300 }} onChange={onChange} />
             {/* form */}
         </div>
     )

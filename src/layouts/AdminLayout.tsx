@@ -100,12 +100,7 @@ const AdminLayout = () => {
                         </Menu.Item>
                     </Menu.SubMenu>
                     {/* </Menu.Item> */}
-                    <Menu.Item key='10' icon={<VscAccount />}>
-                        <Link to='/admin/'>Thông tin của tôi</Link>
-                    </Menu.Item>
-                    <Menu.Item key='11' icon={<FiSettings />}>
-                        <Link to='/admin/'>Cài đặt</Link>
-                    </Menu.Item>
+
                     <Menu.Item key='12' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
                         Đăng xuất
                     </Menu.Item>

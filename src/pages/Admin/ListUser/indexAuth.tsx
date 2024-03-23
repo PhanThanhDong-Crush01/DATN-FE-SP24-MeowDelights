@@ -1,23 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-    DeleteOutlined,
-    EditOutlined,
-    FormOutlined,
-    HighlightOutlined,
-    PlusCircleOutlined,
-    SearchOutlined
-} from '@ant-design/icons'
-import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
-import { Avatar, Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
+import { DeleteOutlined, FormOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import type { GetRef, TableColumnsType, TableColumnType, TableProps } from 'antd'
+import { Avatar, Button, Input, Popconfirm, Space, Table } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
-import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
-import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
-import moment from 'moment'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
-import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
-import { toast } from '@/components/ui/use-toast'
 import { deleteEmployee } from '@/services/auth'
+import { formatPriceBootstrap } from '@/lib/utils'
+import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -44,15 +34,20 @@ type DataIndex = keyof DataType
 
 const ListAuthPage = () => {
     const { data }: any = useAuthQuery()
+    console.log(data)
     const [dataUser, setDataUser] = useState<any>()
+    console.log(dataUser)
     useEffect(() => {
         if (data?.users) {
             setDataUser(data.users.filter((user: any) => user.role === 'member'))
         }
     }, [data])
-    const handleDelete = (record: any) => {
-        deleteEmployee(record)
-    }
+    const { onRemove } = useAuthMutation({
+        action: 'DELETE'
+    })
+    // const handleDelete = (record: any) => {
+    //     deleteEmployee(record)
+    // }
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -170,90 +165,47 @@ const ListAuthPage = () => {
             title: 'Tên tài khoản',
             dataIndex: 'name',
             key: 'name',
-            width: '35%',
+            width: '30%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
                 <div>
                     <h1 style={{ fontSize: '18px' }}>{record.username}</h1>
-                    <p style={{ fontSize: '12px' }}>Mã: {record._id}</p>
+                    <p style={{ fontSize: '15px' }}>{record.email}</p>
+                    <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>Mã: {record._id}</p>
                 </div>
             ),
             fixed: 'left'
         },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-            width: '25%',
-            render: (_, record) => record.email
-        },
 
         {
-            title: 'Địa chỉ',
+            title: 'Thông tin cơ bản',
             dataIndex: 'address',
             key: 'address',
-            width: '20%',
+            width: '40%',
+            render: (_, record) => (
+                <div>
+                    <Avatar src={record.imgUser} alt='' />
+                    <p>
+                        GT: &nbsp;
+                        <span>
+                            {record?.gender === false ? 'Nam' : record?.gender === true ? 'Nữ' : record?.gender}
+                        </span>
+                        &nbsp;
+                        <span>- {record.age} tuổi</span>
+                    </p>
 
-            render: (_, record) => record?.address
-        },
-        {
-            title: 'Tuổi',
-            dataIndex: 'age',
-            key: 'age',
-            width: '15% ',
-            render: (_, record) => record.age
-            // <option value='record.status'></option>
-        },
-        {
-            title: 'Giới tính',
-            dataIndex: 'gender',
-            key: 'gender',
-            width: '15% ',
-            render: (_, record) => {
-                switch (record?.gender) {
-                    case false:
-                        return 'Nam'
-                    case true:
-                        return 'Nữ'
-                    default:
-                        return record?.gender
-                }
-            }
+                    <p>SĐT: {record.phone}</p>
+                    <p>ĐC: {record?.address}</p>
+                </div>
+            )
         },
 
         {
-            title: 'Hình ảnh',
-            dataIndex: 'imgUser',
-            key: 'imgUser',
-            width: '20%',
-            // ...getColumnSearchProps('expiry'),
-            // sorter: (a, b) => a.expiry.length - b.expiry.length,
-            // sortDirections: ['descend', 'ascend'],
-            render: (_, record) => <Avatar src={record.imgUser} alt='' />
-        },
-
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'phone',
-            key: 'phone',
-            width: '20%',
-            render: (_, record) => record.phone
-        },
-        {
-            title: 'Tích điểm',
-            dataIndex: ' discount_points',
-            key: ' discount_points',
-            width: '20%',
-            render: (_, record) => record.discount_points
-            // fixed: 'right'
-        },
-
-        {
-            title: 'Tổng hóa đơn',
+            title: 'Tổng số hóa đơn',
             dataIndex: ' totalBillCount',
             key: ' totalBillCount',
-            width: '20%',
-            render: (_, record) => record.totalBillCount
+            width: '15%',
+            render: (_, record) => <div style={{ textAlign: 'center' }}>{record.totalBillCount}</div>
             // fixed: 'right'
         },
         {
@@ -261,40 +213,50 @@ const ListAuthPage = () => {
             dataIndex: ' totalAmount',
             key: ' totalAmount',
             width: '20%',
-            render: (_, record) => record.totalAmount
+            render: (_, record) => (
+                <div
+                    style={{ fontWeight: 700 }}
+                    dangerouslySetInnerHTML={{
+                        __html: formatPriceBootstrap(record.totalAmount)
+                    }}
+                ></div>
+            )
             // fixed: 'right'
-        }
-        // {
-        //     title: 'Hành động',
-        //     dataIndex: '',
-        //     key: 'x',
-        //     width: '30%',
-        //     fixed: 'right',
-        //     render: (_, record) => (
-        //         <Space size='middle'>
-        //             <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
-        //                 <EditOutlined style={{ display: 'inline-flex' }} />
-        //             </Link>
-        //             <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
-        //                 <FormOutlined style={{ display: 'inline-flex' }} />
-        //             </Link>
+        },
+        {
+            title: 'Hành động',
+            dataIndex: '',
+            key: 'x',
+            width: '15%',
+            fixed: 'right',
+            render: (_, record) => (
+                <Space size='middle'>
+                    {/* <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
+                        <EditOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
+                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+                        <FormOutlined style={{ display: 'inline-flex' }} />
+                    </Link> */}
+                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+                        <FormOutlined style={{ display: 'inline-flex' }} />
+                    </Link>
 
-        //             <Popconfirm
-        //                 placement='topRight'
-        //                 title='Xóa mã nhân viên?'
-        //                 description='Bạn có chắc chắn xóa mã nhân viên này không?'
-        //                 onConfirm={() => handleDelete(record)}
-        //                 onCancel={cancel}
-        //                 okText='Đồng ý'
-        //                 cancelText='Không'
-        //             >
-        //                 <Button type='primary' danger>
-        //                     <DeleteOutlined style={{ display: 'inline-flex' }} />
-        //                 </Button>
-        //             </Popconfirm>
-        //         </Space>
-        //     )
-        // }
+                    <Popconfirm
+                        placement='topRight'
+                        title='Xóa mã nhân viên?'
+                        description='Bạn có chắc chắn xóa mã nhân viên này không?'
+                        onConfirm={() => onRemove(record)}
+                        // onCancel={cancel}
+                        okText='Đồng ý'
+                        cancelText='Không'
+                    >
+                        <Button type='primary' danger>
+                            <DeleteOutlined style={{ display: 'inline-flex' }} />
+                        </Button>
+                    </Popconfirm>
+                </Space>
+            )
+        }
     ]
 
     return (

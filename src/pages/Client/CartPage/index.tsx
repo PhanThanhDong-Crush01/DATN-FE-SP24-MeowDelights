@@ -45,7 +45,7 @@ const CartPage = () => {
     const handleChange = async (value: any) => {
         const idVC = value
         const response = await instance.get('/voucher/' + idVC)
-        const dataPro = response.data?.datas || []
+        const dataPro = response?.data?.datas || []
         setDataVoucherOne(dataPro)
         setIdVoucher(idVC.toLowerCase())
     }
@@ -129,7 +129,9 @@ const CartPage = () => {
                     const user = await instance.get('/auth/' + userID)
                     setAuth(user.data.datas)
                     // Sort products by createdAt (newest to oldest)
-                    dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    dataPro.sort(
+                        (a: any, b: any) => new Date(b?.createdAt).getTime() - new Date(a?.createdAt).getTime()
+                    )
 
                     const formattedData = dataPro
                         .filter((item: any) => item?.voucher?.status === true)
@@ -152,7 +154,9 @@ const CartPage = () => {
     const [voucherDuocChon, setvoucherDuocChon] = useState<any>(undefined)
     useEffect(() => {
         if (MyVoucher !== undefined && data !== undefined) {
-            const voucherDuocChon = MyVoucher.filter((item: any) => item.idVoucher === data?._id)
+            const voucherDuocChon = MyVoucher.filter((item: any) => {
+                return item?.idVoucher === data?._id
+            })
             setvoucherDuocChon(voucherDuocChon)
         }
     }, [MyVoucher, data])
@@ -322,6 +326,16 @@ const CartPage = () => {
                                             width: '100%'
                                         }}
                                     >
+                                        <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
+                                            Điều kiện sử dụng: &nbsp;
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(
+                                                        voucherDuocChon?.[0]?.voucher?.conditions
+                                                    )
+                                                }}
+                                            ></span>
+                                        </h2>
                                         <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
                                             Số tiền bạn được giảm: &nbsp;
                                             <span

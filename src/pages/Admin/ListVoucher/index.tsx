@@ -11,6 +11,8 @@ import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import '@/styles/listVouherAdmin.css'
+import { FcGenealogy } from 'react-icons/fc'
+import { phanPhatVouher } from '@/services/voucher'
 type InputRef = GetRef<typeof Input>
 
 interface DataType {
@@ -35,9 +37,9 @@ const Voucher = () => {
     const [dataVoucherAll, setDataVoucherAll] = useState<any>()
     useEffect(() => {
         if (data) {
-            const dataVoucher = data?.datas.map((item: any, index: any) => ({
+            const dataVoucher = data?.datas.map((item: any) => ({
                 ...item,
-                key: index + 1
+                key: item?._id
             }))
             setDataVoucher(
                 dataVoucher.sort((a: any, b: any) => {
@@ -166,13 +168,6 @@ const Voucher = () => {
     // bảng table
     const columns: TableColumnsType<DataType> = [
         {
-            title: '#',
-            dataIndex: 'key',
-            key: 'key',
-            width: '3%',
-            fixed: 'left'
-        },
-        {
             title: 'Tên voucher',
             dataIndex: 'name',
             key: 'name',
@@ -288,17 +283,55 @@ const Voucher = () => {
     const rowClassName = (record: DataType) => {
         return record.status === false ? 'voucher-expired' : ''
     }
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        setSelectedRowKeys(newSelectedRowKeys)
+    }
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange
+    }
+    const phanphatvoucher = async () => {
+        if (selectedRowKeys.length === 0) {
+            toast({
+                variant: 'destructive',
+                title: 'Mời chọn những voucher bạn muốn phân phát cho người dùng!'
+            })
+        } else {
+            const confirm = window.confirm('Xác nhận lại là phân phát voucher cho người dùng!')
+            if (confirm) {
+                const confirm2 = window.confirm('Xác nhận lại lần 2 là sẽ phân phát voucher cho người dùng!')
+                if (confirm2) {
+                    const idVouchers = selectedRowKeys
+                    await phanPhatVouher({ idVouchers: idVouchers })
+                }
+            }
+        }
+    }
     return (
         <div>
             <div className='flex justify-between items-center'>
                 <p className='text-[20px]'>Phiếu giảm giá </p>
-                <Button
-                    type='primary'
-                    icon={<PlusCircleOutlined />}
-                    size={'large'}
-                    className='bg-[#1677ff]'
-                    onClick={showModal}
-                ></Button>
+                <div>
+                    <Button
+                        type='primary'
+                        icon={<PlusCircleOutlined />}
+                        size={'large'}
+                        className='bg-[#1677ff]'
+                        onClick={showModal}
+                    ></Button>
+                    <Button
+                        type='primary'
+                        danger
+                        icon={<FcGenealogy />}
+                        size={'large'}
+                        className='bg-[#1677ff] ml-3'
+                        onClick={() => phanphatvoucher()}
+                    >
+                        Phân phát Voucher
+                    </Button>
+                </div>
             </div>
             <br />
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -322,7 +355,13 @@ const Voucher = () => {
             <Modal open={isModalOpen} onCancel={handleCancel}>
                 <AddVoucher />
             </Modal>
-            <Table columns={columns} dataSource={dataVoucher} rowClassName={rowClassName} scroll={{ x: 1300 }} />
+            <Table
+                rowSelection={rowSelection}
+                rowClassName={rowClassName}
+                columns={columns}
+                dataSource={dataVoucher}
+                scroll={{ x: 1300 }}
+            />
         </div>
     )
 }

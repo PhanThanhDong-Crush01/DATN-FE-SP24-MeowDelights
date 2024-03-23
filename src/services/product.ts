@@ -83,6 +83,18 @@ export const getOne = async (id: string) => {
         console.log(`['GETONE_PRODUCT_ERROR']`, error)
     }
 }
+export const updateView = async (id: any) => {
+    try {
+        const response = await instance.get(`/products/updateView/${id}`)
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['updateView']`, error)
+    }
+}
 export const getPhanTrangProducts = async (_sort?: string) => {
     try {
         const response = await instance.get(`/products${_sort ? `?_order=${_sort}` : ''}`)

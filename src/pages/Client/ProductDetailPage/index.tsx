@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import ProductReviews from './ProductReviews'
 import { statisticsComment } from '@/services/comment'
+import { updateView } from '@/services/product'
 
 const ProductDetailPage = () => {
     const [data, setProductData] = useState<any>()
@@ -17,6 +18,7 @@ const ProductDetailPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                await updateView(id)
                 const { data } = await instance.get(`/products/${id}`)
                 if (data?.data) {
                     setProductData(data)
@@ -77,13 +79,14 @@ const ProductDetailPage = () => {
         updatePrice(color, selectedSize)
         updateQuantily(color, selectedSize)
     }
+    console.log(handleColorChange)
 
     const handleSizeChange = (size: string) => {
         setSelectedSize(size)
         updatePrice(selectedColor, size)
         updateQuantily(selectedColor, size)
     }
-
+    console.log(handleSizeChange)
     const updatePrice = (color: string, size: string) => {
         const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
 
@@ -94,6 +97,7 @@ const ProductDetailPage = () => {
             setSelectedPrice(null)
         }
     }
+    console.log(updatePrice)
     const [selectedTypeProductDaChon, setSelectedTypeProductDaChon] = useState<any>()
     const updateQuantily = (color: string, size: string) => {
         const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
@@ -106,7 +110,7 @@ const ProductDetailPage = () => {
             setSelectedQuantity(0)
         }
     }
-
+    console.log(updateQuantily)
     const { onSubmit } = useCartMutation({
         action: 'ADD'
     })
@@ -318,6 +322,10 @@ const ProductDetailPage = () => {
                                                 <strong hidden>
                                                     Tên sản phẩm{' '}
                                                     <span {...register('namePro')}>{data?.data?.name}</span>
+                                                </strong>
+                                                <br />
+                                                <strong>
+                                                    View <span>{data?.data?.view}</span>
                                                 </strong>
                                             </p>
                                             <p>

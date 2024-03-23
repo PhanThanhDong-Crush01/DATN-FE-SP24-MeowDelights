@@ -41,6 +41,7 @@ import { useEffect, useState } from 'react'
 import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayPal'
 import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
 import ListCommentPage from '@/pages/Admin/ListComment'
+import ListBanner from '@/pages/Admin/BannerVsSuKien'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -79,6 +80,7 @@ const Routers = () => {
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
+                <Route path='banner' element={<ListBanner />} />
                 <Route path='comment' element={<ListCommentPage />} />
                 <Route path='auth' element={<ListAuthPage />} />
                 <Route path='user' element={<ListUserPage />} />

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import ProductReviews from './ProductReviews'
 import { statisticsComment } from '@/services/comment'
+import { updateView } from '@/services/product'
 
 const ProductDetailPage = () => {
     const [data, setProductData] = useState<any>()
@@ -17,6 +18,7 @@ const ProductDetailPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                await updateView(id)
                 const { data } = await instance.get(`/products/${id}`)
                 if (data?.data) {
                     setProductData(data)
@@ -318,6 +320,10 @@ const ProductDetailPage = () => {
                                                 <strong hidden>
                                                     Tên sản phẩm{' '}
                                                     <span {...register('namePro')}>{data?.data?.name}</span>
+                                                </strong>
+                                                <br />
+                                                <strong>
+                                                    View <span>{data?.data?.view}</span>
                                                 </strong>
                                             </p>
                                             <p>

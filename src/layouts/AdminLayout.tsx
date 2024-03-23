@@ -5,9 +5,7 @@ import { MdOutlineCategory } from 'react-icons/md'
 import { RiBillLine } from 'react-icons/ri'
 import { FaRegMoneyBillAlt } from 'react-icons/fa'
 import { MdOutlineAccountCircle } from 'react-icons/md'
-import { VscAccount } from 'react-icons/vsc'
 import { MdOutlineSettingsPhone } from 'react-icons/md'
-import { FiSettings } from 'react-icons/fi'
 import { MdPowerSettingsNew } from 'react-icons/md'
 import { AiOutlineComment } from 'react-icons/ai'
 import { Layout, Menu, Button, theme } from 'antd'
@@ -60,6 +58,9 @@ const AdminLayout = () => {
                     <Menu.Item key='1' icon={<FaRegChartBar />}>
                         <Link to='/admin'>Thống kê</Link>
                     </Menu.Item>
+                    <Menu.Item key='6' icon={<FaRegMoneyBillAlt />}>
+                        <Link to='/admin/bill'>Hóa đơn</Link>
+                    </Menu.Item>
                     <Menu.Item key='2' icon={<LiaProductHunt />}>
                         <Link to='/admin/products'>Sản phẩm</Link>
                     </Menu.Item>
@@ -78,19 +79,19 @@ const AdminLayout = () => {
                     >
                         <Link to='/admin/voucher'>Khuyến mãi</Link>
                     </Menu.Item>
+                    {/* <Menu.Item key='10' icon={<FaRegMoneyBillAlt />}>
+                        <Link to='/admin/banner'>Banner và sự kiện</Link>
+                    </Menu.Item> */}
                     <Menu.Item key='5' icon={<RiBillLine />}>
                         <Link to='/admin/type_voucher'>Loại khuyến mãi</Link>
                     </Menu.Item>
-                    <Menu.Item key='6' icon={<FaRegMoneyBillAlt />}>
-                        <Link to='/admin/bill'>Hóa đơn</Link>
-                    </Menu.Item>
+
                     <Menu.Item key='7' icon={<AiOutlineComment />}>
                         <Link to='/admin/comment'>Đánh giá</Link>
                     </Menu.Item>
                     <Menu.Item key='8' icon={<MdOutlineSettingsPhone />}>
                         <Link to='/admin/contact'>Liên hệ</Link>
                     </Menu.Item>
-                    {/* <Menu.Item key='8' icon={<MdOutlineAccountCircle />}> */}
                     <Menu.SubMenu key='9' icon={<MdOutlineAccountCircle />} title='Tài khoản'>
                         <Menu.Item key='1'>
                             <Link to='/admin/auth'>Tài khoản khách hàng</Link>
@@ -100,12 +101,7 @@ const AdminLayout = () => {
                         </Menu.Item>
                     </Menu.SubMenu>
                     {/* </Menu.Item> */}
-                    <Menu.Item key='10' icon={<VscAccount />}>
-                        <Link to='/admin/'>Thông tin của tôi</Link>
-                    </Menu.Item>
-                    <Menu.Item key='11' icon={<FiSettings />}>
-                        <Link to='/admin/'>Cài đặt</Link>
-                    </Menu.Item>
+
                     <Menu.Item key='12' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
                         Đăng xuất
                     </Menu.Item>

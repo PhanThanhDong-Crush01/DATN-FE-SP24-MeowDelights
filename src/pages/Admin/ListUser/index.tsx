@@ -1,23 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-    DeleteOutlined,
-    EditOutlined,
-    FormOutlined,
-    HighlightOutlined,
-    PlusCircleOutlined,
-    SearchOutlined
-} from '@ant-design/icons'
-import type { GetRef, TableColumnsType, TableColumnType } from 'antd'
-import { Avatar, Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
+import { DeleteOutlined, EditOutlined, FormOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import type { GetRef, TableColumnsType, TableColumnType, TableProps } from 'antd'
+import { Avatar, Button, Input, Popconfirm, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
-import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
-import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
-import moment from 'moment'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
-import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
-import { toast } from '@/components/ui/use-toast'
 import { deleteEmployee } from '@/services/auth'
+import { formatPriceBootstrap } from '@/lib/utils'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -172,29 +161,23 @@ const ListUserPage = () => {
             title: 'Tên tài khoản',
             dataIndex: 'name',
             key: 'name',
-            width: '35%',
+            width: '30%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
                 <div>
                     <h1 style={{ fontSize: '18px' }}>{record.username}</h1>
-                    <p style={{ fontSize: '12px' }}>Mã: {record._id}</p>
+                    <p style={{ fontSize: '15px' }}>{record.email}</p>
+                    <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>Mã: {record._id}</p>
                 </div>
             ),
             fixed: 'left'
         },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-            width: '25%',
-            render: (_, record) => record.email
-            // fixed: 'left'
-        },
+
         {
             title: 'Vai trò',
             dataIndex: 'role',
             key: 'role',
-            width: '20%',
+            width: '15%',
             filters: [
                 { text: 'admin', value: 'admin' },
                 { text: 'member', value: 'member' }
@@ -226,101 +209,70 @@ const ListUserPage = () => {
                 }
             }
         },
-        {
-            title: 'Địa chỉ',
-            dataIndex: 'address',
-            key: 'address',
-            width: '20%',
-
-            render: (_, record) => record?.address
-        },
-        {
-            title: 'Tuổi',
-            dataIndex: 'age',
-            key: 'age',
-            width: '15% ',
-            render: (_, record) => record.age
-            // <option value='record.status'></option>
-        },
-        {
-            title: 'Giới tính',
-            dataIndex: 'gender',
-            key: 'gender',
-            width: '15% ',
-            render: (_, record) => {
-                switch (record?.gender) {
-                    case false:
-                        return 'Nam'
-                    case true:
-                        return 'Nữ'
-                    default:
-                        return record?.gender
-                }
-            }
-        },
 
         {
-            title: 'Hình ảnh',
-            dataIndex: 'imgUser',
-            key: 'imgUser',
-            width: '20%',
-            // ...getColumnSearchProps('expiry'),
-            // sorter: (a, b) => a.expiry.length - b.expiry.length,
-            // sortDirections: ['descend', 'ascend'],
-            render: (_, record) => <Avatar src={record.imgUser} alt='' />
-        },
-
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'phone',
-            key: 'phone',
-            width: '20%',
-            render: (_, record) => record.phone
-        },
-        {
-            title: 'Mã nhân viên',
+            title: 'Công việc',
             dataIndex: 'employee',
             key: 'employee',
             width: '20%',
-            render: (_, record) => record.employee
+            render: (_, record) => (
+                <div>
+                    <p>Mã NV: {record.employee}</p>
+                    <p>Vị trí: {record.jobPosition}</p>
+                </div>
+            )
         },
         {
-            title: 'Vị trí công việc',
-            dataIndex: 'jobPosition',
-            key: 'jobPosition',
-            width: '20%',
-            render: (_, record) => record.jobPosition
-        },
-        // {
-        //     title: 'Tích điểm',
-        //     dataIndex: ' discount_points',
-        //     key: ' discount_points',
-        //     width: '20%',
-        //     render: (_, record) => record.discount_points
-        //     // fixed: 'right'
-        // },
+            title: 'Thông tin cơ bản',
+            dataIndex: 'address',
+            key: 'address',
+            width: '45%',
+            render: (_, record) => (
+                <div>
+                    <Avatar src={record.imgUser} alt='' />
+                    <p>
+                        GT: &nbsp;
+                        <span>
+                            {record?.gender === false ? 'Nam' : record?.gender === true ? 'Nữ' : record?.gender}
+                        </span>
+                        &nbsp;
+                        <span>- {record.age} tuổi</span>
+                    </p>
 
-        // {
-        //     title: 'Tổng hóa đơn',
-        //     dataIndex: ' totalBillCount',
-        //     key: ' totalBillCount',
-        //     width: '20%',
-        //     render: (_, record) => record.totalBillCount
-        //     // fixed: 'right'
-        // },
-        // {
-        //     title: 'Tổng tiền',
-        //     dataIndex: ' totalAmount',
-        //     key: ' totalAmount',
-        //     width: '20%',
-        //     render: (_, record) => record.totalAmount
-        //     // fixed: 'right'
-        // },
+                    <p>SĐT: {record.phone}</p>
+                    <p>ĐC: {record?.address}</p>
+                </div>
+            )
+        },
+
+        {
+            title: 'Tổng số hóa đơn',
+            dataIndex: ' totalBillCount',
+            key: ' totalBillCount',
+            width: '15%',
+            render: (_, record) => <div style={{ textAlign: 'center' }}>{record.totalBillCount}</div>
+            // fixed: 'right'
+        },
+        {
+            title: 'Tổng tiền',
+            dataIndex: ' totalAmount',
+            key: ' totalAmount',
+            width: '20%',
+            render: (_, record) => (
+                <div
+                    style={{ fontWeight: 700 }}
+                    dangerouslySetInnerHTML={{
+                        __html: formatPriceBootstrap(record.totalAmount)
+                    }}
+                ></div>
+            )
+            // fixed: 'right'
+        },
         {
             title: 'Hành động',
             dataIndex: '',
             key: 'x',
-            width: '23%',
+            width: '20%',
             fixed: 'right',
             render: (_, record) => (
                 <Space size='middle'>

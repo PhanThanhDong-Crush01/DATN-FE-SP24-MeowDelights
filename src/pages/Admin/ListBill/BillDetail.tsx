@@ -384,9 +384,10 @@ const BillDetail = () => {
                             </table>
                         </div>
                     </div>
-                    <div className='font-thin text-base pt-5 mb-5'>
-                        <p className=' font-serif text-lg '>Thông tin sản phẩm</p>
-                        <table className='w-full'>
+
+                    <div className='pt-5 mb-5'>
+                        <p className=' text-lg '>Thông tin sản phẩm</p>
+                        <table className='w-full' style={{ textAlign: 'center' }}>
                             <thead>
                                 <tr className=''>
                                     <th className=''>#</th>

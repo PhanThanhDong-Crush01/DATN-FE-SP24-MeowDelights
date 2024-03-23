@@ -37,11 +37,11 @@ import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 import MyVoucher from '@/pages/Client/AuthPage/MyVoucher'
 import AddAuth from '@/pages/Admin/ListUser/AddAuth'
 import EditAuth from '@/pages/Admin/ListUser/EditAuth'
-import Cart_virtual_users from '@/pages/Client/CartPage/Cart_virtual_users'
 import { useEffect, useState } from 'react'
 import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayPal'
 import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
 import ListCommentPage from '@/pages/Admin/ListComment'
+import ListBanner from '@/pages/Admin/BannerVsSuKien'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -57,11 +57,7 @@ const Routers = () => {
                 <Route index element={<HomePage />} />
                 <Route path='products' element={<ShopPage />} />
                 <Route path='products/:id' element={<ProductDetailPage />} />
-                {userID ? (
-                    <Route path='cart' element={<CartPage />} />
-                ) : (
-                    <Route path='cart' element={<Cart_virtual_users />} />
-                )}
+                <Route path='cart' element={<CartPage />} />
 
                 <Route path='payment_information' element={<PaymentInformationPage />} />
                 <Route path='payment_method_paypalcheckout' element={<PaymentVNPayComponent />} />
@@ -84,6 +80,7 @@ const Routers = () => {
                 <Route index element={<Dashboard />} />
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
+                <Route path='banner' element={<ListBanner />} />
                 <Route path='comment' element={<ListCommentPage />} />
                 <Route path='auth' element={<ListAuthPage />} />
                 <Route path='user' element={<ListUserPage />} />

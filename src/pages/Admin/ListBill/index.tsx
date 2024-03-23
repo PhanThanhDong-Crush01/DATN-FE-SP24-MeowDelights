@@ -356,6 +356,7 @@ const ListBill = () => {
                             __html: formatPriceBootstrap(record?.decreaseVc)
                         }}
                     ></h1>
+                    <h1>{record?.nameVc}</h1>
                 </div>
             )
         },

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import ProductReviews from './ProductReviews'
 import { statisticsComment } from '@/services/comment'
+import { updateView } from '@/services/product'
 
 const ProductDetailPage = () => {
     const [data, setProductData] = useState<any>()
@@ -17,6 +18,7 @@ const ProductDetailPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                await updateView(id)
                 const { data } = await instance.get(`/products/${id}`)
                 if (data?.data) {
                     setProductData(data)
@@ -49,9 +51,6 @@ const ProductDetailPage = () => {
     const star = dataStar?.datas ? dataStar.datas : []
     console.log(star)
     const productId = data?.data?._id
-    const name = data?.data?.name
-    console.log(productId)
-    console.log(name)
 
     const uniqueColorsWithImage = data?.typeProduct.reduce((unique: any, item: any) => {
         if (!unique.some((color: any) => color.color === item.color)) {
@@ -140,52 +139,16 @@ const ProductDetailPage = () => {
                 iduser: storedUserID || '',
                 idpro: productId,
                 idprotype: TypeProductID,
-                quantity: Number(data.quantity),
-                imageTypePro: imageChinh,
-                nameTypePro: selectedColor + ' - ' + selectedSize,
-                namePro: name,
-                money: selectedPrice
+                quantity: Number(data.quantity)
             }
 
             if (storedUserID) {
                 onSubmit(cart)
             } else {
-                // Lấy danh sách sản phẩm từ localStorage
-                let cartItems = JSON.parse(localStorage.getItem('Cart_virtual_users') || '[]')
-
-                // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-                const existingCartItemIndex = cartItems.findIndex(
-                    (item: any) => item.idpro === productId && item.idprotype === TypeProductID
-                )
-
-                if (existingCartItemIndex !== -1) {
-                    // Nếu sản phẩm đã tồn tại trong giỏ hàng
-                    const updatedQuantity = Number(cartItems[existingCartItemIndex].quantity) + Number(data.quantity)
-
-                    // Kiểm tra xem số lượng mới có vượt quá số lượng tối đa cho phép hay không
-                    if (updatedQuantity <= selectedTypeProductDaChon.quantity) {
-                        // Nếu không vượt quá, cập nhật số lượng
-                        cartItems[existingCartItemIndex].quantity = updatedQuantity
-                    } else {
-                        // Nếu vượt quá, thông báo lỗi và không thực hiện thêm sản phẩm vào giỏ hàng
-                        toast({
-                            variant: 'destructive',
-                            title: 'Số lượng vượt quá giới hạn!!',
-                            description: `Vì trong giỏ hàng bạn, loại sản phẩm này đã có ${cartItems[existingCartItemIndex].quantity} số sản phẩm`
-                        })
-                        return // Return early to prevent further execution
-                    }
-                } else {
-                    // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm sản phẩm mới vào danh sách
-                    cartItems.push(cart)
-                }
-
-                // Lưu danh sách sản phẩm mới vào localStorage
-                localStorage.setItem('Cart_virtual_users', JSON.stringify(cartItems))
                 toast({
-                    variant: 'success',
-                    title: 'Thêm sản phẩm vào giỏ hàng thành công!!',
-                    description: 'Hãy kiểm tra giỏ hàng và đi đến trang thanh toán để mang đồ về cho boss nào!'
+                    variant: 'destructive',
+                    title: 'Bạn chưa đăng nhập!',
+                    description: 'Hãy đăng nhập để tếp tục mua hàng!'
                 })
             }
         }
@@ -357,6 +320,10 @@ const ProductDetailPage = () => {
                                                 <strong hidden>
                                                     Tên sản phẩm{' '}
                                                     <span {...register('namePro')}>{data?.data?.name}</span>
+                                                </strong>
+                                                <br />
+                                                <strong>
+                                                    View <span>{data?.data?.view}</span>
                                                 </strong>
                                             </p>
                                             <p>

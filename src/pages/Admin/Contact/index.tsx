@@ -210,12 +210,14 @@ const ListContact = () => {
     }
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        console.log('🚀 ~ onSelectChange ~ newSelectedRowKeys:', newSelectedRowKeys)
         // Kiểm tra nếu có bất kỳ dòng nào trong newSelectedRowKeys
         // mà có idOrder không rỗng, thì không cập nhật selectedRowKeys
         const hasIdOrder = newSelectedRowKeys.some((key) => {
             const record = dataContact.find((item: any) => item.key === key)
             return record && record.idOrder
         })
+        console.log('🚀 ~ hasIdOrder ~ hasIdOrder:', hasIdOrder)
 
         if (!hasIdOrder) {
             setSelectedRowKeys(newSelectedRowKeys)

@@ -241,6 +241,7 @@ const EditVoucher = () => {
                                         <p>Loại mã</p>
                                         <select
                                             className='border-spacing-1 border-gray-200 rounded-md pl-3 mb-1'
+                                            style={{ width: '100%' }}
                                             id='typeVoucher'
                                             {...register('idTypeVoucher', { required: true })}
                                             // onChange={(e) => setValue('idTypeVoucher', e.target.value)}
@@ -249,7 +250,6 @@ const EditVoucher = () => {
                                                 setValue('idTypeVoucher', e.target.options[selectedIndex].value),
                                                     setSelectTypeVc(e.target.options[selectedIndex].value)
                                             }}
-                                            style={{ width: '100%' }}
                                         >
                                             <option value=''>Chọn loại voucher</option>
                                             {typeVoucher &&

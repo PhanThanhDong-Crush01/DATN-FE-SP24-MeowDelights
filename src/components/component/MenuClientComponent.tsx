@@ -4,12 +4,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from '../ui/use-toast'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { useEffect, useState } from 'react'
-import instance from '@/services/core/api'
-import { Menu, MenuProps } from 'antd'
+import { MenuProps } from 'antd'
 import '@/styles/MenuClient.css'
-import { AiOutlineAim, AiOutlineAntDesign, AiOutlineUser } from 'react-icons/ai'
-import { MessageOutlined, SettingOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { UnorderedListOutlined } from '@ant-design/icons'
 import MenuItem from 'antd/es/menu/MenuItem'
+import instance from '@/services/core/api'
 type MenuItem = Required<MenuProps>['items'][number]
 
 function getItem(
@@ -50,14 +49,16 @@ const MenuClientComponent = () => {
         }
     }, [])
 
-    const { dataCart } = useCartQuery()
-
     const [dataCarts, setDataCart] = useState<any>()
     useEffect(() => {
-        if (userID) {
-            setDataCart(dataCart)
+        const fetch = async () => {
+            if (userID) {
+                const response = await instance.get('/cart/user/' + userID)
+                setDataCart(response?.data)
+            }
         }
-    }, [dataCarts])
+        fetch()
+    }, [userID])
 
     const { onRemove } = useCartMutation({
         action: 'DELETE',
@@ -343,7 +344,6 @@ const MenuClientComponent = () => {
                                         </a>
                                     </li>
                                     <li className='aside-toggle aside-trigger'>
-                                        {/* <Menu style={{ fontSize: '20px' }} items={items} onClick={onClick} /> */}
                                         <svg
                                             xmlns='http://www.w3.org/2000/svg'
                                             width='30'
@@ -374,7 +374,7 @@ const MenuClientComponent = () => {
                                                 </div>
                                             </ul>
                                             <ul>
-                                                <Link to={'/'}>Gioi thiệu</Link>
+                                                <Link to={'/'}>Giới thiệu</Link>
                                             </ul>
                                             <ul>
                                                 <Link to={'/contact'}>Liên hệ </Link>

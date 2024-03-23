@@ -37,7 +37,6 @@ import OrderDetailPage from '@/pages/Client/AuthPage/OrderDetail'
 import MyVoucher from '@/pages/Client/AuthPage/MyVoucher'
 import AddAuth from '@/pages/Admin/ListUser/AddAuth'
 import EditAuth from '@/pages/Admin/ListUser/EditAuth'
-import Cart_virtual_users from '@/pages/Client/CartPage/Cart_virtual_users'
 import { useEffect, useState } from 'react'
 import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayPal'
 import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
@@ -57,11 +56,7 @@ const Routers = () => {
                 <Route index element={<HomePage />} />
                 <Route path='products' element={<ShopPage />} />
                 <Route path='products/:id' element={<ProductDetailPage />} />
-                {userID ? (
-                    <Route path='cart' element={<CartPage />} />
-                ) : (
-                    <Route path='cart' element={<Cart_virtual_users />} />
-                )}
+                <Route path='cart' element={<CartPage />} />
 
                 <Route path='payment_information' element={<PaymentInformationPage />} />
                 <Route path='payment_method_paypalcheckout' element={<PaymentVNPayComponent />} />

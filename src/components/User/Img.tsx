@@ -50,9 +50,10 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
 
     return (
         <>
-            <div className='mt-6 border bg-slate-100 rounded-md p-3 '>
-                <div className='font-medium flex items-center justify-between '>
-                    Avatar
+            <div className='mt-6 border bg-slate-100 rounded-md p-3'>
+                <div className='font-medium flex items-center justify-between'>
+                    {!editAuth && <img className='text-sm mt-2 rounded' src={data?.datas?.imgUser} width={100} />}
+
                     <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
                         {editAuth ? (
                             <>Hủy</>

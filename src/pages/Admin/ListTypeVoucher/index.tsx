@@ -14,8 +14,7 @@ interface DataType {
     name: string
 }
 const ListTypeVoucher = () => {
-    const { data }: any = useTypeVoucherQuery()
-    console.log('🚀 ~ ListTypeVoucher ~ data:', data)
+    const { dataTVC }: any = useTypeVoucherQuery()
     const { onRemove } = useTypeVoucherMutation({
         action: 'DELETE'
     })
@@ -23,7 +22,7 @@ const ListTypeVoucher = () => {
         action: 'UPDATE'
     })
 
-    const dataWithKeys = data?.datas.map((item: any, index: any) => ({
+    const dataWithKeys = dataTVC?.datas.map((item: any, index: any) => ({
         ...item,
         key: index + 1
     }))

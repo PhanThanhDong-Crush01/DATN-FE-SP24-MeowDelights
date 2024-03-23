@@ -9,6 +9,7 @@ const HeaderAdminComponents = ({ darkMode, toggleDarkMode }: any) => {
         <header className='hd__admin shadow-xl'>
             <div className='hd__search'>
                 <form className='form__search'>
+                    {' '}
                     <button className='form__search_button' type='submit'>
                         <FaSearch />
                     </button>

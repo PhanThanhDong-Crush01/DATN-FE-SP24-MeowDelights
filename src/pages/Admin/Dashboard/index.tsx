@@ -1,610 +1,251 @@
-import React from 'react'
+import { formatPriceBootstrap } from '@/lib/utils'
+import instance from '@/services/core/api'
+import { thong_ke_doanh_thu, thong_ke_doanh_thu_thang_trong_nam, thong_ke_top_10_product } from '@/services/thongke'
+import { Button, Input } from 'antd'
+import { useEffect, useState } from 'react'
+import Chart from 'react-google-charts'
 
-type Props = {}
+const Dashboard = () => {
+    const [thongke, setThongKe] = useState<any>()
+    const [startDate, setSartDate] = useState<any>(null)
+    const [endDate, setEndDate] = useState<any>(null)
+    const [year, setYear] = useState<any>(2024)
+    const setLaiNam = (year: any) => {
+        setEndDate(null)
+        setSartDate(null)
+        setYear(2024)
+    }
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                let thongkedata: any
+                if (startDate != null && endDate != null) {
+                    const resthongKeNgay = await thong_ke_doanh_thu(startDate, endDate)
+                    thongkedata = resthongKeNgay
+                } else {
+                    const response = await thong_ke_doanh_thu_thang_trong_nam(year) // Chắc chắn rằng hàm thong_ke_doanh_thu_thang_trong_nam đã được định nghĩa trước đó
+                    thongkedata = response
+                }
+                const data = [['Tháng', 'Tổng', 'Phụ kiện - đồ chơi', 'Đồ ăn - đồ uống']]
+                for (const key in thongkedata?.revenueData) {
+                    let dayMonth = key.split('-').slice(1).join('-') // Lấy phần tháng và ngày (VD: từ "2024-03-10" lấy "03-10")
 
-const Dashboard = (props: Props) => {
+                    const monthData = thongkedata?.revenueData[key]
+                    const totalRevenue = monthData.totalRevenue || 0
+                    let accessoryRevenue = 0
+                    let foodRevenue = 0
+
+                    // Tính tổng doanh thu từ các danh mục
+                    for (const categoryId in monthData.categories) {
+                        const category = monthData.categories[categoryId]
+                        if (category.name === 'Phụ kiện - đồ chơi') {
+                            accessoryRevenue += category.totalRevenue
+                        } else if (category.name === 'Đồ ăn - đồ uống') {
+                            foodRevenue += category.totalRevenue
+                        }
+                    }
+
+                    data.push([dayMonth, totalRevenue, accessoryRevenue, foodRevenue])
+                }
+
+                setThongKe(data)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetch()
+    }, [startDate, endDate, year])
+
+    const [top10Product, setTop10] = useState<any>()
+    useEffect(() => {
+        const fetch = async () => {
+            const res = await thong_ke_top_10_product()
+            setTop10(res.data)
+        }
+        fetch()
+    }, [])
+
     return (
-        <h1>Dashboard</h1>
-        // <div id='layoutSidenav_content'>
-        //     <main>
-        //         <div className='container-fluid px-4'>
-        //             <h1 className='mt-4'>Thống kê</h1>
-        //             <ol className='breadcrumb mb-4'>
-        //                 <li className='breadcrumb-item active'>Thống kê chi tiết</li>
-        //             </ol>
-        //             <div className='row'>
-        //                 <div className='col-xl-3 col-md-6'>
-        //                     <div className='card bg-primary text-white mb-4'>
-        //                         <div className='card-body'>Primary Card</div>
-        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
-        //                             <a className='small text-white stretched-link' href='#'>
-        //                                 View Details
-        //                             </a>
-        //                             <div className='small text-white'>
-        //                                 <i className='fas fa-angle-right'></i>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div className='col-xl-3 col-md-6'>
-        //                     <div className='card bg-warning text-white mb-4'>
-        //                         <div className='card-body'>Warning Card</div>
-        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
-        //                             <a className='small text-white stretched-link' href='#'>
-        //                                 View Details
-        //                             </a>
-        //                             <div className='small text-white'>
-        //                                 <i className='fas fa-angle-right'></i>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div className='col-xl-3 col-md-6'>
-        //                     <div className='card bg-success text-white mb-4'>
-        //                         <div className='card-body'>Success Card</div>
-        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
-        //                             <a className='small text-white stretched-link' href='#'>
-        //                                 View Details
-        //                             </a>
-        //                             <div className='small text-white'>
-        //                                 <i className='fas fa-angle-right'></i>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div className='col-xl-3 col-md-6'>
-        //                     <div className='card bg-danger text-white mb-4'>
-        //                         <div className='card-body'>Danger Card</div>
-        //                         <div className='card-footer d-flex align-items-center justify-content-between'>
-        //                             <a className='small text-white stretched-link' href='#'>
-        //                                 View Details
-        //                             </a>
-        //                             <div className='small text-white'>
-        //                                 <i className='fas fa-angle-right'></i>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //             <div className='row'>
-        //                 <div className='col-xl-6'>
-        //                     <div className='card mb-4'>
-        //                         <div className='card-header'>
-        //                             <i className='fas fa-chart-area me-1'></i>
-        //                             Area Chart Example
-        //                         </div>
-        //                         <div className='card-body'>
-        //                             <img
-        //                                 src='https://res.cloudinary.com/dyq6gbngv/image/upload/v1709884510/z5229518643885_a71fff591c2b97cd949f3ec33dccea8d_zgazab.jpg'
-        //                                 alt=''
-        //                                 width='100%'
-        //                                 height='40'
-        //                             />
-        //                             {/* <canvas id='myAreaChart' width='100%' height='40'></canvas> */}
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div className='col-xl-6'>
-        //                     <div className='card mb-4'>
-        //                         <div className='card-header'>
-        //                             <i className='fas fa-chart-bar me-1'></i>
-        //                             Bar Chart Example
-        //                         </div>
-        //                         <div className='card-body'>
-        //                             <img
-        //                                 src='https://res.cloudinary.com/dyq6gbngv/image/upload/v1709884512/z5229518135930_355e63aee40a647a05094d68e70b0ff7_adiqhs.jpg'
-        //                                 alt=''
-        //                                 width='100%'
-        //                                 height='40'
-        //                             />
-        //                             {/* <canvas id='myBarChart' width='100%' height='40'></canvas> */}
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //             <div className='card mb-4'>
-        //                 <div className='card-header'>
-        //                     <i className='fas fa-table me-1'></i>
-        //                     DataTable Example
-        //                 </div>
-        //                 <div className='card-body'>
-        //                     <table id='datatablesSimple'>
-        //                         <thead>
-        //                             <tr>
-        //                                 <th>Name</th>
-        //                                 <th>Position</th>
-        //                                 <th>Office</th>
-        //                                 <th>Age</th>
-        //                                 <th>Start date</th>
-        //                                 <th>Salary</th>
-        //                             </tr>
-        //                         </thead>
-        //                         <tfoot>
-        //                             <tr>
-        //                                 <th>Name</th>
-        //                                 <th>Position</th>
-        //                                 <th>Office</th>
-        //                                 <th>Age</th>
-        //                                 <th>Start date</th>
-        //                                 <th>Salary</th>
-        //                             </tr>
-        //                         </tfoot>
-        //                         <tbody>
-        //                             <tr>
-        //                                 <td>Tiger Nixon</td>
-        //                                 <td>System Architect</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>61</td>
-        //                                 <td>2011/04/25</td>
-        //                                 <td>$320,800</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Garrett Winters</td>
-        //                                 <td>Accountant</td>
-        //                                 <td>Tokyo</td>
-        //                                 <td>63</td>
-        //                                 <td>2011/07/25</td>
-        //                                 <td>$170,750</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Ashton Cox</td>
-        //                                 <td>Junior Technical Author</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>66</td>
-        //                                 <td>2009/01/12</td>
-        //                                 <td>$86,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Cedric Kelly</td>
-        //                                 <td>Senior Javascript Developer</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>22</td>
-        //                                 <td>2012/03/29</td>
-        //                                 <td>$433,060</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Airi Satou</td>
-        //                                 <td>Accountant</td>
-        //                                 <td>Tokyo</td>
-        //                                 <td>33</td>
-        //                                 <td>2008/11/28</td>
-        //                                 <td>$162,700</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Brielle Williamson</td>
-        //                                 <td>Integration Specialist</td>
-        //                                 <td>New York</td>
-        //                                 <td>61</td>
-        //                                 <td>2012/12/02</td>
-        //                                 <td>$372,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Herrod Chandler</td>
-        //                                 <td>Sales Assistant</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>59</td>
-        //                                 <td>2012/08/06</td>
-        //                                 <td>$137,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Rhona Davidson</td>
-        //                                 <td>Integration Specialist</td>
-        //                                 <td>Tokyo</td>
-        //                                 <td>55</td>
-        //                                 <td>2010/10/14</td>
-        //                                 <td>$327,900</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Colleen Hurst</td>
-        //                                 <td>Javascript Developer</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>39</td>
-        //                                 <td>2009/09/15</td>
-        //                                 <td>$205,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Sonya Frost</td>
-        //                                 <td>Software Engineer</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>23</td>
-        //                                 <td>2008/12/13</td>
-        //                                 <td>$103,600</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Jena Gaines</td>
-        //                                 <td>Office Manager</td>
-        //                                 <td>London</td>
-        //                                 <td>30</td>
-        //                                 <td>2008/12/19</td>
-        //                                 <td>$90,560</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Quinn Flynn</td>
-        //                                 <td>Support Lead</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>22</td>
-        //                                 <td>2013/03/03</td>
-        //                                 <td>$342,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Charde Marshall</td>
-        //                                 <td>Regional Director</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>36</td>
-        //                                 <td>2008/10/16</td>
-        //                                 <td>$470,600</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Haley Kennedy</td>
-        //                                 <td>Senior Marketing Designer</td>
-        //                                 <td>London</td>
-        //                                 <td>43</td>
-        //                                 <td>2012/12/18</td>
-        //                                 <td>$313,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Tatyana Fitzpatrick</td>
-        //                                 <td>Regional Director</td>
-        //                                 <td>London</td>
-        //                                 <td>19</td>
-        //                                 <td>2010/03/17</td>
-        //                                 <td>$385,750</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Michael Silva</td>
-        //                                 <td>Marketing Designer</td>
-        //                                 <td>London</td>
-        //                                 <td>66</td>
-        //                                 <td>2012/11/27</td>
-        //                                 <td>$198,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Paul Byrd</td>
-        //                                 <td>Chief Financial Officer (CFO)</td>
-        //                                 <td>New York</td>
-        //                                 <td>64</td>
-        //                                 <td>2010/06/09</td>
-        //                                 <td>$725,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Gloria Little</td>
-        //                                 <td>Systems Administrator</td>
-        //                                 <td>New York</td>
-        //                                 <td>59</td>
-        //                                 <td>2009/04/10</td>
-        //                                 <td>$237,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Bradley Greer</td>
-        //                                 <td>Software Engineer</td>
-        //                                 <td>London</td>
-        //                                 <td>41</td>
-        //                                 <td>2012/10/13</td>
-        //                                 <td>$132,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Dai Rios</td>
-        //                                 <td>Personnel Lead</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>35</td>
-        //                                 <td>2012/09/26</td>
-        //                                 <td>$217,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Jenette Caldwell</td>
-        //                                 <td>Development Lead</td>
-        //                                 <td>New York</td>
-        //                                 <td>30</td>
-        //                                 <td>2011/09/03</td>
-        //                                 <td>$345,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Yuri Berry</td>
-        //                                 <td>Chief Marketing Officer (CMO)</td>
-        //                                 <td>New York</td>
-        //                                 <td>40</td>
-        //                                 <td>2009/06/25</td>
-        //                                 <td>$675,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Caesar Vance</td>
-        //                                 <td>Pre-Sales Support</td>
-        //                                 <td>New York</td>
-        //                                 <td>21</td>
-        //                                 <td>2011/12/12</td>
-        //                                 <td>$106,450</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Doris Wilder</td>
-        //                                 <td>Sales Assistant</td>
-        //                                 <td>Sidney</td>
-        //                                 <td>23</td>
-        //                                 <td>2010/09/20</td>
-        //                                 <td>$85,600</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Angelica Ramos</td>
-        //                                 <td>Chief Executive Officer (CEO)</td>
-        //                                 <td>London</td>
-        //                                 <td>47</td>
-        //                                 <td>2009/10/09</td>
-        //                                 <td>$1,200,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Gavin Joyce</td>
-        //                                 <td>Developer</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>42</td>
-        //                                 <td>2010/12/22</td>
-        //                                 <td>$92,575</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Jennifer Chang</td>
-        //                                 <td>Regional Director</td>
-        //                                 <td>Singapore</td>
-        //                                 <td>28</td>
-        //                                 <td>2010/11/14</td>
-        //                                 <td>$357,650</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Brenden Wagner</td>
-        //                                 <td>Software Engineer</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>28</td>
-        //                                 <td>2011/06/07</td>
-        //                                 <td>$206,850</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Fiona Green</td>
-        //                                 <td>Chief Operating Officer (COO)</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>48</td>
-        //                                 <td>2010/03/11</td>
-        //                                 <td>$850,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Shou Itou</td>
-        //                                 <td>Regional Marketing</td>
-        //                                 <td>Tokyo</td>
-        //                                 <td>20</td>
-        //                                 <td>2011/08/14</td>
-        //                                 <td>$163,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Michelle House</td>
-        //                                 <td>Integration Specialist</td>
-        //                                 <td>Sidney</td>
-        //                                 <td>37</td>
-        //                                 <td>2011/06/02</td>
-        //                                 <td>$95,400</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Suki Burks</td>
-        //                                 <td>Developer</td>
-        //                                 <td>London</td>
-        //                                 <td>53</td>
-        //                                 <td>2009/10/22</td>
-        //                                 <td>$114,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Prescott Bartlett</td>
-        //                                 <td>Technical Author</td>
-        //                                 <td>London</td>
-        //                                 <td>27</td>
-        //                                 <td>2011/05/07</td>
-        //                                 <td>$145,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Gavin Cortez</td>
-        //                                 <td>Team Leader</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>22</td>
-        //                                 <td>2008/10/26</td>
-        //                                 <td>$235,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Martena Mccray</td>
-        //                                 <td>Post-Sales support</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>46</td>
-        //                                 <td>2011/03/09</td>
-        //                                 <td>$324,050</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Unity Butler</td>
-        //                                 <td>Marketing Designer</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>47</td>
-        //                                 <td>2009/12/09</td>
-        //                                 <td>$85,675</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Howard Hatfield</td>
-        //                                 <td>Office Manager</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>51</td>
-        //                                 <td>2008/12/16</td>
-        //                                 <td>$164,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Hope Fuentes</td>
-        //                                 <td>Secretary</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>41</td>
-        //                                 <td>2010/02/12</td>
-        //                                 <td>$109,850</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Vivian Harrell</td>
-        //                                 <td>Financial Controller</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>62</td>
-        //                                 <td>2009/02/14</td>
-        //                                 <td>$452,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Timothy Mooney</td>
-        //                                 <td>Office Manager</td>
-        //                                 <td>London</td>
-        //                                 <td>37</td>
-        //                                 <td>2008/12/11</td>
-        //                                 <td>$136,200</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Jackson Bradshaw</td>
-        //                                 <td>Director</td>
-        //                                 <td>New York</td>
-        //                                 <td>65</td>
-        //                                 <td>2008/09/26</td>
-        //                                 <td>$645,750</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Olivia Liang</td>
-        //                                 <td>Support Engineer</td>
-        //                                 <td>Singapore</td>
-        //                                 <td>64</td>
-        //                                 <td>2011/02/03</td>
-        //                                 <td>$234,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Bruno Nash</td>
-        //                                 <td>Software Engineer</td>
-        //                                 <td>London</td>
-        //                                 <td>38</td>
-        //                                 <td>2011/05/03</td>
-        //                                 <td>$163,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Sakura Yamamoto</td>
-        //                                 <td>Support Engineer</td>
-        //                                 <td>Tokyo</td>
-        //                                 <td>37</td>
-        //                                 <td>2009/08/19</td>
-        //                                 <td>$139,575</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Thor Walton</td>
-        //                                 <td>Developer</td>
-        //                                 <td>New York</td>
-        //                                 <td>61</td>
-        //                                 <td>2013/08/11</td>
-        //                                 <td>$98,540</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Finn Camacho</td>
-        //                                 <td>Support Engineer</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>47</td>
-        //                                 <td>2009/07/07</td>
-        //                                 <td>$87,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Serge Baldwin</td>
-        //                                 <td>Data Coordinator</td>
-        //                                 <td>Singapore</td>
-        //                                 <td>64</td>
-        //                                 <td>2012/04/09</td>
-        //                                 <td>$138,575</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Zenaida Frank</td>
-        //                                 <td>Software Engineer</td>
-        //                                 <td>New York</td>
-        //                                 <td>63</td>
-        //                                 <td>2010/01/04</td>
-        //                                 <td>$125,250</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Zorita Serrano</td>
-        //                                 <td>Software Engineer</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>56</td>
-        //                                 <td>2012/06/01</td>
-        //                                 <td>$115,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Jennifer Acosta</td>
-        //                                 <td>Junior Javascript Developer</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>43</td>
-        //                                 <td>2013/02/01</td>
-        //                                 <td>$75,650</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Cara Stevens</td>
-        //                                 <td>Sales Assistant</td>
-        //                                 <td>New York</td>
-        //                                 <td>46</td>
-        //                                 <td>2011/12/06</td>
-        //                                 <td>$145,600</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Hermione Butler</td>
-        //                                 <td>Regional Director</td>
-        //                                 <td>London</td>
-        //                                 <td>47</td>
-        //                                 <td>2011/03/21</td>
-        //                                 <td>$356,250</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Lael Greer</td>
-        //                                 <td>Systems Administrator</td>
-        //                                 <td>London</td>
-        //                                 <td>21</td>
-        //                                 <td>2009/02/27</td>
-        //                                 <td>$103,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Jonas Alexander</td>
-        //                                 <td>Developer</td>
-        //                                 <td>San Francisco</td>
-        //                                 <td>30</td>
-        //                                 <td>2010/07/14</td>
-        //                                 <td>$86,500</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Shad Decker</td>
-        //                                 <td>Regional Director</td>
-        //                                 <td>Edinburgh</td>
-        //                                 <td>51</td>
-        //                                 <td>2008/11/13</td>
-        //                                 <td>$183,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Michael Bruce</td>
-        //                                 <td>Javascript Developer</td>
-        //                                 <td>Singapore</td>
-        //                                 <td>29</td>
-        //                                 <td>2011/06/27</td>
-        //                                 <td>$183,000</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <td>Donna Snider</td>
-        //                                 <td>Customer Support</td>
-        //                                 <td>New York</td>
-        //                                 <td>27</td>
-        //                                 <td>2011/01/25</td>
-        //                                 <td>$112,000</td>
-        //                             </tr>
-        //                         </tbody>
-        //                     </table>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </main>
-        //     <footer className='py-4 bg-light mt-auto'>
-        //         <div className='container-fluid px-4'>
-        //             <div className='d-flex align-items-center justify-content-between small'>
-        //                 <div className='text-muted'>Copyright &copy; Your Website 2023</div>
-        //                 <div>
-        //                     <a href='#'>Privacy Policy</a>
-        //                     &middot;
-        //                     <a href='#'>Terms &amp; Conditions</a>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </footer>
-        // </div>
+        <div className='main-panel'>
+            <div className='content-wrapper'>
+                <div className='row'>
+                    <div className='col-md-12 grid-margin'>
+                        <div className='row'>
+                            <div className='col-12 col-xl-8 mb-4 mb-xl-0'>
+                                <h3 className='font-weight-bold' style={{ fontSize: '25px' }}>
+                                    Thống kê:
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style={{ width: '40%', marginTop: '10px' }}>
+                        <h2 style={{ fontSize: '20px' }}>Lọc thống kê theo ngày:</h2>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <p>Từ</p>
+                            <Input
+                                type='date'
+                                onChange={(e) => setSartDate(e.target.value)}
+                                name='startDate'
+                                style={{ width: '150px' }}
+                            />
+                            <p>Đến</p>
+                            <Input
+                                type='date'
+                                onChange={(e) => setEndDate(e.target.value)}
+                                name='endDate'
+                                style={{ width: '150px' }}
+                            />
+                            <p>Hoặc</p>
+                            <Button onClick={() => setLaiNam(2024)}>Năm 2024</Button>
+                        </div>
+                    </div>
+                    <Chart
+                        width={'auto'}
+                        height={'500px'}
+                        chartType='ColumnChart'
+                        loader={<div>Loading Chart...</div>}
+                        data={thongke}
+                        options={{
+                            title: 'Company Performance',
+                            chartArea: { width: '100px' },
+                            hAxis: {
+                                title: 'Năm',
+                                minValue: 0
+                            },
+                            vAxis: {
+                                title: 'Tiền'
+                            }
+                        }}
+                        legendToggle
+                    />
+                </div>
+                <div className='row'>
+                    <div className='col-md-5 grid-margin stretch-card'>
+                        <div className='card position-relative'>
+                            <div className='card-body'>
+                                <div
+                                    id='detailedReports'
+                                    className='carousel slide detailed-report-carousel position-static pt-2'
+                                    data-ride='carousel'
+                                >
+                                    <div className='carousel-inner'>
+                                        <div className='carousel-item active'>
+                                            <div className='row'>
+                                                <div className='col-md-12 col-xl-6 d-flex flex-column justify-content-start'>
+                                                    <div className='ml-xl-4 mt-3'>
+                                                        <p className='card-title'>Detailed Reports</p>
+                                                        <h1 className='text-primary'>$34040</h1>
+                                                        <h3 className='font-weight-500 mb-xl-4 text-primary'>
+                                                            North America
+                                                        </h3>
+                                                        <p className='mb-2 mb-xl-0'>
+                                                            The total number of sessions within the date range. It is
+                                                            the period time a user is actively engaged with your
+                                                            website, page or app, etc
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className='col-md-5 col-xl-9'>
+                                                    <Chart
+                                                        width={'500px'}
+                                                        height={'300px'}
+                                                        chartType='PieChart'
+                                                        loader={<div>Loading Chart...</div>}
+                                                        data={[
+                                                            ['Task', 'Hours per Day'],
+                                                            ['Work', 11],
+                                                            ['Eat', 2],
+                                                            ['Commute', 2],
+                                                            ['Watch TV', 2],
+                                                            ['Sleep', 7]
+                                                        ]}
+                                                        options={{
+                                                            title: 'My Daily Activities',
+                                                            pieHole: 0.4
+                                                        }}
+                                                        rootProps={{ 'data-testid': '1' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a
+                                        className='carousel-control-prev'
+                                        href='#detailedReports'
+                                        role='button'
+                                        data-slide='prev'
+                                    >
+                                        <span className='carousel-control-prev-icon' aria-hidden='true'></span>
+                                        <span className='sr-only'>Previous</span>
+                                    </a>
+                                    <a
+                                        className='carousel-control-next'
+                                        href='#detailedReports'
+                                        role='button'
+                                        data-slide='next'
+                                    >
+                                        <span className='carousel-control-next-icon' aria-hidden='true'></span>
+                                        <span className='sr-only'>Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-md-7 grid-margin stretch-card'>
+                        <div className='card'>
+                            <div className='card-body'>
+                                <p className='card-title mb-0'>Top Sản Phẩm</p>
+                                <div className='table-responsive'>
+                                    <table className='table table-striped table-borderless text-left'>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Sản phẩm</th>
+                                                <th>Bán được</th>
+                                                <th>Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {top10Product &&
+                                                top10Product.map((item: any, index: number) => (
+                                                    <tr key={item?._id}>
+                                                        <td>{index + 1}</td>
+                                                        <td>{item?.name}</td>
+                                                        <td
+                                                            className='font-weight-bold'
+                                                            style={{ fontWeight: 700 }}
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: formatPriceBootstrap(item?.totalRevenue)
+                                                            }}
+                                                        ></td>
+                                                        <td className='font-weight-medium'>
+                                                            {item?.status ? (
+                                                                <div className='badge badge-success'>Còn hàng</div>
+                                                            ) : (
+                                                                <div className='badge badge-danger'>Hết hàng</div>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
 

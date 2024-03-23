@@ -22,16 +22,13 @@ interface DataType {
     decreaseVc: number
     date: any
     money: number
-    totalQuantity: number
     paymentmethods: string
     paymentstatus: string
     orderstatus: string
-    user: {
-        name: any
-        email: any
-    }
-    time: any
-    dateTime: any
+    createdAt: any
+    updatedAt: any
+    totalQuantity: number
+    billDetails: any[]
 }
 type DataIndex = keyof DataType
 
@@ -356,6 +353,7 @@ const ListBill = () => {
                             __html: formatPriceBootstrap(record?.decreaseVc)
                         }}
                     ></h1>
+                    <h1>{record?.nameVc}</h1>
                 </div>
             )
         },

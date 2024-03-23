@@ -45,6 +45,24 @@ export const update = async (voucher: IVoucher) => {
         console.log(`['UPDATE_VOUCHER_ERROR']`, error)
     }
 }
+export const phanPhatVouher = async (idVouchers: any) => {
+    try {
+        const response = await instance.post(`/voucher/phanPhatVouher`, idVouchers)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: response?.data?.message
+            })
+        }
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['phanPhatVouher']`, error)
+    }
+}
 export const add = async (voucher: IVoucher) => {
     try {
         const response = await instance.post('/voucher', voucher)

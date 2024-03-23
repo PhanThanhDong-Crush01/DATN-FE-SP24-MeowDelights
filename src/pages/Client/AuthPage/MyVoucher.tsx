@@ -20,10 +20,10 @@ const MyVoucher = (_props: Props) => {
         const fetchData = async () => {
             try {
                 const response = await instance.get('/my_voucher/user/' + userID)
-                const dataPro = response.data?.datas || []
+                const dataPro = response?.data?.datas || []
 
                 // Sort products by createdAt (newest to oldest)
-                dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                dataPro.sort((a: any, b: any) => new Date(b?.createdAt).getTime() - new Date(a?.createdAt).getTime())
 
                 const formattedData = dataPro.map((item: any, index: any) => ({
                     ...item,
@@ -32,9 +32,9 @@ const MyVoucher = (_props: Props) => {
 
                 setdataMyVoucher(
                     formattedData.sort((a: any, b: any) => {
-                        if (a.voucher.status === true && b.voucher.status === false) {
+                        if (a?.voucher?.status === true && b?.voucher?.status === false) {
                             return -1 // a trước b
-                        } else if (a.voucher.status === false && b.voucher.status === true) {
+                        } else if (a?.voucher?.status === false && b?.voucher?.status === true) {
                             return 1 // b trước a
                         } else {
                             return 0 // Giữ nguyên vị trí

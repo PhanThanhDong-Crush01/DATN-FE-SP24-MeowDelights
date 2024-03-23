@@ -1,6 +1,5 @@
 import { toast } from '@/components/ui/use-toast'
 import instance from './core/api'
-import { message } from 'antd'
 
 export const getAll = async () => {
     try {

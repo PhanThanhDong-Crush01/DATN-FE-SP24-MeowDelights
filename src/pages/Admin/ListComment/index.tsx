@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { SearchOutlined, StarFilled, StarOutlined, StarTwoTone } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType, TableProps } from 'antd'
-import { Avatar, Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
+import { Avatar, Button, Image, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 
 import { deleteEmployee, getOneUser } from '@/services/auth'
@@ -14,6 +14,7 @@ import { string } from 'joi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStarHalf } from '@fortawesome/free-solid-svg-icons'
 import { Highlighter } from 'lucide-react'
+import { Link } from 'react-router-dom'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -45,7 +46,6 @@ const ListCommentPage = () => {
         ...item,
         key: index + 1
     }))
-    console.log(dataWithKeys)
     const [filteredInfo, setFilteredInfo] = useState<Filters>({})
     const [sortedInfo, setSortedInfo] = useState<Sorts>()
 
@@ -159,55 +159,50 @@ const ListCommentPage = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
-            width: '2%',
-            fixed: 'left'
+            width: '5%'
         },
         {
             title: 'Sản phẩm',
             dataIndex: 'productId',
             key: 'productId',
-            width: '35%',
+            width: '40%',
             ...getColumnSearchProps('productId'),
             render: (_, record) => {
                 return (
                     <div>
-                        {/* <h1 style={{ fontSize: '18px' }}>{record?.productId}</h1> */}
-                        <h1 style={{ fontSize: '16px' }}>{record?.productInfo?.name}</h1>
-                        <img src={record?.productInfo?.image} alt='' />
-                        <p style={{ fontSize: '12px' }}>Mã: {record?.productInfo?._id}</p>
-                        {/* Hiển thị thông tin sản phẩm nếu có */}
+                        <div>
+                            <Image src={record?.productInfo?.image} width={70} />
+                            <Link to={'/products/' + record?.productInfo?._id}>
+                                <h1 style={{ fontSize: '16px' }}>{record?.productInfo?.name}</h1>
+                            </Link>
+                        </div>
+                        <div>
+                            <div>
+                                {record?.productTypeInfo?.color} - {record?.productTypeInfo?.size}-
+                                {record?.productTypeInfo?.weight}
+                            </div>
+                            <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>
+                                Mã: {record?.productInfo?._id}
+                            </p>
+                        </div>
                     </div>
                 )
             },
             fixed: 'left'
         },
-        {
-            title: 'Loại sản phẩm',
-            dataIndex: 'productTypeId',
-            key: 'productTypeId',
-            width: '15%',
-            render: (_, record) => {
-                return (
-                    <div>
-                        {record?.productTypeInfo?.color} - {record?.productTypeInfo?.size}-
-                        {record?.productTypeInfo?.weight}
-                    </div>
-                )
-            }
-            // fixed: 'left'
-        },
+
         {
             title: 'Khách hàng',
             dataIndex: 'userId',
             key: 'userId',
-            width: '40%',
+            width: '30%',
             ...getColumnSearchProps('userId'),
             render: (_, record) => {
                 return (
                     <div>
                         <h1 style={{ fontSize: '16px', color: '' }}>Tên: {record?.userInfo?.name}</h1>
                         <h2 style={{ fontSize: '16px' }}>Email: {record?.userInfo?.email}</h2>
-                        <p style={{ fontSize: '12px', color: '' }}>Mã: {record?.userId}</p>
+                        <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>Mã: {record?.userId}</p>
                     </div>
                 )
             }
@@ -218,7 +213,7 @@ const ListCommentPage = () => {
             dataIndex: 'img',
             key: 'img',
             width: '20%',
-            render: (_, record) => <img src={record?.img} alt='' />
+            render: (_, record) => <Image src={record?.img} alt='' />
         },
 
         {

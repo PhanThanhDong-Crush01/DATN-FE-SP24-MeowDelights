@@ -42,6 +42,7 @@ import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayP
 import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
 import ListCommentPage from '@/pages/Admin/ListComment'
 import ListBanner from '@/pages/Admin/BannerVsSuKien'
+import EditProduct from '@/pages/Admin/Products/Edit/EditProduct'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -88,7 +89,7 @@ const Routers = () => {
                 <Route path='user/editAuth/:id' element={<EditAuth />} />
                 <Route path='user/edit/:id' element={<EditUser />} />
                 {/* <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} /> */}
-                {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
+                <Route path='products/:id/edit' element={<EditProduct />} />
                 <Route path='products/add' element={<AddProduct />} />
                 <Route path='categories' element={<ListCategory />} />
                 <Route path='categories/edit/:id' element={<EditCategory />} />

@@ -156,6 +156,9 @@ const ListBill = () => {
                     <p>
                         Đến: <i style={{ fontSize: '12px' }}>{record?.address}</i>
                     </p>
+                    <p>
+                        Mã: <i style={{ fontSize: '12px', color: 'blue' }}>{record?._id}</i>
+                    </p>
                 </div>
             )
         },

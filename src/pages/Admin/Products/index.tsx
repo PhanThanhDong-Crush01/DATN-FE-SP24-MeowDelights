@@ -34,6 +34,7 @@ interface DataType {
     description: string
     idCategory: string
     categoryName: string
+    view: number
     colors: any
     sizes: any
     totalQuantity: number
@@ -54,7 +55,7 @@ const Product = () => {
                 // Sort products by createdAt (newest to oldest)
                 dataPro.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-                const formattedData = dataPro.map((item: any, index: any) => ({
+                const formattedData = dataPro.map((item: any, index: number) => ({
                     ...item,
                     key: index + 1
                 }))
@@ -158,7 +159,7 @@ const Product = () => {
             title: '#',
             dataIndex: 'key',
             key: 'key',
-            width: '2%',
+            width: '1.5%',
             fixed: 'left'
         },
 
@@ -190,7 +191,7 @@ const Product = () => {
             title: 'Giá',
             dataIndex: 'minPrice',
             key: 'minPrice',
-            width: '5%',
+            width: '3%',
             sorter: (a, b) => a.averagePrice - b.averagePrice,
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (
@@ -229,7 +230,7 @@ const Product = () => {
             title: 'Kích cỡ',
             dataIndex: 'sizes',
             key: 'sizes',
-            width: '7%',
+            width: '3%',
             render: (_, record) => (
                 <div className='flex'>
                     <p>
@@ -239,6 +240,15 @@ const Product = () => {
                     </p>
                 </div>
             )
+        },
+        {
+            title: 'Lượt xem',
+            dataIndex: 'view',
+            key: 'view',
+            width: '3.5%',
+            sorter: (a, b) => a.view - b.view,
+            sortDirections: ['descend', 'ascend'],
+            render: (_, record) => record.view
         },
         {
             title: 'Danh Mục',
@@ -261,7 +271,7 @@ const Product = () => {
             title: 'Đã bán',
             dataIndex: 'sold',
             key: 'sold',
-            width: '3%',
+            width: '4%',
             sorter: (a, b) => a.soldAmount - b.soldAmount,
             sortDirections: ['descend', 'ascend'],
             render: (_, record) => (

@@ -158,10 +158,14 @@ const BillDetail = () => {
                     id='name-bill'
                     style={{ fontWeight: 900 }}
                 >
-                    Hóa đơn chi tiết
+                    Hóa đơn chi tiết: <br />
+                    <span style={{ fontWeight: 500, fontSize: '18px' }}>
+                        Mã: <span style={{ color: 'gray' }}> {id}</span>
+                    </span>
                 </h4>
 
                 <button
+                    style={{ marginLeft: '35%' }}
                     className='flex flex-row gap-3 bg-blue-500 hover:bg-blue-500 text-white font-bold py-2 px-4 pl-3 rounded h-10 w-36 text-right mx-16 mt-10 hover:bg-blue-300'
                     onClick={handlePrint}
                 >
@@ -180,20 +184,21 @@ const BillDetail = () => {
                 </button>
             </div>
             <div id='bill-detail' className=' border-2 border-blue-300  rounded  w-auto mx-28 my-2'>
-                <div className='  md:px-6 xl:px-7.5 '>
-                    {/* <span className='font-bold text-base text-blue-500'>Thời gian đặt hàng: 17.00pm 12/1/2024</span> */}
-                    <div className=' gap-72 font-thin text-base  flex flex-row pt-2'>
-                        <div className='flex flex-col gap-3 pl-2'>
+                <div className='md:px-6 xl:px-7.5 '>
+                    <div
+                        className='gap-72 font-thin text-base pt-2'
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'self-start' }}
+                    >
+                        <div className='flex flex-col gap-3 pl-2' style={{ width: '75%' }}>
                             <p id='ten-cua-hang' className='mt-2 font-serif'>
                                 Trạng thái giao hàng
                             </p>
 
-                            <ul>
+                            <ul style={{ width: '100%' }}>
                                 {bill?.billChangeStatusOrderHistory &&
                                     bill?.billChangeStatusOrderHistory.map((item: any) => (
                                         <li
                                             style={{
-                                                listStyle: 'inside',
                                                 marginTop: '5px',
                                                 fontWeight: 500,
                                                 display: 'flex',
@@ -292,7 +297,7 @@ const BillDetail = () => {
                                 </h1>
                             )}
                         </div>
-                        <div className='mt-2' id='trang-thai-thanh-toan'>
+                        <div className='mt-2' id='trang-thai-thanh-toan' style={{ width: '30%' }}>
                             <p id='ten-cua-hang' className=' font-serif'>
                                 Phương thức thanh toán: {data?.bill?.paymentmethods}
                             </p>

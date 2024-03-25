@@ -327,6 +327,16 @@ const CartPage = () => {
                                         }}
                                     >
                                         <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
+                                            Điều kiện sử dụng: &nbsp;
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatPriceBootstrap(
+                                                        voucherDuocChon?.[0]?.voucher?.conditions
+                                                    )
+                                                }}
+                                            ></span>
+                                        </h2>
+                                        <h2 style={{ fontSize: '20px', display: 'flex', margin: '5px 0' }}>
                                             Số tiền bạn được giảm: &nbsp;
                                             <span
                                                 dangerouslySetInnerHTML={{

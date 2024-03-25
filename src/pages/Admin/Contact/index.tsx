@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Popconfirm, Select, Table } from 'antd'
+import { Button, Modal, Popconfirm, Select, Table } from 'antd'
 import type { TableColumnsType } from 'antd'
 import { useContactQuery } from '@/hooks/Contact/useContactQuery'
 import { formatPriceBootstrap } from '@/lib/utils'
-import { DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { toast } from '@/components/ui/use-toast'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { useContactMutation } from '@/hooks/Contact/useContactMutation'
+import { Sheet, SheetTrigger } from '@/components/ui/sheet'
+import UpdateContact_note_idOrder from './UpdateContact_note_idOrder'
 
 interface DataType {
     key: React.Key
@@ -178,18 +180,28 @@ const ListContact = () => {
             key: 'x',
             width: '7%',
             render: (_, record) => (
-                <Popconfirm
-                    placement='topRight'
-                    title='Xóa liên hệ?'
-                    description='Bạn có chắc chắn xóa liên hệ này không?'
-                    //onConfirm={() => onRemove(record)}
-                    okText='Đồng ý'
-                    cancelText='Không'
-                >
-                    <Button type='primary' danger>
-                        <DeleteOutlined style={{ display: 'inline-flex' }} />
-                    </Button>
-                </Popconfirm>
+                <>
+                    <Sheet>
+                        <SheetTrigger>
+                            <Button type='primary' ghost>
+                                <EditOutlined style={{ display: 'inline-flex' }} />
+                            </Button>
+                        </SheetTrigger>
+                        <UpdateContact_note_idOrder id={record._id} />
+                    </Sheet>
+                    <Popconfirm
+                        placement='topRight'
+                        title='Xóa liên hệ?'
+                        description='Bạn có chắc chắn xóa liên hệ này không?'
+                        //onConfirm={() => onRemove(record)}
+                        okText='Đồng ý'
+                        cancelText='Không'
+                    >
+                        <Button type='primary' danger>
+                            <DeleteOutlined style={{ display: 'inline-flex' }} />
+                        </Button>
+                    </Popconfirm>
+                </>
             )
         }
     ]
@@ -294,6 +306,7 @@ const ListContact = () => {
                     </button>
                 </div>
             </div>
+
             <Table rowSelection={rowSelection} columns={columns} dataSource={dataContact} scroll={{ x: 1300 }} />
         </div>
     )

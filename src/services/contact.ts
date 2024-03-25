@@ -44,6 +44,25 @@ export const update = async (contact: any) => {
         console.log(`['UPDATE_CONTACT_ERROR']`, error.response.data.message)
     }
 }
+export const api_updateContact_note_idOrder = async (contact: any) => {
+    try {
+        const response = await instance.patch(`/contact/${contact.id}/updateContact_note_idOrder`, contact)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật liên hệ thành công!!',
+                description: 'Cập nhật liên hệ thành công!'
+            })
+        }
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['UPDATE_CONTACT_ERROR']`, error.response.data.message)
+    }
+}
 export const setStaffWithContact = async (contact: any) => {
     try {
         const response = await instance.patch(`/contact/1/staff`, contact)

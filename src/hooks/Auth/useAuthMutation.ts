@@ -32,7 +32,8 @@ export const useAuthMutation = ({
         age: 0,
         gender: true,
         jobPosition: '',
-        employee: ''
+        employee: '',
+        datas: undefined
     },
     onSuccess
 }: useAuthMutationProps) => {

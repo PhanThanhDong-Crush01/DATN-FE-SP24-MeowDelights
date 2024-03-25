@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom'
 import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { deleteEmployee } from '@/services/auth'
 import { formatPriceBootstrap } from '@/lib/utils'
+import { Sheet, SheetTrigger } from '@/components/ui/sheet'
+import EditRoleAuth from './EditRoleAuth'
+import EmployeeNV from './Employee'
+import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -20,7 +24,7 @@ interface DataType {
     email: string
     role: string
     address: number
-    age: number
+
     gender: boolean
     imgUser: string
     phone: string
@@ -46,6 +50,9 @@ const ListUserPage = () => {
     const handleDelete = (record: any) => {
         deleteEmployee(record)
     }
+    const { onRemove } = useAuthMutation({
+        action: 'DELETE'
+    })
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -90,7 +97,6 @@ const ListUserPage = () => {
         clearFilters()
         setSearchText('')
     }
-    const getStatusLabel = (status: boolean) => (status ? 'Còn voucher' : 'Hết voucher')
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -148,8 +154,25 @@ const ListUserPage = () => {
             record[dataIndex]
                 .toString()
                 .toLowerCase()
-                .includes((value as string).toLowerCase())
+                .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100)
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            )
     })
+
     // bảng table
     const columns: TableColumnsType<DataType> = [
         {
@@ -161,8 +184,8 @@ const ListUserPage = () => {
         },
         {
             title: 'Tên tài khoản',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'username',
+            key: 'username',
             width: '30%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
@@ -181,8 +204,13 @@ const ListUserPage = () => {
             key: 'role',
             width: '15%',
             filters: [
-                { text: 'admin', value: 'admin' },
-                { text: 'member', value: 'member' }
+                { text: 'Nhân viên quản lí sản phẩm', value: 'adminProduct' },
+                { text: 'Nhân viên quản lí Voucher', value: 'adminVoucher' },
+                { text: 'Nhân viên quản lí hóa đơn', value: 'adminOrder' },
+                { text: 'Nhân viên quản lí liên hệ', value: 'adminContact' },
+                { text: 'Nhân viên quản lí bình luận, đánh giá', value: 'adminComment' },
+                { text: 'Nhân viên quản lí người dùng', value: 'adminMember' },
+                { text: 'Quản lí cấp cao', value: 'adminWeb' }
             ],
             filteredValue: filteredInfo.role || null,
             onFilter: (value: string, record: any) => record.role.includes(value),
@@ -195,15 +223,15 @@ const ListUserPage = () => {
                     case 'adminProduct':
                         return 'Nhân viên quản lí sản phẩm'
                     case 'adminVoucher':
-                        return 'Nhân viên quản lí Voucher '
+                        return 'Nhân viên quản lí Voucher'
                     case 'adminOrder':
                         return 'Nhân viên quản lí hóa đơn'
                     case 'adminContact':
                         return 'Nhân viên quản lí liên hệ'
                     case 'adminMember':
-                        return 'Nhân viên quản lí bình luận, đánh giá'
+                        return 'Nhân viên quản lí người dùng'
                     case 'adminComment':
-                        return 'Nhân viên quản lí sản phẩm'
+                        return 'Nhân viên quản lí bình luận, đánh giá'
                     case 'adminWeb':
                         return 'Quản lí cấp cao'
                     default:
@@ -238,7 +266,6 @@ const ListUserPage = () => {
                             {record?.gender === false ? 'Nam' : record?.gender === true ? 'Nữ' : record?.gender}
                         </span>
                         &nbsp;
-                        <span>- {record.age} tuổi</span>
                     </p>
 
                     <p>SĐT: {record.phone}</p>
@@ -274,30 +301,61 @@ const ListUserPage = () => {
             title: 'Hành động',
             dataIndex: '',
             key: 'x',
-            width: '20%',
+            width: '23%',
             fixed: 'right',
             render: (_, record) => (
                 <Space size='middle'>
-                    <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
+                    <div className='flex flex-col gap-5'>
+                        <Sheet>
+                            <SheetTrigger>
+                                <Button type='primary' ghost>
+                                    Thay đổi quyền
+                                </Button>
+                            </SheetTrigger>
+                            <EditRoleAuth id={record._id} />
+                        </Sheet>
+                        {/* <Sheet>
+                        <SheetTrigger>
+                            <Button type='primary' ghost>
+                                <FormOutlined style={{ display: 'inline-flex' }} />
+                            </Button>
+                        </SheetTrigger>
+                        <EmployeeNV id={record._id} />
+                    </Sheet> */}
+                        {/* <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
                         <EditOutlined style={{ display: 'inline-flex' }} />
                     </Link>
                     <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
                         <FormOutlined style={{ display: 'inline-flex' }} />
-                    </Link>
+                    </Link> */}
+                        <Popconfirm
+                            placement='topRight'
+                            title='Xóa mã nhân viên?'
+                            description='Bạn có chắc chắn xóa mã nhân viên này không?'
+                            onConfirm={() => handleDelete(record)}
+                            onCancel={cancel}
+                            okText='Đồng ý'
+                            cancelText='Không'
+                        >
+                            <Button type='primary' danger>
+                                Xóa quyền
+                            </Button>
+                        </Popconfirm>
 
-                    <Popconfirm
-                        placement='topRight'
-                        title='Xóa mã nhân viên?'
-                        description='Bạn có chắc chắn xóa mã nhân viên này không?'
-                        onConfirm={() => handleDelete(record)}
-                        onCancel={cancel}
-                        okText='Đồng ý'
-                        cancelText='Không'
-                    >
-                        <Button type='primary' danger>
-                            <DeleteOutlined style={{ display: 'inline-flex' }} />
-                        </Button>
-                    </Popconfirm>
+                        <Popconfirm
+                            placement='topRight'
+                            title='Xóa mã nhân viên?'
+                            description='Bạn có chắc chắn xóa nhân viên này không?'
+                            onConfirm={() => onRemove(record)}
+                            onCancel={cancel}
+                            okText='Đồng ý'
+                            cancelText='Không'
+                        >
+                            <Button type='primary' danger>
+                                Xóa nhân viên
+                            </Button>
+                        </Popconfirm>
+                    </div>
                 </Space>
             )
         }

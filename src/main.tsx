@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider, focusManager } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
 import App from './App'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
@@ -14,6 +13,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <App />
         </BrowserRouter>
         <Toaster />
-        <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
 )

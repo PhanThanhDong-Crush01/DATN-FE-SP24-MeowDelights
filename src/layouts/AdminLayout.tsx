@@ -33,14 +33,14 @@ const AdminLayout = () => {
     const { data }: any = useAuthQuery(userID)
 
     const navigate = useNavigate()
-    const handleLogout = () => {
-        localStorage.removeItem('userID')
-        localStorage.removeItem('user')
-        toast({
+    const handleLogout = async () => {
+        await localStorage.removeItem('userID')
+        await localStorage.removeItem('user')
+        await toast({
             variant: 'destructive',
             title: 'Bạn đã đăng xuất thành công!'
         })
-        navigate('/signin')
+        await navigate('/signin')
     }
 
     return (
@@ -100,7 +100,6 @@ const AdminLayout = () => {
                             <Link to='/admin/user'>Tài khoản nhân viên</Link>
                         </Menu.Item>
                     </Menu.SubMenu>
-                    {/* </Menu.Item> */}
 
                     <Menu.Item key='12' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
                         Đăng xuất

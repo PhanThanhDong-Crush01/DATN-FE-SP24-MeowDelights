@@ -8,6 +8,7 @@ import { Pencil } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Avatar } from 'antd'
+import ImageUpload from '@/lib/uploadFile'
 
 type ImgUserFormProps = {
     data: IAuth
@@ -44,28 +45,35 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
         }
     }, [data, form])
 
+    const [imageUrl, setImageUrl] = useState<any>()
+    const handleImageUpload = (url: any) => {
+        setImageUrl(url)
+    }
     const onHandleSubmit: SubmitHandler<FormControlType> = (values) => {
-        onSubmit({ ...data.datas, ...values })
+        if (imageUrl) {
+            const dataNew = { ...values, imgUser: imageUrl }
+            onSubmit({ ...data.datas, ...dataNew })
+        }
     }
 
     return (
         <>
             <div className='mt-6 border bg-slate-100 rounded-md p-3'>
                 <div className='font-medium flex items-center justify-between'>
-                    {!editAuth && <img className='text-sm mt-2 rounded' src={data?.datas?.imgUser} width={100} />}
-
-                    <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
-                        {editAuth ? (
-                            <>Hủy</>
-                        ) : (
-                            <>
+                    {/* {!editAuth && <img className='text-sm mt-2 rounded' src={data?.datas?.imgUser} width={100} />} */}
+                    {!editAuth && <Avatar src={data?.datas?.imgUser} style={{ width: 110, height: 110 }}></Avatar>}
+                    {editAuth ? (
+                        <></>
+                    ) : (
+                        <>
+                            <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
                                 <Pencil className='h-4 w-4 mr-2' />
                                 Chỉnh sửa
-                            </>
-                        )}
-                    </Button>
+                            </Button>
+                        </>
+                    )}
                 </div>
-                {!editAuth && <Avatar src={data?.datas?.imgUser}></Avatar>}
+
                 {editAuth && (
                     <Form {...form}>
                         <form
@@ -73,19 +81,14 @@ const ImgUserForm = ({ data }: ImgUserFormProps) => {
                             className='flex'
                             style={{ justifyContent: 'space-between', alignItems: 'center' }}
                         >
-                            <FormField
-                                control={form.control}
-                                name='imgUser'
-                                render={({ field }) => (
-                                    <FormItem style={{ width: '80%' }}>
-                                        <FormControl>
-                                            <Input {...field} placeholder='Nhập đường dẫn ảnh' />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className='flex items-center gap-x-2'>
+                            <FormItem>
+                                <ImageUpload onImageUpload={handleImageUpload} />
+                            </FormItem>
+                            <div className='flex gap-x-2'>
+                                <Button variant='ghost' onClick={() => setEditAuth(!editAuth)}>
+                                    Hủy
+                                </Button>
+                                <br />
                                 <Button type='submit'>Lưu</Button>
                             </div>
                         </form>

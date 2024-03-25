@@ -96,7 +96,9 @@ const BillDetail = () => {
     }, [])
 
     const form = useForm<any>()
-
+    const { onSubmit } = useBillDetailMutation({
+        action: 'UPDATE_PAYMENT_STATUS'
+    })
     const handleSubmitForm = async (data: any) => {
         if (!data) {
             toast({
@@ -110,6 +112,14 @@ const BillDetail = () => {
                 orderstatus: data?.status
             }
             const change = await apiChangeStatusOrder(changeStatusOrder)
+            if (data?.status == 'Đã giao hàng thành công') {
+                const updatedPayMents = {
+                    ...data,
+                    _id: id,
+                    paymentstatus: 'Đã thanh toán'
+                }
+                onSubmit(updatedPayMents)
+            }
             window.location.reload()
             setOpen(false)
         }
@@ -125,29 +135,6 @@ const BillDetail = () => {
         const change = await apiCancelOrder(CancelOrder)
         setOpen(false)
         navigate('/admin/bill')
-    }
-    const { onSubmit } = useBillDetailMutation({
-        action: 'UPDATE_PAYMENT_STATUS',
-        onSuccess: () => {
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
-        }
-    })
-
-    const handleSubmitPaymentStatus = (data: any) => {
-        const confirm = window.confirm('Xác nhận lại là đơn hàng đã thanh toán!')
-        if (confirm) {
-            const confirm2 = window.confirm('Xác nhận lại lần 2 là đơn hàng đã thanh toán!')
-            if (confirm2) {
-                const updatedPayMents = {
-                    ...data,
-                    _id: id,
-                    paymentstatus: 'Đã thanh toán'
-                }
-                onSubmit(updatedPayMents)
-            }
-        }
     }
 
     return (
@@ -215,82 +202,89 @@ const BillDetail = () => {
                                     ))}
                             </ul>
 
-                            {data?.bill?.orderstatus != 'Đã hủy hàng' && (
-                                <Dialog open={open} onOpenChange={setOpen}>
-                                    <DialogTrigger asChild>
-                                        {/* <Button>Hủy đơn hàng</Button> */}
-                                        <Button
-                                            variant='outline'
-                                            style={{
-                                                backgroundColor: 'white',
-                                                borderColor: '#93C5FD',
-                                                color: '#93C5FD'
-                                            }}
-                                        >
-                                            Cập nhật trạng thái
-                                        </Button>
-                                    </DialogTrigger>
-
-                                    <DialogContent className='sm:max-w-[425px]'>
-                                        <DialogHeader>
-                                            <DialogTitle>Thay đổi trạng thái giao hàng</DialogTitle>
-                                            <DialogDescription>
-                                                Cập nhật trạng thái giao hàng do nhân viên hoặc shiper thông báo
-                                            </DialogDescription>
-                                        </DialogHeader>
-
-                                        <Form {...form}>
-                                            <form
-                                                onSubmit={form.handleSubmit(handleSubmitForm)}
-                                                className='w-2/3 space-y-6'
-                                                style={{ textAlign: 'center' }}
+                            {data?.bill?.orderstatus !== 'Đã hủy hàng' &&
+                                data?.bill?.orderstatus !== 'Đã giao hàng thành công' &&
+                                data?.bill?.paymentstatus !== 'Đã thanh toán' && (
+                                    <Dialog open={open} onOpenChange={setOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                variant='outline'
+                                                style={{
+                                                    backgroundColor: 'white',
+                                                    borderColor: '#93C5FD',
+                                                    color: '#93C5FD'
+                                                }}
                                             >
-                                                <FormField
-                                                    control={form.control}
-                                                    name='status'
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <Select
-                                                                onValueChange={field.onChange}
-                                                                defaultValue={field.value}
-                                                            >
-                                                                <FormControl>
-                                                                    <SelectTrigger className='w-[370px]'>
-                                                                        <SelectValue
-                                                                            placeholder='Trạng thái'
-                                                                            style={{ color: 'black' }}
-                                                                        />
-                                                                    </SelectTrigger>
-                                                                </FormControl>
-                                                                <SelectContent>
-                                                                    {missingOrderStatusesFormatted.map(
-                                                                        (item: any, index: number) => (
-                                                                            <SelectItem key={index} value={item.status}>
-                                                                                {item.status}
-                                                                            </SelectItem>
-                                                                        )
-                                                                    )}
-                                                                </SelectContent>
-                                                            </Select>
+                                                Cập nhật trạng thái
+                                            </Button>
+                                        </DialogTrigger>
 
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                <div className='flex'>
-                                                    <Button className='bg-[red]' onClick={() => handleSubmitOrder({})}>
-                                                        Hủy đơn hàng
-                                                    </Button>
+                                        <DialogContent className='sm:max-w-[425px]'>
+                                            <DialogHeader>
+                                                <DialogTitle>Thay đổi trạng thái giao hàng</DialogTitle>
+                                                <DialogDescription>
+                                                    Cập nhật trạng thái giao hàng do nhân viên hoặc shipper thông báo
+                                                </DialogDescription>
+                                            </DialogHeader>
 
-                                                    <Button type='submit' className='ml-10'>
-                                                        Submit
-                                                    </Button>
-                                                </div>
-                                            </form>
-                                        </Form>
-                                    </DialogContent>
-                                </Dialog>
-                            )}
+                                            <Form {...form}>
+                                                <form
+                                                    onSubmit={form.handleSubmit(handleSubmitForm)}
+                                                    className='w-2/3 space-y-6'
+                                                    style={{ textAlign: 'center' }}
+                                                >
+                                                    <FormField
+                                                        control={form.control}
+                                                        name='status'
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <Select
+                                                                    onValueChange={field.onChange}
+                                                                    defaultValue={field.value}
+                                                                >
+                                                                    <FormControl>
+                                                                        <SelectTrigger className='w-[370px]'>
+                                                                            <SelectValue
+                                                                                placeholder='Trạng thái'
+                                                                                style={{ color: 'black' }}
+                                                                            />
+                                                                        </SelectTrigger>
+                                                                    </FormControl>
+                                                                    <SelectContent>
+                                                                        {missingOrderStatusesFormatted.map(
+                                                                            (item: any, index: number) => (
+                                                                                <SelectItem
+                                                                                    key={index}
+                                                                                    value={item.status}
+                                                                                >
+                                                                                    {item.status}
+                                                                                </SelectItem>
+                                                                            )
+                                                                        )}
+                                                                    </SelectContent>
+                                                                </Select>
+
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <div className='flex'>
+                                                        <Button
+                                                            className='bg-[red]'
+                                                            onClick={() => handleSubmitOrder({})}
+                                                        >
+                                                            Hủy đơn hàng
+                                                        </Button>
+                                                        <Button type='submit' className='ml-10'>
+                                                            Submit
+                                                        </Button>
+                                                    </div>
+                                                </form>
+                                            </Form>
+                                        </DialogContent>
+                                    </Dialog>
+                                )}
+
                             {data?.bill?.orderstatus == 'Đã hủy hàng' && (
                                 <h1 style={{ fontSize: '20px', color: 'black' }}>
                                     Lí do: <span style={{ color: 'red' }}>{messgaseCanCelOrder?.message}</span>
@@ -325,29 +319,6 @@ const BillDetail = () => {
                                     )}
                                 </span>
                             </p>
-                            {data?.bill?.paymentstatus == 'Chưa thanh toán' ||
-                            data?.bill?.paymentstatus == 'Chờ thanh toán' ? (
-                                <div className='flex mt-2' style={{ alignItems: 'center' }}>
-                                    <GrLinkNext /> &nbsp;
-                                    <button
-                                        style={{
-                                            backgroundColor: 'orangered',
-                                            color: 'wheat',
-                                            padding: '5px',
-                                            border: '1px solid gray',
-                                            borderRadius: '10px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            fontSize: '12px'
-                                        }}
-                                        onClick={() => handleSubmitPaymentStatus(data?.bill?._id)}
-                                    >
-                                        Cập nhật thanh toán &nbsp; <IoCardSharp />
-                                    </button>
-                                </div>
-                            ) : (
-                                ''
-                            )}
                         </div>
                     </div>
                     <div className='flex flex-col gap-3 border-stroke py-1  dark:border-strokedark pt-5'>

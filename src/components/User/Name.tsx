@@ -15,7 +15,6 @@ type FormControlType = {
     name: string
 }
 const NameForm = ({ data }: NameFormProps) => {
-    console.log(data)
     const [editAuth, setEditAuth] = useState(false)
     const { form, onSubmit } = useAuthMutation({
         action: 'UPDATE', // Specify the action as 'UPDATE'
@@ -41,14 +40,10 @@ const NameForm = ({ data }: NameFormProps) => {
                 address: data?.datas?.address || '',
                 gender: data?.datas?.gender || true
             })
-            console.log(data?.datas)
-            console.log(form)
         }
     }, [data, form])
 
     const onHandleSubmit: SubmitHandler<FormControlType> = (values) => {
-        console.log('Submitting form with values:', values)
-
         onSubmit({ ...data?.datas, ...values })
         if (data && form) {
             form.reset({
@@ -60,8 +55,6 @@ const NameForm = ({ data }: NameFormProps) => {
                 address: data?.datas?.address || '',
                 gender: data?.datas?.gender || true
             })
-            console.log(data?.datas)
-            console.log(form)
         }
     }
 

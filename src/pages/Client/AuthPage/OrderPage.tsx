@@ -456,12 +456,21 @@ const OrderPage: React.FC = () => {
                                 <span style={{ fontSize: '16px', color: 'black' }}>{TimeDate(record?.updatedAt)}</span>
                             </h1>
                             <div
-                                style={{ fontWeight: '700' }}
-                                className='text-lg text-[red] mb-3'
-                                dangerouslySetInnerHTML={{
-                                    __html: formatPrice(record?.money)
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
                                 }}
-                            ></div>
+                            >
+                                <p>{record.paymentstatus === 'Đã thanh toán' ? 'Đã thanh toán: ' : ''} &nbsp;</p>
+                                <p
+                                    style={{ fontWeight: '700' }}
+                                    className='text-lg text-[red]'
+                                    dangerouslySetInnerHTML={{
+                                        __html: formatPrice(record?.money)
+                                    }}
+                                ></p>
+                            </div>
                         </div>
                     </div>
                     <hr style={{ marginBottom: '20px', border: '1px solid #DCDCDC' }} />
@@ -497,48 +506,49 @@ const OrderPage: React.FC = () => {
                         </>
 
                         {/* Nút "Hủy đơn hàng" hiển thị khi trạng thái là "Chờ xác nhận" hoặc "Đang chuẩn bị hàng" */}
-                        {(record.orderstatus === 'Chờ xác nhận' || record.orderstatus === 'Đang chuẩn bị hàng') && (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button
-                                        type='primary'
-                                        danger
-                                        onClick={() => handleWhyCancelButtonClick(record?._id)}
-                                    >
-                                        Hủy đơn hàng
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className='sm:max-w-[425px]'>
-                                    <DialogHeader>
-                                        <DialogTitle>Hủy đơn</DialogTitle>
-                                        <DialogDescription>
-                                            Mời bạn viết lí do hủy đơn hàng {record?._id}
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <form action=''>
-                                        <Input
-                                            className='col-span-3'
-                                            onChange={(e) => setNewWhy(e.target.value)}
-                                            placeholder='Lí do...'
-                                            style={{
-                                                border: '1px solid gray',
-                                                borderRadius: '10px',
-                                                marginBottom: '10px'
-                                            }}
-                                        />
-                                        <DialogFooter>
-                                            <Button
-                                                type='primary'
-                                                style={{ backgroundColor: 'blueviolet' }}
-                                                onClick={handleAddWhy}
-                                            >
-                                                Lưu
-                                            </Button>
-                                        </DialogFooter>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        )}
+                        {(record.orderstatus === 'Chờ xác nhận' || record.orderstatus === 'Đang chuẩn bị hàng') &&
+                            record.paymentstatus !== 'Đã thanh toán' && (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            type='primary'
+                                            danger
+                                            onClick={() => handleWhyCancelButtonClick(record?._id)}
+                                        >
+                                            Hủy đơn hàng
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className='sm:max-w-[425px]'>
+                                        <DialogHeader>
+                                            <DialogTitle>Hủy đơn</DialogTitle>
+                                            <DialogDescription>
+                                                Mời bạn viết lí do hủy đơn hàng {record?._id}
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <form action=''>
+                                            <Input
+                                                className='col-span-3'
+                                                onChange={(e) => setNewWhy(e.target.value)}
+                                                placeholder='Lí do...'
+                                                style={{
+                                                    border: '1px solid gray',
+                                                    borderRadius: '10px',
+                                                    marginBottom: '10px'
+                                                }}
+                                            />
+                                            <DialogFooter>
+                                                <Button
+                                                    type='primary'
+                                                    style={{ backgroundColor: 'blueviolet' }}
+                                                    onClick={handleAddWhy}
+                                                >
+                                                    Lưu
+                                                </Button>
+                                            </DialogFooter>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
 
                         {/* Nút "Đánh giá" hiển thị khi trạng thái là "Giao hàng thành công" */}
                         {record.orderstatus === 'Đã giao hàng thành công' && (

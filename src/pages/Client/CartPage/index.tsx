@@ -75,6 +75,14 @@ const CartPage = () => {
         const upTongTienCanThanhToan = dataCart?.totalAmount + phiVanChuyen - voucherGiamGia
         setTongTienCanThanhToan(upTongTienCanThanhToan)
     }, [dataCart, voucherGiamGia])
+
+    useEffect(() => {
+        console.log('first', dataCart?.totalAmount < data?.conditions)
+        if (dataCart?.totalAmount < data?.conditions) {
+            setVoucherGiamGia(0)
+        }
+    }, [dataCart?.totalAmount])
+
     const apDungVoucher = () => {
         if (xetIdVoucher() && XetDieuKienDungVoucher()) {
             setVoucherGiamGia(data?.decrease)
@@ -108,7 +116,6 @@ const CartPage = () => {
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
 
     const [userID, setUserID] = useState<any>()
-    console.log(userID)
     useEffect(() => {
         const storedUserID = localStorage.getItem('userID')
         if (storedUserID) {

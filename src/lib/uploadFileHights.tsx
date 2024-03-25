@@ -3,12 +3,17 @@ import { Modal, Upload } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import axios from 'axios'
 
-const ImageUpload = ({ onImageUpload }: { onImageUpload: (imageUrl: string) => void }) => {
+interface Props {
+    classImage: string
+    onImageUpload: (imageUrl: any) => void
+}
+
+const ImageUpload: React.FC<Props> = ({ classImage, onImageUpload }) => {
     const [previewVisible, setPreviewVisible] = useState<boolean>(false)
     const [previewImage, setPreviewImage] = useState<string>('')
     const [previewTitle, setPreviewTitle] = useState<string>('')
     const [fileList, setFileList] = useState<any[]>([])
-    const [imageUrl, setImageUrl] = useState<string>('')
+    const [imageUrl, setImageUrl] = useState<any>('')
 
     const handleCancel = () => setPreviewVisible(false)
 
@@ -42,7 +47,7 @@ const ImageUpload = ({ onImageUpload }: { onImageUpload: (imageUrl: string) => v
             onSuccess(response.data, file)
 
             // Gọi hàm callback để truyền link ảnh ra ngoài
-            onImageUpload(imageUrl)
+            onImageUpload({ classImage: classImage, urlImage: imageUrl })
         } catch (error) {
             console.error('Error uploading image: ', error)
             onError(error)

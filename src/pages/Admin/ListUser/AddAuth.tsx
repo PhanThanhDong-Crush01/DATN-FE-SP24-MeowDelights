@@ -21,7 +21,7 @@ const AddAuth = () => {
             })
             localStorage.setItem('authID', data?.user?._id)
 
-            navigate(`/admin/user/editAuth/${data?.user?._id}`)
+            navigate(`/admin/auth`)
         }
     })
     const {

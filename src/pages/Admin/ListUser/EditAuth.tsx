@@ -282,7 +282,7 @@ const EditAuth = () => {
                                 )}
                             </div>
                         </div>
-                        <div className='flex flex-row gap-20'>
+                        {/* <div className='flex flex-row gap-20'>
                             <div className='flex flex-col gap-3 w-56'>
                                 <p className='font-medium text-base '>Vị trí công việc</p>
                                 <Input
@@ -304,7 +304,7 @@ const EditAuth = () => {
                                     {...register('employee')}
                                 />
                             </div>
-                        </div>
+                        </div> */}
                         <div className='flex justify-center pr-16'>
                             <Button type='submit'> Cập nhật</Button>
                         </div>

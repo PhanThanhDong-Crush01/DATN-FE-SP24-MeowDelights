@@ -86,7 +86,7 @@ const Routers = () => {
                 <Route path='user' element={<ListUserPage />} />
                 <Route path='user/add' element={<AddAuth />} />
                 <Route path='user/editAuth/:id' element={<EditAuth />} />
-                <Route path='user/edit/:id' element={<EditUser />} />
+                {/* <Route path='user/edit/:id' element={<EditUser />} /> */}
                 {/* <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} /> */}
                 {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='products/add' element={<AddProduct />} />

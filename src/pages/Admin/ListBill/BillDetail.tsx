@@ -111,7 +111,7 @@ const BillDetail = () => {
                 idStaff: userID,
                 orderstatus: data?.status
             }
-            const change = await apiChangeStatusOrder(changeStatusOrder)
+            await apiChangeStatusOrder(changeStatusOrder)
             if (data?.status == 'Đã giao hàng thành công') {
                 const updatedPayMents = {
                     ...data,
@@ -132,7 +132,7 @@ const BillDetail = () => {
             idStaff: userID,
             orderstatus: data?.status
         }
-        const change = await apiCancelOrder(CancelOrder)
+        await apiCancelOrder(CancelOrder)
         setOpen(false)
         navigate('/admin/bill')
     }
@@ -201,7 +201,6 @@ const BillDetail = () => {
                                         </li>
                                     ))}
                             </ul>
-
                             {data?.bill?.orderstatus !== 'Đã hủy hàng' &&
                                 data?.bill?.orderstatus !== 'Đã giao hàng thành công' &&
                                 data?.bill?.paymentstatus !== 'Đã thanh toán' && (

@@ -93,10 +93,10 @@ const AdminLayout = () => {
                         <Link to='/admin/contact'>Liên hệ</Link>
                     </Menu.Item>
                     <Menu.SubMenu key='9' icon={<MdOutlineAccountCircle />} title='Tài khoản'>
-                        <Menu.Item key='1'>
+                        <Menu.Item key='account-info'>
                             <Link to='/admin/auth'>Tài khoản khách hàng</Link>
                         </Menu.Item>
-                        <Menu.Item key='2'>
+                        <Menu.Item key=''>
                             <Link to='/admin/user'>Tài khoản nhân viên</Link>
                         </Menu.Item>
                     </Menu.SubMenu>

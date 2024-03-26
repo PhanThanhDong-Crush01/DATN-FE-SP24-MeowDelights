@@ -58,3 +58,120 @@
 .dropdown-content:action {
     display: block;
 }
+@media (max-width: 991px) {
+    .aside-toggle .menu {
+        display: none;
+        position: absolute;
+        top: 55px;
+        left: 520px;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    /* utility classes */
+}
+
+@media (min-width: 991px) {
+}
+
+/* @media (max-width: 767px) {
+} */
+
+@media (max-width: 576px) {
+    .aside-toggle .menu {
+        display: none;
+        position: absolute;
+        top: 55px;
+        left: 300px;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .dropdown-content {
+        background-color: white;
+        position: absolute;
+        padding: 10px;
+        /* width: 200px; */
+        right: 300px;
+        display: none; /* Ẩn .dropdown-content mặc định */
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+}
+/* @media (min-width: 576px) {
+    .aside-toggle .menu {
+        display: none;
+        position: absolute;
+        top: 55px;
+        left: 300px;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+} */
+@media (max-width: 320px) {
+    .aside-toggle .menu {
+        display: none;
+        position: absolute;
+        top: 55px;
+        left: 30px;
+        width: 120px;
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .dropdown-content {
+        background-color: white;
+        position: absolute;
+        padding: 10px;
+        /* width: 200px; */
+        /* right: 300px; */
+        display: none; /* Ẩn .dropdown-content mặc định */
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .dropdown-content .item {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+}
+@media (min-width: 320px) {
+    .aside-toggle .menu {
+        display: none;
+        position: absolute;
+        top: 55px;
+        left: 230px;
+        width: 120px;
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .dropdown-content {
+        background-color: white;
+        position: absolute;
+        padding: 10px;
+        /* width: 200px; */
+        /* right: 300px; */
+        display: none; /* Ẩn .dropdown-content mặc định */
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .dropdown-content .item {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+}

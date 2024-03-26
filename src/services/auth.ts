@@ -4,6 +4,7 @@
 import { IAuth } from '@/interface/IAuth'
 import instance from './core/api'
 import { toast } from '@/components/ui/use-toast'
+import { Wind } from 'lucide-react'
 export const getAll = async () => {
     try {
         const response = await instance.get(`/auth`)
@@ -105,7 +106,26 @@ export const updateUserRole = async (user: IAuth) => {
         if (response.data) {
             toast({
                 variant: 'success',
-                title: 'Cập nhật quyền thành công!!',
+                title: 'Cập nhật quyền thành công !!',
+                description: 'Cập nhật quyền thành công!'
+            })
+        }
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['UPDATEUSERROLE_AUTH_ERROR']`, error)
+    }
+}
+export const setEmployeeCode = async (user: IAuth) => {
+    try {
+        const response = await instance.patch(`${user._id}/setEmployeeCode`)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Cập nhật  mã nhân viên thành công !!',
                 description: 'Cập nhật quyền thành công!'
             })
         }
@@ -178,6 +198,16 @@ export const editAuth = async (user: any) => {
 export const deleteEmployee = async (user: IAuth) => {
     try {
         const response = await instance.patch(`/auth/deleteEmployee/${user._id}`, user)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Xóa quyền nhân viên thành công!!',
+                description: 'Tài khoản này hoạt động như 1 khách hàng !'
+            })
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000)
+        }
         return response.data
     } catch (error: any) {
         toast({
@@ -193,8 +223,8 @@ export const remove = async (auth: IAuth) => {
 
         toast({
             variant: 'success',
-            title: 'Xóa thành công!!',
-            description: 'Xóa thành công!'
+            title: 'Xóa tài khoản thành công !!'
+            // description: 'Xóa thành công!'
         })
     } catch (error: any) {
         toast({

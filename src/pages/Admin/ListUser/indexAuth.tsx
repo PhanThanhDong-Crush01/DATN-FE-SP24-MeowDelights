@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { DeleteOutlined, FormOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, FormOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import type { GetRef, TableColumnsType, TableColumnType, TableProps } from 'antd'
 import { Avatar, Button, Input, Popconfirm, Space, Table } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
@@ -8,6 +8,8 @@ import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 import { deleteEmployee } from '@/services/auth'
 import { formatPriceBootstrap } from '@/lib/utils'
 import { useAuthMutation } from '@/hooks/Auth/useAuthMutation'
+import { Sheet, SheetTrigger } from '@/components/ui/sheet'
+import EditRoleAuth from './EditRoleAuth'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -21,7 +23,7 @@ interface DataType {
     email: string
     role: string
     address: number
-    age: number
+
     gender: boolean
     imgUser: string
     phone: string
@@ -163,8 +165,8 @@ const ListAuthPage = () => {
         },
         {
             title: 'Tên tài khoản',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'username',
+            key: 'username',
             width: '30%',
             ...getColumnSearchProps('username'),
             render: (_, record) => (
@@ -191,7 +193,6 @@ const ListAuthPage = () => {
                             {record?.gender === false ? 'Nam' : record?.gender === true ? 'Nữ' : record?.gender}
                         </span>
                         &nbsp;
-                        <span>- {record.age} tuổi</span>
                     </p>
 
                     <p>SĐT: {record.phone}</p>
@@ -230,28 +231,31 @@ const ListAuthPage = () => {
             width: '15%',
             fixed: 'right',
             render: (_, record) => (
-                <Space size='middle'>
-                    {/* <Link to={`/admin/user/edit/${record?._id}`} type='primary'>
-                        <EditOutlined style={{ display: 'inline-flex' }} />
-                    </Link>
-                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
+                <Space size='middle' className='flex flex-col gap-2'>
+                    <Sheet>
+                        <SheetTrigger>
+                            <Button type='primary' ghost>
+                                Cấp quyền NV
+                            </Button>
+                        </SheetTrigger>
+                        <EditRoleAuth id={record._id} />
+                    </Sheet>
+                    {/* <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
                         <FormOutlined style={{ display: 'inline-flex' }} />
                     </Link> */}
-                    <Link to={`/admin/user/editAuth/${record?._id}`} type='primary'>
-                        <FormOutlined style={{ display: 'inline-flex' }} />
-                    </Link>
 
                     <Popconfirm
                         placement='topRight'
                         title='Xóa mã nhân viên?'
-                        description='Bạn có chắc chắn xóa mã nhân viên này không?'
+                        description='Bạn có chắc chắn xóa tài khoản này không?'
                         onConfirm={() => onRemove(record)}
                         // onCancel={cancel}
                         okText='Đồng ý'
                         cancelText='Không'
                     >
                         <Button type='primary' danger>
-                            <DeleteOutlined style={{ display: 'inline-flex' }} />
+                            {/* <DeleteOutlined style={{ display: 'inline-flex' }} /> */}
+                            Xóa tài khoản
                         </Button>
                     </Popconfirm>
                 </Space>
@@ -263,7 +267,7 @@ const ListAuthPage = () => {
         <div>
             <div className='flex justify-between items-center '>
                 <p className='text-[30px] pb-4'>Danh sách tài khoản khách hàng </p>
-                <Link to={'/admin/user/add'}>
+                {/* <Link to={'/admin/user/add'}>
                     <Button
                         className='flex justify-center mb-2 bg-[#1677ff]'
                         type='primary'
@@ -271,7 +275,7 @@ const ListAuthPage = () => {
                         size={'large'}
                         onClick={showModal}
                     ></Button>
-                </Link>
+                </Link> */}
             </div>
             <Table columns={columns} dataSource={dataUser} scroll={{ x: 1300 }} onChange={handleChange} />
             {/* form */}

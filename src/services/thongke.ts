@@ -33,6 +33,17 @@ export const thong_ke_doanh_thu = async (startDate: any, endDate: any) => {
         return response.data
     } catch (error: any) {
         toast({
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['thong_ke_doanh_thu']`, error)
+    }
+}
+export const thong_ke = async (startDate: any, endDate: any) => {
+    try {
+        const response = await instance.post('/statistics/thong_ke', { startDate, endDate })
+        return response.data
+    } catch (error: any) {
+        toast({
             variant: 'destructive',
             title: error?.response?.data?.message + '!'
         })

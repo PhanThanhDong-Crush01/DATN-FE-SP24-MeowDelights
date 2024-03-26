@@ -221,7 +221,7 @@ const MenuClientComponent = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <Link to={'/signin'}>
+                                                <Link to={'/updateProfile'}>
                                                     <p
                                                         className='sigma_header-control-cart'
                                                         title='Your Cart'
@@ -236,8 +236,8 @@ const MenuClientComponent = () => {
                                                 </Link>
 
                                                 <ul
-                                                    className='sigma_cart-dropdown pl-10'
-                                                    style={{ textAlign: 'left', width: '3%', marginRight: '100px' }}
+                                                    className='sigma_cart-dropdown'
+                                                    style={{ textAlign: 'left', width: '5%', marginRight: '100px' }}
                                                 >
                                                     <li>
                                                         <h1
@@ -267,7 +267,7 @@ const MenuClientComponent = () => {
                                                     <li
                                                         style={{
                                                             display: 'flex',
-                                                            justifyContent: 'space-around',
+                                                            justifyContent: 'space-between',
                                                             width: '80%'
                                                         }}
                                                     >
@@ -279,12 +279,7 @@ const MenuClientComponent = () => {
                                                         &nbsp;
                                                         <div className='sigma_cart-product-body'>
                                                             <Link to={'/admin'}>
-                                                                <button
-                                                                    className='btn btn-primary'
-                                                                    onClick={handleLogout}
-                                                                >
-                                                                    Quản lý web
-                                                                </button>
+                                                                <button className='btn btn-primary'>Quản lý web</button>
                                                             </Link>
                                                         </div>
                                                     </li>

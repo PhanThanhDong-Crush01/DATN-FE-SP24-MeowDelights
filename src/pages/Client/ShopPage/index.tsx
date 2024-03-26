@@ -1,6 +1,5 @@
 import FooterTemplate from '@/components/component/Footer'
 import MenuClientComponent from '@/components/component/MenuClientComponent'
-import { useProductQuery } from '@/hooks/Product/useProductQuery'
 import ListProduct from './listProduct'
 
 const ShopPage = () => {

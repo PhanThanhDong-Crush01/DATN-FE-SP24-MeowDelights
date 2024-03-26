@@ -34,20 +34,20 @@ const AdminLayout = () => {
 
     const navigate = useNavigate()
     const handleLogout = async () => {
-        await localStorage.removeItem('userID')
-        await localStorage.removeItem('user')
-        await toast({
+        localStorage.removeItem('userID')
+        localStorage.removeItem('user')
+        toast({
             variant: 'destructive',
             title: 'Bạn đã đăng xuất thành công!'
         })
-        await navigate('/signin')
+        navigate('/signin')
     }
 
     return (
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
                 <div className='demo-logo-vertical' />
-                <Link to='/' style={{ width: '100%' }}>
+                <Link to='/products' style={{ width: '100%' }}>
                     <img
                         src='https://res.cloudinary.com/drwpkuqxv/image/upload/v1709051842/logo_meowdelights.jpg'
                         alt=''

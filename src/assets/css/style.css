@@ -9,7 +9,7 @@
     --thm-base-hover: #ce9200; /* Primary hover */
     --thm-base-rgb: 255, 204, 4; /* Primary rgb */
     --thm-base-hue: #fbe48a; /* Primary low hue */
-    --thm-secondary: #4ac4d8; /* Secondary */
+    --thm-secondary: #195660; /* Secondary */
     --thm-secondary-hover: #099dad; /* Secondary hover */
     --thm-secondary-rgb: 74, 196, 216; /* Secondary rgb */
     --thm-b-text: #686a6f; /* Body text */
@@ -1547,12 +1547,13 @@ h4,
 h5,
 h6 {
     font-family: var(--thm-font);
-    font-weight: 600;
-    color: var(--thm-secondary);
+    font-weight: 800;
+    color: black;
+    font-size: 18px;
 }
 
 h1,
-h2,
+--thm-secondary h2,
 h3,
 h4,
 h5,
@@ -15864,8 +15865,8 @@ hr {
 }
 
 .sigma_product .sigma_product-body .sigma_product-title a {
-    color: var(--thm-secondary);
-    font-weight: 500;
+    color: black;
+    font-weight: 700;
 }
 
 .sigma_product .sigma_product-body .sigma_product-title a:hover {
@@ -16945,6 +16946,11 @@ td.remove button span {
 
 .sigma_product-buttons a.btn-block + a.btn-block {
     margin-top: 10px;
+}
+
+h1 {
+    color: black;
+    font-weight: 800;
 }
 
 @media (max-width: 991px) {

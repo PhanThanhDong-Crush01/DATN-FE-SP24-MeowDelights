@@ -202,8 +202,7 @@ const BillDetail = () => {
                                     ))}
                             </ul>
                             {data?.bill?.orderstatus !== 'Đã hủy hàng' &&
-                                data?.bill?.orderstatus !== 'Đã giao hàng thành công' &&
-                                data?.bill?.paymentstatus !== 'Đã thanh toán' && (
+                                data?.bill?.orderstatus !== 'Đã giao hàng thành công' && (
                                     <Dialog open={open} onOpenChange={setOpen}>
                                         <DialogTrigger asChild>
                                             <Button
@@ -268,12 +267,15 @@ const BillDetail = () => {
                                                         )}
                                                     />
                                                     <div className='flex'>
-                                                        <Button
-                                                            className='bg-[red]'
-                                                            onClick={() => handleSubmitOrder({})}
-                                                        >
-                                                            Hủy đơn hàng
-                                                        </Button>
+                                                        {data?.bill?.paymentstatus !== 'Đã thanh toán' && (
+                                                            <Button
+                                                                className='bg-[red]'
+                                                                onClick={() => handleSubmitOrder({})}
+                                                            >
+                                                                Hủy đơn hàng
+                                                            </Button>
+                                                        )}
+
                                                         <Button type='submit' className='ml-10'>
                                                             Submit
                                                         </Button>

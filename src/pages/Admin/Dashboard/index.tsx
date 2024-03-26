@@ -3,68 +3,118 @@ import { toast } from '@/components/ui/use-toast'
 import { formatPriceBootstrap } from '@/lib/utils'
 import {
     getTop10User,
+    thong_ke,
     thong_ke_doanh_thu,
     thong_ke_doanh_thu_thang_trong_nam,
     thong_ke_top_10_product
 } from '@/services/thongke'
 import { Button } from 'antd'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Chart from 'react-google-charts'
 import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
-    const [thongke, setThongKe] = useState<any>()
-    const [totalRevenueOfYear, setTotalRevenueOfYear] = useState<any>()
-    const [thongkeCateNam, setThongKeCateNam] = useState<any>()
+    const [totalRevenue, setTotalRevenue] = useState<any>()
     const [thongketheongay, setThongketheongay] = useState<any>()
-    const [startDate, setSartDate] = useState<any>(null)
-    const [endDate, setEndDate] = useState<any>(null)
+    const [startDate, setSartDate] = useState<any>()
+    const [endDate, setEndDate] = useState<any>()
     const [year, setYear] = useState<any>(2024)
+    const [doanhSo, setDoanhSo] = useState<any>()
+    const [doanhSoSanPham, setDoanhSoSanPham] = useState<any>()
+    const [bangthongke, setBangThongKe] = useState<any>()
+    const [loc, setLoc] = useState<any>(false)
 
     useEffect(() => {
         const fetch = async () => {
             try {
-                let thongkedata: any
-                if (startDate != null && endDate != null) {
-                    const resthongKeNgay = await thong_ke_doanh_thu(startDate, endDate)
-                    thongkedata = resthongKeNgay
-                    setThongketheongay(resthongKeNgay)
-                } else {
-                    const response = await thong_ke_doanh_thu_thang_trong_nam(year) // Chắc chắn rằng hàm thong_ke_doanh_thu_thang_trong_nam đã được định nghĩa trước đó
-                    thongkedata = response
-                    setThongKeCateNam(response.bangtongke)
-                    setTotalRevenueOfYear(response.totalRevenueOfYear)
-                }
-                const data = [['Tháng', 'Tổng', 'Phụ kiện - đồ chơi', 'Đồ ăn - đồ uống']]
-                for (const key in thongkedata?.revenueData) {
-                    let dayMonth = key.split('-').slice(1).join('-') // Lấy phần tháng và ngày (VD: từ "2024-03-10" lấy "03-10")
+                const data = await thong_ke(startDate ? startDate : '2024-01-01', endDate ? endDate : '2024-06-01')
+                console.log('🚀 ~ fetch ~ data:', data)
+                if (data) {
+                    setDoanhSoSanPham(data?.revenueEveryDay)
+                    setTotalRevenue(data?.totalRevenue)
+                    setBangThongKe(data?.bangtongke)
+                    let doanhSo
+                    const diffInDays =
+                        Math.abs(
+                            new Date(endDate ? endDate : '2024-06-01') - new Date(startDate ? startDate : '2024-01-01')
+                        ) /
+                        (1000 * 60 * 60 * 24)
 
-                    const monthData = thongkedata?.revenueData[key]
-                    const totalRevenue = monthData.totalRevenue || 0
-                    let accessoryRevenue = 0
-                    let foodRevenue = 0
-
-                    // Tính tổng doanh thu từ các danh mục
-                    for (const categoryId in monthData.categories) {
-                        const category = monthData.categories[categoryId]
-                        if (category.name === 'Phụ kiện - đồ chơi') {
-                            accessoryRevenue += category.totalRevenue
-                        } else if (category.name === 'Đồ ăn - đồ uống') {
-                            foodRevenue += category.totalRevenue
+                    if (diffInDays > 365) {
+                        // Nếu lớn hơn 365 ngày, gộp theo từng năm
+                        const revenueByYear: any = {}
+                        for (const date in data?.revenueEveryDay) {
+                            const year = date.substring(0, 4)
+                            if (!revenueByYear[year]) {
+                                revenueByYear[year] = 0
+                            }
+                            revenueByYear[year] += data?.revenueEveryDay[date].money
                         }
+
+                        doanhSo = [
+                            ['Năm', 'Tổng tiền'],
+                            ...Object.entries(revenueByYear).map(([year, sales]) => [year, sales])
+                        ]
+                        setDoanhSo(doanhSo)
+                    } else if (365 > diffInDays && diffInDays > 90) {
+                        // 365 > diffInDays > 90, gộp theo từng tháng
+                        const revenueByMonth: any = {}
+                        for (const date in data?.revenueEveryDay) {
+                            const month = date.substring(0, 7) // Lấy năm và tháng
+                            if (!revenueByMonth[month]) {
+                                revenueByMonth[month] = 0
+                            }
+                            revenueByMonth[month] += data?.revenueEveryDay[date].money
+                        }
+                        doanhSo = [
+                            ['Tháng', 'Tổng tiền'],
+                            ...Object.entries(revenueByMonth).map(([month, sales]) => [month, sales])
+                        ]
+                        setDoanhSo(doanhSo)
+                    } else if (90 > diffInDays && diffInDays > 15) {
+                        // 90 > diffInDays > 29, gộp theo từng tuần của tháng
+                        const revenueByWeek: any = {}
+                        const dates = Object.keys(data?.revenueEveryDay)
+
+                        // Lặp qua các ngày và tính toán tuần tương ứng
+                        dates.forEach((date) => {
+                            const week = Math.ceil(new Date(date).getDate() / 7)
+                            const yearMonth = date.substring(5, 7) // Lấy năm và tháng
+                            const weekKey = `T${yearMonth}-Tuần ${week}`
+
+                            if (!revenueByWeek[weekKey]) {
+                                revenueByWeek[weekKey] = 0
+                            }
+
+                            revenueByWeek[weekKey] += data?.revenueEveryDay[date].money
+                        })
+
+                        // Chuyển đổi dữ liệu thành mảng và thêm tiêu đề
+                        doanhSo = [
+                            ['Tuần - Tháng', 'Tổng tiền'],
+                            ...Object.entries(revenueByWeek).map(([week, sales]) => [week, sales])
+                        ]
+                        setDoanhSo(doanhSo)
+                    } else {
+                        // 29 > diffInDays, gộp theo từng ngày
+                        doanhSo = [
+                            ['Ngày', 'Tổng tiền'],
+                            ...Object.entries(data?.revenueEveryDay).map(([date, info]) => [
+                                moment(date).format('MM-DD'),
+                                info.money
+                            ])
+                        ]
+                        setDoanhSo(doanhSo)
                     }
-
-                    data.push([dayMonth, totalRevenue, accessoryRevenue, foodRevenue])
                 }
-
-                setThongKe(data)
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
         }
 
         fetch()
-    }, [startDate, endDate, year])
+    }, [loc])
 
     const [top10Product, setTop10Pro] = useState<any>()
     const [top10User, setTop10User] = useState<any>()
@@ -83,33 +133,42 @@ const Dashboard = () => {
     const [ngaymuonthongke, setNgayMuonThongKe] = useState<any>('')
     const [productBanduocTrongNgay, setProductBanDuocTongNgay] = useState<any>()
     const onchaneDate = (value: any) => {
-        if (startDate == null || endDate == null) {
+        const filteredData = doanhSoSanPham[value]
+        if (filteredData?.money == 0) {
             toast({
                 variant: 'destructive',
-                title: 'Bạn cần chọn lọc doanh thu theo startDate và endDate ở trên trước!'
+                title: `Ngày ${value} không bán được gì!`
             })
-        } else if (value < startDate || value > endDate) {
-            toast({
-                variant: 'destructive',
-                title: `Giá trị cần phải nằm trong khoảng từ ${startDate} đến ${endDate}!`
-            })
+            setNgayMuonThongKe('')
         } else {
-            const filteredData = thongketheongay?.revenueData[value]
-            if (filteredData?.totalRevenue == 0) {
-                toast({
-                    variant: 'destructive',
-                    title: `Ngày ${value} không bán được gì!`
-                })
-                setNgayMuonThongKe('')
-            } else {
-                setNgayMuonThongKe(filteredData)
-            }
+            setNgayMuonThongKe(filteredData)
         }
     }
     useEffect(() => {
         if (ngaymuonthongke !== '') {
-            const product = ngaymuonthongke.soldProducts.map((item: any) => [item.namePro, item.money])
-            const newData = [['Tên sản phẩm', 'Tiền'], ...product]
+            let products = ngaymuonthongke.products
+
+            // Sắp xếp các sản phẩm theo tiền giảm dần
+            products.sort((a: any, b: any) => b.money - a.money)
+
+            let newData = [['Tên sản phẩm', 'Tiền']]
+
+            // Nếu số lượng sản phẩm lớn hơn 5, chỉ lấy 5 sản phẩm cao nhất
+            if (products.length > 5) {
+                // Lấy 5 sản phẩm đầu tiên
+                const topProducts = products.slice(0, 5)
+                newData = [['Tên sản phẩm', 'Tiền'], ...topProducts.map((item: any) => [item.namePro, item.money])]
+
+                // Tính tổng tiền của các sản phẩm còn lại
+                const remainingMoney = products.slice(5).reduce((acc: any, cur: any) => acc + cur.money, 0)
+
+                // Thêm sản phẩm "Sản phẩm khác" với tổng tiền của các sản phẩm còn lại
+                newData.push(['Sản phẩm khác', remainingMoney])
+            } else {
+                // Nếu số lượng sản phẩm không vượt quá 5, hiển thị tất cả các sản phẩm
+                newData = [['Tên sản phẩm', 'Tiền'], ...products.map((item: any) => [item.namePro, item.money])]
+            }
+
             setProductBanDuocTongNgay(newData)
         }
     }, [ngaymuonthongke])
@@ -136,8 +195,8 @@ const Dashboard = () => {
                 </div>
 
                 <div>
-                    <div style={{ width: '40%', marginTop: '10px' }}>
-                        <h2 style={{ fontSize: '20px' }}>Lọc thống kê theo ngày:</h2>
+                    <div style={{ width: '35%', marginLeft: '65%' }}>
+                        <h2 style={{ fontSize: '20px' }}>Lọc thống kê:</h2>
                         <div
                             style={{
                                 display: 'flex',
@@ -161,29 +220,51 @@ const Dashboard = () => {
                                 name='endDate'
                                 style={{ width: '150px' }}
                             />
-                            <p>Hoặc</p>
-                            <Button onClick={() => setLaiNam(2024)}>Năm 2024</Button>
+                            <Button
+                                onClick={() => {
+                                    if (!startDate) {
+                                        toast({
+                                            variant: 'destructive',
+                                            title: 'Bạn chưa chọn ngày bắt đầu!'
+                                        })
+                                    } else if (!endDate) {
+                                        toast({
+                                            variant: 'destructive',
+                                            title: 'Bạn chưa chọn ngày kết thúc!'
+                                        })
+                                    } else {
+                                        setLoc(true)
+                                        toast({
+                                            variant: 'success',
+                                            title: 'Đang lọc thống kê!',
+                                            description:
+                                                'Chọn khoảng thời gian cách nhau càng xa thì việc lọc thống kê càng mất thời gian! Đợi nhé'
+                                        })
+                                    }
+                                }}
+                                type='primary'
+                                danger
+                            >
+                                Lọc
+                            </Button>
                         </div>
                     </div>
-                    <Chart
-                        width={'auto'}
-                        height={'500px'}
-                        chartType='ColumnChart'
-                        loader={<div>Loading Chart...</div>}
-                        data={thongke}
-                        options={{
-                            title: 'Company Performance',
-                            chartArea: { width: '100px' },
-                            hAxis: {
-                                title: 'Năm',
-                                minValue: 0
-                            },
-                            vAxis: {
-                                title: 'Tiền'
-                            }
-                        }}
-                        legendToggle
-                    />
+                    <div style={{ width: '100%' }}>
+                        <Chart
+                            width={'100%'}
+                            height={'500px'}
+                            chartType='LineChart'
+                            loader={<div>Loading Chart</div>}
+                            data={doanhSo}
+                            options={{
+                                title: 'Biểu đồ thống kê doanh thu',
+                                hAxis: { title: '', titleTextStyle: { color: '#333' } },
+                                vAxis: { minValue: 0 },
+                                tooltip: { isHtml: true }
+                            }}
+                            rootProps={{ 'data-testid': '1' }}
+                        />
+                    </div>
                 </div>
                 <div className='row'>
                     <div className='col-md-5 grid-margin stretch-card'>
@@ -231,7 +312,7 @@ const Dashboard = () => {
                                                                     style={{ fontWeight: 700 }}
                                                                     dangerouslySetInnerHTML={{
                                                                         __html: formatPriceBootstrap(
-                                                                            ngaymuonthongke?.totalRevenue
+                                                                            ngaymuonthongke?.money
                                                                         )
                                                                     }}
                                                                 ></span>
@@ -250,7 +331,7 @@ const Dashboard = () => {
                                                             loader={<div>Loading Chart...</div>}
                                                             data={productBanduocTrongNgay}
                                                             options={{
-                                                                title: 'My Daily Activities',
+                                                                title: 'Biểu đồ doanh số danh mục sản phẩm',
                                                                 pieHole: 0.4
                                                             }}
                                                             rootProps={{ 'data-testid': '1' }}
@@ -293,7 +374,7 @@ const Dashboard = () => {
                                                                     className='font-weight-bold'
                                                                     style={{ fontWeight: 700 }}
                                                                     dangerouslySetInnerHTML={{
-                                                                        __html: formatPriceBootstrap(totalRevenueOfYear)
+                                                                        __html: formatPriceBootstrap(totalRevenue)
                                                                     }}
                                                                 ></span>
                                                             </h1>
@@ -309,9 +390,9 @@ const Dashboard = () => {
                                                             height={'300px'}
                                                             chartType='PieChart'
                                                             loader={<div>Loading Chart...</div>}
-                                                            data={thongkeCateNam}
+                                                            data={bangthongke}
                                                             options={{
-                                                                title: 'My Daily Activities',
+                                                                title: 'Biểu đồ %  ',
                                                                 pieHole: 0.4
                                                             }}
                                                             rootProps={{ 'data-testid': '1' }}
@@ -329,9 +410,9 @@ const Dashboard = () => {
                         <div className='card'>
                             <div className='card-body'>
                                 <p className='card-title mb-0'>
-                                    <Button onClick={() => setShowTable(true)}>Top Sản Phẩm</Button>
+                                    <Button onClick={() => setShowTable(true)}>Top 5 Sản Phẩm</Button>
                                     <Button onClick={() => setShowTable(false)} style={{ marginLeft: '20px' }}>
-                                        Top Người dùng
+                                        Top 5 Người dùng
                                     </Button>
                                 </p>
                                 <div className='table-responsive'>

@@ -5,14 +5,11 @@ import { Button, Input, Modal, Popconfirm, Space, Table, message } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 import { useVoucherQuery } from '@/hooks/Voucher/useVoucherQuery'
 import { useVoucherMutation } from '@/hooks/Voucher/useVoucherMutation'
-import { toast } from '@/components/ui/use-toast'
 import AddVoucher from './AddVoucher'
 import { formatPrice } from '@/lib/utils'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import '@/styles/listVouherAdmin.css'
-import { FcGenealogy } from 'react-icons/fc'
-import { phanPhatVouher } from '@/services/voucher'
 type InputRef = GetRef<typeof Input>
 
 interface DataType {
@@ -284,31 +281,6 @@ const Voucher = () => {
         return record.status === false ? 'voucher-expired' : ''
     }
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        setSelectedRowKeys(newSelectedRowKeys)
-    }
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange
-    }
-    const phanphatvoucher = async () => {
-        if (selectedRowKeys.length === 0) {
-            toast({
-                variant: 'destructive',
-                title: 'Mời chọn những voucher bạn muốn phân phát cho người dùng!'
-            })
-        } else {
-            const confirm = window.confirm('Xác nhận lại là phân phát voucher cho người dùng!')
-            if (confirm) {
-                const confirm2 = window.confirm('Xác nhận lại lần 2 là sẽ phân phát voucher cho người dùng!')
-                if (confirm2) {
-                    const idVouchers = selectedRowKeys
-                    await phanPhatVouher({ idVouchers: idVouchers })
-                }
-            }
-        }
-    }
     return (
         <div>
             <div className='flex justify-between items-center'>
@@ -321,16 +293,6 @@ const Voucher = () => {
                         className='bg-[#1677ff]'
                         onClick={showModal}
                     ></Button>
-                    <Button
-                        type='primary'
-                        danger
-                        icon={<FcGenealogy />}
-                        size={'large'}
-                        className='bg-[#1677ff] ml-3'
-                        onClick={() => phanphatvoucher()}
-                    >
-                        Phân phát Voucher
-                    </Button>
                 </div>
             </div>
             <br />
@@ -355,13 +317,7 @@ const Voucher = () => {
             <Modal open={isModalOpen} onCancel={handleCancel}>
                 <AddVoucher />
             </Modal>
-            <Table
-                rowSelection={rowSelection}
-                rowClassName={rowClassName}
-                columns={columns}
-                dataSource={dataVoucher}
-                scroll={{ x: 1300 }}
-            />
+            <Table rowClassName={rowClassName} columns={columns} dataSource={dataVoucher} scroll={{ x: 1300 }} />
         </div>
     )
 }

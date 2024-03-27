@@ -37,14 +37,14 @@ const AddVoucher = () => {
             expiry: data.expiry,
             conditions: data.conditions,
             idTypeVoucher: data.idTypeVoucher,
-            minTotalBill1: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.minTotalBill1,
-            quantity1: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.quantity1,
-            minTotalBill2: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.minTotalBill2,
-            quantity2: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.quantity2,
-            minTotalBill3: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.minTotalBill3,
-            quantity3: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.quantity3,
-            minTotalBill4: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.minTotalBill4,
-            quantity4: selectTypeVc == '65ba03f7cb1e0ffc78158c55' ? 10000 : data.quantity4
+            minTotalBill1: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.minTotalBill1,
+            quantity1: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.quantity1,
+            minTotalBill2: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.minTotalBill2,
+            quantity2: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.quantity2,
+            minTotalBill3: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.minTotalBill3,
+            quantity3: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.quantity3,
+            minTotalBill4: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.minTotalBill4,
+            quantity4: selectTypeVc === '65ba03f7cb1e0ffc78158c55' ? 100 : data.quantity4
         }
         onSubmit(dataNew)
     }

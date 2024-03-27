@@ -40,15 +40,11 @@ const UpdateProfile = (_props: Props) => {
                                         <NameForm data={data} />
 
                                         <PhoneForm data={data} />
-
-                                        <EmailForm data={data} />
                                     </div>
                                     <div style={{ width: '45%' }}>
                                         <EmailForm data={data} />
-                                        {/* <AgeForm data={data} /> */}
                                         <GenderForm data={data} />
                                         <AddressForm data={data} />
-                                        {/* <AddressForm data={data} /> đổi mật khẩu */}
                                     </div>
                                 </div>
                             </main>

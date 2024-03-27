@@ -134,41 +134,7 @@ const ListContact = () => {
                 </div>
             )
         },
-        {
-            title: 'Trạng thái chốt đơn',
-            dataIndex: 'statusOrder',
-            key: 'statusOrder',
-            width: '10%',
-            render: (_, record) => (
-                <div>
-                    {record?.statusOrder ? (
-                        <h1 style={{ fontSize: '18px', color: 'green' }}>True</h1>
-                    ) : (
-                        <h1 style={{ fontSize: '18px', color: 'red' }}>False</h1>
-                    )}
-                </div>
-            )
-        },
-        {
-            title: 'Đơn hàng',
-            dataIndex: 'idOrder',
-            key: 'idOrder',
-            width: '10%',
-            render: (_, record) => (
-                <div>
-                    {record?.order?.money != null ? (
-                        <h1
-                            style={{ fontSize: '20px' }}
-                            dangerouslySetInnerHTML={{
-                                __html: formatPriceBootstrap(record?.order?.money)
-                            }}
-                        ></h1>
-                    ) : (
-                        ''
-                    )}
-                </div>
-            )
-        },
+
         {
             title: 'Ghi chú',
             dataIndex: 'note',

@@ -49,14 +49,14 @@ const ProductDetailPage = () => {
 
     const { register, handleSubmit } = useForm()
     const star = dataStar?.datas ? dataStar.datas : []
-    console.log(star)
     const productId = data?.data?._id
 
     const uniqueColorsWithImage = data?.typeProduct.reduce((unique: any, item: any) => {
         if (!unique.some((color: any) => color.color === item.color)) {
             unique.push({
                 color: item.color,
-                image: item.image // Thêm link ảnh vào đây
+                image: item.image,
+                quantity: item.quantity
             })
         }
         return unique
@@ -406,11 +406,7 @@ const ProductDetailPage = () => {
                                                         <h2
                                                             className=' px-2 text-xl'
                                                             dangerouslySetInnerHTML={{
-                                                                __html: Number(
-                                                                    selectedQuantity == 0
-                                                                        ? data?.totalQuantity
-                                                                        : selectedQuantity
-                                                                )
+                                                                __html: Number(selectedQuantity)
                                                             }}
                                                         ></h2>
 

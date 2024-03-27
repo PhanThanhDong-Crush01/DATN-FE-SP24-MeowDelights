@@ -56,7 +56,7 @@ const Routers = () => {
     }, [])
 
     const { data }: any = useAuthQuery(userID)
-
+    console.log('🚀 ~ Routers ~ data:', data?.data)
     return (
         <Routes>
             <Route path='/' element={<BaseLayout />}>

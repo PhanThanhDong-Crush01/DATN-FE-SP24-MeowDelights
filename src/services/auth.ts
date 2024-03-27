@@ -20,7 +20,6 @@ export const getAll = async () => {
 export const getOneUser = async (id: string) => {
     try {
         const response = await instance.get(`/auth/${id}`)
-        console.log('🚀 ~ getOneUser ~ response.data:', response.data)
         return response.data
     } catch (error: any) {
         toast({

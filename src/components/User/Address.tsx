@@ -31,11 +31,6 @@ const AddressForm = ({ data }: AddressFormProps) => {
 
     useEffect(() => {
         if (data && form) {
-            console.log('Data:', data)
-            console.log('Form:', form)
-
-            console.log('Effect triggered')
-
             form.reset({
                 imgUser: data?.datas?.imgUser || '',
                 name: data?.datas?.name || '',

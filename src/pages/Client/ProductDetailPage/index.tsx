@@ -79,14 +79,12 @@ const ProductDetailPage = () => {
         updatePrice(color, selectedSize)
         updateQuantily(color, selectedSize)
     }
-    console.log(handleColorChange)
 
     const handleSizeChange = (size: string) => {
         setSelectedSize(size)
         updatePrice(selectedColor, size)
         updateQuantily(selectedColor, size)
     }
-    console.log(handleSizeChange)
     const updatePrice = (color: string, size: string) => {
         const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
 
@@ -97,7 +95,6 @@ const ProductDetailPage = () => {
             setSelectedPrice(null)
         }
     }
-    console.log(updatePrice)
     const [selectedTypeProductDaChon, setSelectedTypeProductDaChon] = useState<any>()
     const updateQuantily = (color: string, size: string) => {
         const selectedTypeProduct = data?.typeProduct.find((item: any) => item.color === color && item.size === size)
@@ -110,7 +107,6 @@ const ProductDetailPage = () => {
             setSelectedQuantity(0)
         }
     }
-    console.log(updateQuantily)
     const { onSubmit } = useCartMutation({
         action: 'ADD'
     })

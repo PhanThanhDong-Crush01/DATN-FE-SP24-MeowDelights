@@ -8,10 +8,12 @@ import {
     thong_ke_doanh_thu_thang_trong_nam,
     thong_ke_top_10_product
 } from '@/services/thongke'
+import { phanPhatVouher } from '@/services/voucher'
 import { Button } from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Chart from 'react-google-charts'
+import { FcGenealogy } from 'react-icons/fc'
 import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
@@ -179,6 +181,11 @@ const Dashboard = () => {
         setNgayMuonThongKe('')
         setYear(2024)
     }
+
+    const phanphatvoucher = async () => {
+        await phanPhatVouher({ top10User: top10User })
+    }
+
     return (
         <div className='main-panel'>
             <div className='content-wrapper'>
@@ -457,39 +464,55 @@ const Dashboard = () => {
                                             </tbody>
                                         </table>
                                     ) : (
-                                        <table className='table table-striped table-borderless text-left'>
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th style={{ width: '40%' }}>THông tin khách hàng</th>
-                                                    <th>Số lượng hóa đơn</th>
-                                                    <th>Tổng tiền</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {top10User &&
-                                                    top10User.map((item: any, index: number) => (
-                                                        <tr key={item?._id}>
-                                                            <td>{index + 1}</td>
-                                                            <td>
-                                                                <h1 style={{ fontSize: '20px' }}>{item?.username}</h1>
-                                                                <p>{item?.email}</p>
-                                                                <p>{item?.phone}</p>
-                                                            </td>
-                                                            <td style={{ textAlign: 'center' }}>
-                                                                {item?.totalBillCount}
-                                                            </td>
-                                                            <td
-                                                                className='font-weight-bold'
-                                                                style={{ fontWeight: 700 }}
-                                                                dangerouslySetInnerHTML={{
-                                                                    __html: formatPriceBootstrap(item?.totalAmount)
-                                                                }}
-                                                            ></td>
-                                                        </tr>
-                                                    ))}
-                                            </tbody>
-                                        </table>
+                                        <div>
+                                            <table className='table table-striped table-borderless text-left'>
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th style={{ width: '40%' }}>THông tin khách hàng</th>
+                                                        <th>Số lượng hóa đơn</th>
+                                                        <th>Tổng tiền</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {top10User &&
+                                                        top10User.map((item: any, index: number) => (
+                                                            <tr key={item?._id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>
+                                                                    <h1 style={{ fontSize: '20px' }}>
+                                                                        {item?.username}
+                                                                    </h1>
+                                                                    <p>{item?.email}</p>
+                                                                    <p>{item?.phone}</p>
+                                                                </td>
+                                                                <td style={{ textAlign: 'center' }}>
+                                                                    {item?.totalBillCount}
+                                                                </td>
+                                                                <td
+                                                                    className='font-weight-bold'
+                                                                    style={{ fontWeight: 700 }}
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: formatPriceBootstrap(item?.totalAmount)
+                                                                    }}
+                                                                ></td>
+                                                            </tr>
+                                                        ))}
+                                                </tbody>
+                                            </table>
+
+                                            <Button
+                                                type='primary'
+                                                danger
+                                                icon={<FcGenealogy />}
+                                                size={'large'}
+                                                className='bg-[#1677ff]'
+                                                style={{ marginLeft: '35%' }}
+                                                onClick={() => phanphatvoucher()}
+                                            >
+                                                Phân phát Voucher
+                                            </Button>
+                                        </div>
                                     )}
                                 </div>
                             </div>

@@ -288,7 +288,7 @@ const Product = () => {
                                 {record.soldQuantity} sp đã bán
                             </u>
                         </DialogTrigger>
-                        <DialogContent style={{ width: '30%' }}>
+                        <DialogContent>
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <img
                                     src={getBill?.data?.image}
@@ -319,7 +319,7 @@ const Product = () => {
                                         {getBill?.typeProduct_bill.map((item: any, index: number) => (
                                             <tr key={item?.color}>
                                                 <td>{index + 1}</td>
-                                                <td>
+                                                <td style={{ width: '30%' }}>
                                                     {item?.color} x {item?.size}
                                                     <br />
                                                     <img src={item?.image} alt='ảnh loại sản phẩm' width={'70px'} />

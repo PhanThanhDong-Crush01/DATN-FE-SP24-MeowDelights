@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Select } from 'antd'
 import instance from '@/services/core/api'
+import { toast } from '@/components/ui/use-toast'
 
 const CartPage = () => {
     const { dataCart } = useCartQuery()
@@ -103,8 +104,16 @@ const CartPage = () => {
             },
             tongTien: tongTienCanThanhToan
         }
-        localStorage.setItem('thongtindonhang', JSON.stringify(thongtindonhang))
-        navigate('/payment_information')
+        if (auth?.isLocked === true) {
+            localStorage.setItem('thongtindonhang', JSON.stringify(thongtindonhang))
+            navigate('/payment_information')
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Tài khoản của bạn đã bị khóa!',
+                description: `Bạn có thể quay lại vào ngày ${auth?.dateIsLockedTrue} để mua hàng`
+            })
+        }
     }
 
     const onSearch = (value: string) => {

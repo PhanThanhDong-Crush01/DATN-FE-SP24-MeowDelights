@@ -21,7 +21,6 @@ import EditCategory from '@/pages/Admin/Category/EditCategory'
 import AddProduct from '@/pages/Admin/Products/Add/AddProduct'
 import Voucher from '@/pages/Admin/ListVoucher'
 import AddVoucher from '@/pages/Admin/ListVoucher/AddVoucher'
-import PaymentMoMo from '@/pages/Client/PaymentSuccessPage/PaymentMoMo'
 import List_Bill_Order from '@/pages/Client/AuthPage/List_Bill_Order'
 import Product from '@/pages/Admin/Products'
 import UpdateProfile from '@/pages/Client/AuthPage/UpdateProfile'
@@ -42,6 +41,8 @@ import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayP
 import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
 import ListCommentPage from '@/pages/Admin/ListComment'
 import EditProduct from '@/pages/Admin/Products/Edit/EditProduct'
+import DetailCommentPage from '@/pages/Admin/ListComment/DetailComment'
+import { useAuthQuery } from '@/hooks/Auth/useAuthQuery'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -51,6 +52,9 @@ const Routers = () => {
             setUserID(storedUserID)
         }
     }, [])
+
+    const { data }: any = useAuthQuery(userID)
+    console.log('🚀 ~ Routers ~ data:', data?.data)
     return (
         <Routes>
             <Route path='/' element={<BaseLayout />}>
@@ -59,13 +63,16 @@ const Routers = () => {
                 <Route path='products/:id' element={<ProductDetailPage />} />
                 <Route path='cart' element={<CartPage />} />
 
-                <Route path='payment_information' element={<PaymentInformationPage />} />
-                <Route path='payment_method_paypalcheckout' element={<PaymentVNPayComponent />} />
-                <Route path='payment_success' element={<PaymentSuccessPage />} />
+                {data?.datas?.isLocked === true ? (
+                    <>
+                        <Route path='payment_information' element={<PaymentInformationPage />} />
+                        <Route path='payment_method_paypalcheckout' element={<PaymentVNPayComponent />} />
+                        <Route path='payment_success' element={<PaymentSuccessPage />} />
+                    </>
+                ) : null}
                 <Route path='contact' element={<ContactPage />} />
                 <Route path='introduce' element={<IntroducePage />} />
 
-                <Route path='bill_order' element={<List_Bill_Order />} />
                 <Route path='check_order' element={<SendOTP />} />
             </Route>
             <Route path='signin' element={<SigninPage />} />
@@ -76,28 +83,34 @@ const Routers = () => {
                 <Route path='my_voucher' element={<MyVoucher />} />
                 <Route path='order/order_detail/:id' element={<OrderDetailPage />} />
             </Route>
-            <Route path='admin' element={<AdminLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path='dashboard' element={<Dashboard />} />
-                <Route path='products' element={<Product />} />
-                <Route path='comment' element={<ListCommentPage />} />
-                <Route path='auth' element={<ListAuthPage />} />
-                <Route path='user' element={<ListUserPage />} />
-                <Route path='user/add' element={<AddAuth />} />
-                <Route path='user/editAuth/:id' element={<EditAuth />} />
-                <Route path='products/:id/edit' element={<EditProduct />} />
-                <Route path='products/add' element={<AddProduct />} />
-                <Route path='categories' element={<ListCategory />} />
-                <Route path='categories/edit/:id' element={<EditCategory />} />
-                <Route path='categories/add' element={<AddCategory />} />
-                <Route path='voucher' element={<Voucher />} />
-                <Route path='voucher/edit/:id' element={<EditVoucher />} />
-                <Route path='voucher/add' element={<AddVoucher />} />
-                <Route path='type_voucher' element={<ListTypeVoucher />} />
-                <Route path='bill' element={<ListBill />} />
-                <Route path='bill/:id' element={<BillDetail />} />
-                <Route path='contact' element={<ListContact />} />
-            </Route>
+            {data?.datas?.isLocked === true ? (
+                <>
+                    <Route path='admin' element={<AdminLayout />}>
+                        <Route index element={<Dashboard />} />
+                        <Route path='dashboard' element={<Dashboard />} />
+                        <Route path='products' element={<Product />} />
+                        <Route path='comment' element={<ListCommentPage />} />
+                        <Route path='comment/:id' element={<DetailCommentPage />} />
+                        <Route path='auth' element={<ListAuthPage />} />
+                        <Route path='user' element={<ListUserPage />} />
+                        <Route path='user/add' element={<AddAuth />} />
+                        <Route path='user/editAuth/:id' element={<EditAuth />} />
+                        <Route path='user/edit/:id' element={<EditUser />} />
+                        <Route path='products/:id/edit' element={<EditProduct />} />
+                        <Route path='products/add' element={<AddProduct />} />
+                        <Route path='categories' element={<ListCategory />} />
+                        <Route path='categories/edit/:id' element={<EditCategory />} />
+                        <Route path='categories/add' element={<AddCategory />} />
+                        <Route path='voucher' element={<Voucher />} />
+                        <Route path='voucher/edit/:id' element={<EditVoucher />} />
+                        <Route path='voucher/add' element={<AddVoucher />} />
+                        <Route path='type_voucher' element={<ListTypeVoucher />} />
+                        <Route path='bill' element={<ListBill />} />
+                        <Route path='bill/:id' element={<BillDetail />} />
+                        <Route path='contact' element={<ListContact />} />
+                    </Route>
+                </>
+            ) : null}
             <Route path='*' element={'Page Not Found'} />
         </Routes>
     )

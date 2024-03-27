@@ -74,21 +74,24 @@ export const add = async (comment: IComment) => {
     }
 }
 
-export const remove = async (comment: IComment) => {
+export const remove = async (comment: any) => {
+    console.log('🚀 ~ remove ~ comment:', comment)
     try {
-        await instance.delete(`/comment/${comment._id}`)
-
-        toast({
-            variant: 'success',
-            title: 'Xóa bình luận thành công!!',
-            description: 'Xóa bình luận thành công!'
-        })
+        const response = await instance.delete(`/comment/${comment?.comment?.data._id}`)
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Xóa thành công!!',
+                description: 'Xóa đánh giá thành công!'
+            })
+        }
+        return response.data
     } catch (error: any) {
         toast({
             variant: 'destructive',
             title: error?.response?.data?.message + '!'
         })
-        console.log(`['DELETE_COMMENT_ERROR']`, error)
+        console.log(`['Delete_COMMENT_ERROR']`, error)
     }
 }
 export const statisticsComment = async (id: string) => {
@@ -97,5 +100,32 @@ export const statisticsComment = async (id: string) => {
         return response.data
     } catch (error: any) {
         console.log(`['GETONE_COMMENT_ERROR']`, error)
+    }
+}
+export const checkComment = async ({ userId, productId, productTypeId }: any) => {
+    try {
+        const response = await instance.post('/comment/check', { userId, productId, productTypeId })
+        if (response.data) {
+            toast({
+                variant: 'success',
+                title: 'Bình luận này đã có!!',
+                description: 'Bình luận này đã có!'
+            })
+        }
+        return response.data
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: error?.response?.data?.message + '!'
+        })
+        console.log(`['ADD_COMMENT_ERROR']`, error)
+    }
+}
+export const getAllCommentsByBillId = async (id: string) => {
+    try {
+        const response = await instance.get(`/comment/bill/${id}`)
+        return response.data
+    } catch (error: any) {
+        console.log(`['GETALL_COMMENT_OF_BILL_ERROR']`, error)
     }
 }

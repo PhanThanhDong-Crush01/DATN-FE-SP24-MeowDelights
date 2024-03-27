@@ -19,6 +19,8 @@ const SigninPage = () => {
             const response = await signin(values)
             if (response?.user) {
                 const user = JSON.stringify(response?.user)
+                // localStorage.setItem('user', user)
+                // localStorage.setItem('userID', response?.user?._id)
                 localStorage.setItem('user', user)
                 localStorage.setItem('userID', response?.user?._id)
                 if (response?.user?.role !== 'member') {

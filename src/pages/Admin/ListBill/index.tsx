@@ -22,16 +22,13 @@ interface DataType {
     decreaseVc: number
     date: any
     money: number
-    totalQuantity: number
     paymentmethods: string
     paymentstatus: string
     orderstatus: string
-    user: {
-        name: any
-        email: any
-    }
-    time: any
-    dateTime: any
+    createdAt: any
+    updatedAt: any
+    totalQuantity: number
+    billDetails: any[]
 }
 type DataIndex = keyof DataType
 
@@ -158,6 +155,9 @@ const ListBill = () => {
                     </p>
                     <p>
                         Đến: <i style={{ fontSize: '12px' }}>{record?.address}</i>
+                    </p>
+                    <p>
+                        Mã: <i style={{ fontSize: '12px', color: 'blue' }}>{record?._id}</i>
                     </p>
                 </div>
             )

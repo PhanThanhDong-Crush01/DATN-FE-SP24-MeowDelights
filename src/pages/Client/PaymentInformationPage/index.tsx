@@ -95,7 +95,6 @@ const PaymentInformationPage = () => {
             billdetails: billdetails
         }
         localStorage.setItem('donhang', JSON.stringify(addNew))
-        localStorage.setItem('khachvanglai', JSON.stringify(khachvanglai))
         await removeCartUser(userID)
         navigate('/check_order')
     }

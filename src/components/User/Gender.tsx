@@ -17,7 +17,6 @@ type FormControlType = {
     gender: boolean
 }
 const GenderForm = ({ data }: GenderFormProps) => {
-    console.log(data)
     const [editAuth, setEditAuth] = useState(false)
     const { form, onSubmit } = useAuthMutation({
         action: 'UPDATE', // Specify the action as 'UPDATE'

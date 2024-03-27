@@ -10,6 +10,7 @@ import FormAddInfoTypeProduct from './FormAddInfoTypeProduct'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 import ImageUpload from '@/lib/uploadFile'
 import ProductFormDescription from './CKE_Form_Description'
+import { format, addDays, isAfter } from 'date-fns'
 
 interface Color {
     id: number
@@ -30,8 +31,7 @@ const colorsData: Color[] = [
 
 const sizesData: Size[] = [
     { id: 1, size: 'S' },
-    { id: 2, size: 'M' },
-    { id: 3, size: 'L' }
+    { id: 2, size: 'M' }
     // Thêm các kích thước khác nếu cần
 ]
 
@@ -118,6 +118,15 @@ const FormProduct = ({ setImageUrl, setDescriptionData }: any) => {
         setImageUrl(url)
     }
 
+    const handleDeleteSize = (colorToDelete: string, sizeToDelete: string) => {
+        setTypeProduct((prevTypeProducts: any) => {
+            return prevTypeProducts.filter((item: any) => !(item.color === colorToDelete && item.size === sizeToDelete))
+        })
+        setCombinedData((prevTypeProducts: any) => {
+            return prevTypeProducts.filter((item: any) => !(item.color === colorToDelete && item.size === sizeToDelete))
+        })
+    }
+
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: '60%', textAlign: 'center' }}>
@@ -146,7 +155,20 @@ const FormProduct = ({ setImageUrl, setDescriptionData }: any) => {
                 <Form.Item
                     label='Ngày nhập'
                     name='import_date'
-                    rules={[{ required: true, message: 'Vui lòng thêm ngày nhập hàng!' }]}
+                    rules={[
+                        { required: true, message: 'Vui lòng thêm ngày nhập hàng!' },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                const currentDate = format(new Date(), 'yyyy-MM-dd')
+                                const yesterday = format(addDays(new Date(), -1), 'yyyy-MM-dd')
+
+                                if (value === currentDate || value === yesterday) {
+                                    return Promise.resolve()
+                                }
+                                return Promise.reject(new Error('Ngày nhập phải là ngày hiện tại hoặc hôm qua!'))
+                            }
+                        })
+                    ]}
                 >
                     <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
@@ -154,7 +176,19 @@ const FormProduct = ({ setImageUrl, setDescriptionData }: any) => {
                 <Form.Item
                     label='Ngày sản xuất'
                     name='manufacture_date'
-                    rules={[{ required: true, message: 'Vui lòng thêm ngày sản xuất!' }]}
+                    rules={[
+                        { required: true, message: 'Vui lòng thêm ngày sản xuất!' },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                const importDate = getFieldValue('import_date') // Lấy ngày nhập hàng
+
+                                if (value < importDate) {
+                                    return Promise.resolve()
+                                }
+                                return Promise.reject(new Error('Ngày sản xuất phải nhỏ hơn ngày nhập hàng!'))
+                            }
+                        })
+                    ]}
                 >
                     <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
@@ -162,7 +196,39 @@ const FormProduct = ({ setImageUrl, setDescriptionData }: any) => {
                 <Form.Item
                     label='Ngày hết hạn'
                     name='expiry_date'
-                    rules={[{ required: true, message: 'Vui lòng thêm ngày hết hạn!' }]}
+                    rules={[
+                        { required: true, message: 'Vui lòng thêm ngày hết hạn!' },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                const importDate = getFieldValue('import_date') // Lấy ngày nhập hàng
+                                const manufactureDate = getFieldValue('manufacture_date') // Lấy ngày sản xuất
+
+                                if (value >= importDate && isAfter(value, manufactureDate)) {
+                                    const fifteenDaysAfterImport = addDays(new Date(importDate), 15)
+                                    if (isAfter(value, fifteenDaysAfterImport)) {
+                                        const thirtyDaysAfterManufacture = addDays(new Date(manufactureDate), 30)
+                                        if (isAfter(value, thirtyDaysAfterManufacture)) {
+                                            return Promise.resolve()
+                                        } else {
+                                            return Promise.reject(
+                                                new Error('Ngày hết hạn phải sau 30 ngày kể từ ngày sản xuất!')
+                                            )
+                                        }
+                                    } else {
+                                        return Promise.reject(
+                                            new Error('Ngày hết hạn phải lớn hơn 15 ngày kể từ ngày nhập hàng!')
+                                        )
+                                    }
+                                } else {
+                                    return Promise.reject(
+                                        new Error(
+                                            'Ngày hết hạn không được nhỏ hơn ngày nhập và phải sau ngày sản xuất!'
+                                        )
+                                    )
+                                }
+                            }
+                        })
+                    ]}
                 >
                     <Input type='date' style={{ height: '40px', width: '100%', borderColor: 'gray' }} />
                 </Form.Item>
@@ -276,7 +342,11 @@ const FormProduct = ({ setImageUrl, setDescriptionData }: any) => {
                                 </Space>
                             </div>
                             <div style={{ marginTop: '50px' }}>
-                                <FormAddInfoTypeProduct data={combinedData} onClose={onClose} />
+                                <FormAddInfoTypeProduct
+                                    handleDeleteSize={handleDeleteSize}
+                                    data={combinedData}
+                                    onClose={onClose}
+                                />
                             </div>
                         </Drawer>
                     </div>

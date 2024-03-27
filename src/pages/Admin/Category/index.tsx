@@ -2,14 +2,11 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/ic
 import type { TableColumnsType } from 'antd'
 import { Button, Popconfirm, Space, Table } from 'antd'
 import '@/styles/Cate.css'
-import { Link } from 'react-router-dom'
 import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 import AddCategory from './AddCategory'
-import { IoMdAdd } from 'react-icons/io'
 import EditCategory from './EditCategory'
 import { useCategoryQuery } from '@/hooks/Category/useCategoryQuery'
 import { useCategoryMutation } from '@/hooks/Category/useCategoryMutation'
-import { toast } from '@/components/ui/use-toast'
 
 interface DataType {
     key: string

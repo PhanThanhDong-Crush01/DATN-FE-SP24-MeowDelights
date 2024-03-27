@@ -10,11 +10,8 @@ const SignupPage = () => {
     const { register, handleSubmit } = useForm()
 
     const onSubmit = async (data: any) => {
-        console.log(data)
-        // Thực hiện xử lý đăng ký tài khoản tại đây
         try {
             const reponse = await signup(data)
-            console.log('api signup', reponse)
             message.success(reponse?.data?.message)
             // localStorage.setItem('user', JSON.stringify(data))
             navigate('/signin')

@@ -33,7 +33,7 @@ const AdminLayout = () => {
     const { data }: any = useAuthQuery(userID)
 
     const navigate = useNavigate()
-    const handleLogout = () => {
+    const handleLogout = async () => {
         localStorage.removeItem('userID')
         localStorage.removeItem('user')
         toast({
@@ -47,7 +47,7 @@ const AdminLayout = () => {
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
                 <div className='demo-logo-vertical' />
-                <Link to='/' style={{ width: '100%' }}>
+                <Link to='/products' style={{ width: '100%' }}>
                     <img
                         src='https://res.cloudinary.com/drwpkuqxv/image/upload/v1709051842/logo_meowdelights.jpg'
                         alt=''
@@ -93,14 +93,13 @@ const AdminLayout = () => {
                         <Link to='/admin/contact'>Liên hệ</Link>
                     </Menu.Item>
                     <Menu.SubMenu key='9' icon={<MdOutlineAccountCircle />} title='Tài khoản'>
-                        <Menu.Item key='1'>
+                        <Menu.Item key='account-info'>
                             <Link to='/admin/auth'>Tài khoản khách hàng</Link>
                         </Menu.Item>
-                        <Menu.Item key='2'>
+                        <Menu.Item key=''>
                             <Link to='/admin/user'>Tài khoản nhân viên</Link>
                         </Menu.Item>
                     </Menu.SubMenu>
-                    {/* </Menu.Item> */}
 
                     <Menu.Item key='12' icon={<MdPowerSettingsNew style={{ color: 'red' }} />} onClick={handleLogout}>
                         Đăng xuất

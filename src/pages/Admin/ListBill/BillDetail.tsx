@@ -96,7 +96,9 @@ const BillDetail = () => {
     }, [])
 
     const form = useForm<any>()
-
+    const { onSubmit } = useBillDetailMutation({
+        action: 'UPDATE_PAYMENT_STATUS'
+    })
     const handleSubmitForm = async (data: any) => {
         if (!data) {
             toast({
@@ -109,7 +111,15 @@ const BillDetail = () => {
                 idStaff: userID,
                 orderstatus: data?.status
             }
-            const change = await apiChangeStatusOrder(changeStatusOrder)
+            await apiChangeStatusOrder(changeStatusOrder)
+            if (data?.status == 'Đã giao hàng thành công') {
+                const updatedPayMents = {
+                    ...data,
+                    _id: id,
+                    paymentstatus: 'Đã thanh toán'
+                }
+                onSubmit(updatedPayMents)
+            }
             window.location.reload()
             setOpen(false)
         }
@@ -122,32 +132,9 @@ const BillDetail = () => {
             idStaff: userID,
             orderstatus: data?.status
         }
-        const change = await apiCancelOrder(CancelOrder)
+        await apiCancelOrder(CancelOrder)
         setOpen(false)
         navigate('/admin/bill')
-    }
-    const { onSubmit } = useBillDetailMutation({
-        action: 'UPDATE_PAYMENT_STATUS',
-        onSuccess: () => {
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
-        }
-    })
-
-    const handleSubmitPaymentStatus = (data: any) => {
-        const confirm = window.confirm('Xác nhận lại là đơn hàng đã thanh toán!')
-        if (confirm) {
-            const confirm2 = window.confirm('Xác nhận lại lần 2 là đơn hàng đã thanh toán!')
-            if (confirm2) {
-                const updatedPayMents = {
-                    ...data,
-                    _id: id,
-                    paymentstatus: 'Đã thanh toán'
-                }
-                onSubmit(updatedPayMents)
-            }
-        }
     }
 
     return (
@@ -158,10 +145,14 @@ const BillDetail = () => {
                     id='name-bill'
                     style={{ fontWeight: 900 }}
                 >
-                    Hóa đơn chi tiết
+                    Hóa đơn chi tiết: <br />
+                    <span style={{ fontWeight: 500, fontSize: '18px' }}>
+                        Mã: <span style={{ color: 'gray' }}> {id}</span>
+                    </span>
                 </h4>
 
                 <button
+                    style={{ marginLeft: '35%' }}
                     className='flex flex-row gap-3 bg-blue-500 hover:bg-blue-500 text-white font-bold py-2 px-4 pl-3 rounded h-10 w-36 text-right mx-16 mt-10 hover:bg-blue-300'
                     onClick={handlePrint}
                 >
@@ -180,20 +171,21 @@ const BillDetail = () => {
                 </button>
             </div>
             <div id='bill-detail' className=' border-2 border-blue-300  rounded  w-auto mx-28 my-2'>
-                <div className='  md:px-6 xl:px-7.5 '>
-                    {/* <span className='font-bold text-base text-blue-500'>Thời gian đặt hàng: 17.00pm 12/1/2024</span> */}
-                    <div className=' gap-72 font-thin text-base  flex flex-row pt-2'>
-                        <div className='flex flex-col gap-3 pl-2'>
+                <div className='md:px-6 xl:px-7.5 '>
+                    <div
+                        className='gap-72 font-thin text-base pt-2'
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'self-start' }}
+                    >
+                        <div className='flex flex-col gap-3 pl-2' style={{ width: '75%' }}>
                             <p id='ten-cua-hang' className='mt-2 font-serif'>
                                 Trạng thái giao hàng
                             </p>
 
-                            <ul>
+                            <ul style={{ width: '100%' }}>
                                 {bill?.billChangeStatusOrderHistory &&
                                     bill?.billChangeStatusOrderHistory.map((item: any) => (
                                         <li
                                             style={{
-                                                listStyle: 'inside',
                                                 marginTop: '5px',
                                                 fontWeight: 500,
                                                 display: 'flex',
@@ -209,90 +201,98 @@ const BillDetail = () => {
                                         </li>
                                     ))}
                             </ul>
-
-                            {data?.bill?.orderstatus != 'Đã hủy hàng' && (
-                                <Dialog open={open} onOpenChange={setOpen}>
-                                    <DialogTrigger asChild>
-                                        {/* <Button>Hủy đơn hàng</Button> */}
-                                        <Button
-                                            variant='outline'
-                                            style={{
-                                                backgroundColor: 'white',
-                                                borderColor: '#93C5FD',
-                                                color: '#93C5FD'
-                                            }}
-                                        >
-                                            Cập nhật trạng thái
-                                        </Button>
-                                    </DialogTrigger>
-
-                                    <DialogContent className='sm:max-w-[425px]'>
-                                        <DialogHeader>
-                                            <DialogTitle>Thay đổi trạng thái giao hàng</DialogTitle>
-                                            <DialogDescription>
-                                                Cập nhật trạng thái giao hàng do nhân viên hoặc shiper thông báo
-                                            </DialogDescription>
-                                        </DialogHeader>
-
-                                        <Form {...form}>
-                                            <form
-                                                onSubmit={form.handleSubmit(handleSubmitForm)}
-                                                className='w-2/3 space-y-6'
-                                                style={{ textAlign: 'center' }}
+                            {data?.bill?.orderstatus !== 'Đã hủy hàng' &&
+                                data?.bill?.orderstatus !== 'Đã giao hàng thành công' && (
+                                    <Dialog open={open} onOpenChange={setOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                variant='outline'
+                                                style={{
+                                                    backgroundColor: 'white',
+                                                    borderColor: '#93C5FD',
+                                                    color: '#93C5FD'
+                                                }}
                                             >
-                                                <FormField
-                                                    control={form.control}
-                                                    name='status'
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <Select
-                                                                onValueChange={field.onChange}
-                                                                defaultValue={field.value}
+                                                Cập nhật trạng thái
+                                            </Button>
+                                        </DialogTrigger>
+
+                                        <DialogContent className='sm:max-w-[425px]'>
+                                            <DialogHeader>
+                                                <DialogTitle>Thay đổi trạng thái giao hàng</DialogTitle>
+                                                <DialogDescription>
+                                                    Cập nhật trạng thái giao hàng do nhân viên hoặc shipper thông báo
+                                                </DialogDescription>
+                                            </DialogHeader>
+
+                                            <Form {...form}>
+                                                <form
+                                                    onSubmit={form.handleSubmit(handleSubmitForm)}
+                                                    className='w-2/3 space-y-6'
+                                                    style={{ textAlign: 'center' }}
+                                                >
+                                                    <FormField
+                                                        control={form.control}
+                                                        name='status'
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <Select
+                                                                    onValueChange={field.onChange}
+                                                                    defaultValue={field.value}
+                                                                >
+                                                                    <FormControl>
+                                                                        <SelectTrigger className='w-[370px]'>
+                                                                            <SelectValue
+                                                                                placeholder='Trạng thái'
+                                                                                style={{ color: 'black' }}
+                                                                            />
+                                                                        </SelectTrigger>
+                                                                    </FormControl>
+                                                                    <SelectContent>
+                                                                        {missingOrderStatusesFormatted.map(
+                                                                            (item: any, index: number) => (
+                                                                                <SelectItem
+                                                                                    key={index}
+                                                                                    value={item.status}
+                                                                                >
+                                                                                    {item.status}
+                                                                                </SelectItem>
+                                                                            )
+                                                                        )}
+                                                                    </SelectContent>
+                                                                </Select>
+
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <div className='flex'>
+                                                        {data?.bill?.paymentstatus !== 'Đã thanh toán' && (
+                                                            <Button
+                                                                className='bg-[red]'
+                                                                onClick={() => handleSubmitOrder({})}
                                                             >
-                                                                <FormControl>
-                                                                    <SelectTrigger className='w-[370px]'>
-                                                                        <SelectValue
-                                                                            placeholder='Trạng thái'
-                                                                            style={{ color: 'black' }}
-                                                                        />
-                                                                    </SelectTrigger>
-                                                                </FormControl>
-                                                                <SelectContent>
-                                                                    {missingOrderStatusesFormatted.map(
-                                                                        (item: any, index: number) => (
-                                                                            <SelectItem key={index} value={item.status}>
-                                                                                {item.status}
-                                                                            </SelectItem>
-                                                                        )
-                                                                    )}
-                                                                </SelectContent>
-                                                            </Select>
+                                                                Hủy đơn hàng
+                                                            </Button>
+                                                        )}
 
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                <div className='flex'>
-                                                    <Button className='bg-[red]' onClick={() => handleSubmitOrder({})}>
-                                                        Hủy đơn hàng
-                                                    </Button>
+                                                        <Button type='submit' className='ml-10'>
+                                                            Submit
+                                                        </Button>
+                                                    </div>
+                                                </form>
+                                            </Form>
+                                        </DialogContent>
+                                    </Dialog>
+                                )}
 
-                                                    <Button type='submit' className='ml-10'>
-                                                        Submit
-                                                    </Button>
-                                                </div>
-                                            </form>
-                                        </Form>
-                                    </DialogContent>
-                                </Dialog>
-                            )}
                             {data?.bill?.orderstatus == 'Đã hủy hàng' && (
                                 <h1 style={{ fontSize: '20px', color: 'black' }}>
                                     Lí do: <span style={{ color: 'red' }}>{messgaseCanCelOrder?.message}</span>
                                 </h1>
                             )}
                         </div>
-                        <div className='mt-2' id='trang-thai-thanh-toan'>
+                        <div className='mt-2' id='trang-thai-thanh-toan' style={{ width: '30%' }}>
                             <p id='ten-cua-hang' className=' font-serif'>
                                 Phương thức thanh toán: {data?.bill?.paymentmethods}
                             </p>
@@ -320,29 +320,6 @@ const BillDetail = () => {
                                     )}
                                 </span>
                             </p>
-                            {data?.bill?.paymentstatus == 'Chưa thanh toán' ||
-                            data?.bill?.paymentstatus == 'Chờ thanh toán' ? (
-                                <div className='flex mt-2' style={{ alignItems: 'center' }}>
-                                    <GrLinkNext /> &nbsp;
-                                    <button
-                                        style={{
-                                            backgroundColor: 'orangered',
-                                            color: 'wheat',
-                                            padding: '5px',
-                                            border: '1px solid gray',
-                                            borderRadius: '10px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            fontSize: '12px'
-                                        }}
-                                        onClick={() => handleSubmitPaymentStatus(data?.bill?._id)}
-                                    >
-                                        Cập nhật thanh toán &nbsp; <IoCardSharp />
-                                    </button>
-                                </div>
-                            ) : (
-                                ''
-                            )}
                         </div>
                     </div>
                     <div className='flex flex-col gap-3 border-stroke py-1  dark:border-strokedark pt-5'>

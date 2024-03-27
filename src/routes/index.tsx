@@ -41,7 +41,11 @@ import { useEffect, useState } from 'react'
 import PaymentVNPayComponent from '@/pages/Client/PaymentSuccessPage/PaymentPayPal'
 import ListAuthPage from '@/pages/Admin/ListUser/indexAuth'
 import ListCommentPage from '@/pages/Admin/ListComment'
+
 import EditProduct from '@/pages/Admin/Products/Edit/EditProduct'
+
+import ListBanner from '@/pages/Admin/BannerVsSuKien'
+import DetailCommentPage from '@/pages/Admin/ListComment/DetailComment'
 
 const Routers = () => {
     const [userID, setUserID] = useState<any>()
@@ -81,11 +85,14 @@ const Routers = () => {
                 <Route path='dashboard' element={<Dashboard />} />
                 <Route path='products' element={<Product />} />
                 <Route path='comment' element={<ListCommentPage />} />
+                <Route path='comment/:id' element={<DetailCommentPage />} />
                 <Route path='auth' element={<ListAuthPage />} />
                 <Route path='user' element={<ListUserPage />} />
                 <Route path='user/add' element={<AddAuth />} />
                 <Route path='user/editAuth/:id' element={<EditAuth />} />
-                <Route path='products/:id/edit' element={<EditProduct />} />
+                {/* <Route path='user/edit/:id' element={<EditUser />} /> */}
+                {/* <Route path='sales-at-the-counter' element={<Sales_at_the_counter />} /> */}
+                {/* <Route path='products/:id/edit' element={<EditProduct />}/> */}
                 <Route path='products/add' element={<AddProduct />} />
                 <Route path='categories' element={<ListCategory />} />
                 <Route path='categories/edit/:id' element={<EditCategory />} />

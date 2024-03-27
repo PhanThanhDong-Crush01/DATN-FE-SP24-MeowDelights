@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStarHalf } from '@fortawesome/free-solid-svg-icons'
 import { Highlighter } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useProductQuery } from '@/hooks/Product/useProductQuery'
 type InputRef = GetRef<typeof Input>
 type OnChange = NonNullable<TableProps<DataType>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -22,31 +23,25 @@ type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 interface DataType {
-    datas: any
+    name: any
+    averageStars: number
+    totalComment: number
+
     key: string
     _id: string
-    productId: string
-    productInfo: any
-    productTypeInfo: any
-    userInfo: any
-    productTypeId: string
-    userId: string
-    img: string
-    title: string
-    star: number
-    comment: string
 }
 
 type DataIndex = keyof DataType
 
 const ListCommentPage = () => {
-    const { data }: any = useCommentQuery()
+    const { data }: any = useProductQuery()
     console.log(data)
-    const dataWithKeys = data?.datas.map((item: any, index: any) => ({
+    const dataWithKeys = data?.datas?.map((item: any, index: any) => ({
         ...item,
         key: index + 1
     }))
     console.log(dataWithKeys)
+
     const [filteredInfo, setFilteredInfo] = useState<Filters>({})
     const [sortedInfo, setSortedInfo] = useState<Sorts>()
 
@@ -157,34 +152,22 @@ const ListCommentPage = () => {
     // bảng table
     const columns: TableColumnsType<DataType> = [
         {
-            title: '#',
-            dataIndex: 'key',
-            key: 'key',
-            width: '5%'
-        },
-        {
             title: 'Sản phẩm',
             dataIndex: 'productId',
             key: 'productId',
-            width: '40%',
+            width: '3%',
             ...getColumnSearchProps('productId'),
             render: (_, record) => {
                 return (
                     <div>
                         <div>
-                            <Image src={record?.productInfo?.image} width={70} />
-                            <Link to={'/products/' + record?.productInfo?._id}>
-                                <h1 style={{ fontSize: '16px' }}>{record?.productInfo?.name}</h1>
+                            <Image src={record?.img} width={70} />
+                            <Link to={'/products/' + record?._id}>
+                                <h1 style={{ fontSize: '16px' }}>{record?.name}</h1>
                             </Link>
                         </div>
                         <div>
-                            <div>
-                                {record?.productTypeInfo?.color} - {record?.productTypeInfo?.size}-
-                                {record?.productTypeInfo?.weight}
-                            </div>
-                            <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>
-                                Mã: {record?.productInfo?._id}
-                            </p>
+                            <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>Mã: {record?._id}</p>
                         </div>
                     </div>
                 )
@@ -193,71 +176,38 @@ const ListCommentPage = () => {
         },
 
         {
-            title: 'Khách hàng',
-            dataIndex: 'userId',
-            key: 'userId',
-            width: '30%',
-            ...getColumnSearchProps('userId'),
-            render: (_, record) => {
-                return (
-                    <div>
-                        <h1 style={{ fontSize: '16px', color: '' }}>Tên: {record?.userInfo?.name}</h1>
-                        <h2 style={{ fontSize: '16px' }}>Email: {record?.userInfo?.email}</h2>
-
-                        <p style={{ fontSize: '12px', marginTop: '5px', color: 'gray' }}>Mã: {record?.userId}</p>
-                    </div>
-                )
-            }
-        },
-
-        {
-            title: 'Hình ảnh',
-            dataIndex: 'img',
-            key: 'img',
-            width: '20%',
-            render: (_, record) => <Image src={record?.img} alt='' />
-        },
-
-        {
-            title: 'Chủ đề',
-            dataIndex: 'title',
-            key: 'title',
-            width: '20%',
-            render: (_, record) => record?.title
-        },
-        {
-            title: 'Số sao',
+            title: 'Số sao trung bình',
             dataIndex: 'star',
             key: 'star',
-            width: '20%',
-            filters: [
-                {
-                    text: '1-2 sao',
-                    value: '1-<2'
-                },
-                {
-                    text: '2-3 sao',
-                    value: '2-<3'
-                },
-                {
-                    text: '3-4 sao',
-                    value: '3-<4'
-                },
-                {
-                    text: '4-5 sao',
-                    value: '4-5'
-                }
-            ],
+            width: '3%',
+            // filters: [
+            //     {
+            //         text: '1-2 sao',
+            //         value: '1-<2'
+            //     },
+            //     {
+            //         text: '2-3 sao',
+            //         value: '2-<3'
+            //     },
+            //     {
+            //         text: '3-4 sao',
+            //         value: '3-<4'
+            //     },
+            //     {
+            //         text: '4-5 sao',
+            //         value: '4-5'
+            //     }
+            // ],
 
-            onFilter: (value: number, record) => {
-                const star = record.star
-                const [lowerBound, upperBound] = value.split('-').map(parseFloat)
-                return star >= lowerBound && star <= upperBound
-            },
+            // onFilter: (value: number, record) => {
+            //     const star = record.star
+            //     const [lowerBound, upperBound] = value.split('-').map(parseFloat)
+            //     return star >= lowerBound && star <= upperBound
+            // },
 
             render: (_, record) => {
-                const fullStars = Math.floor(record.star) // Số sao đầy
-                const decimalPart = record.star - fullStars // Phần thập phân của số sao
+                const fullStars = Math.floor(record?.averageStars) // Số sao đầy
+                const decimalPart = record?.averageStars - fullStars // Phần thập phân của số sao
 
                 const starArray = Array.from({ length: fullStars }, (_, index) => index) // Tạo mảng sao đầy
                 let halfStarComponent = null
@@ -291,11 +241,28 @@ const ListCommentPage = () => {
             }
         },
         {
-            title: 'Đánh giá',
+            title: 'Số đánh giá',
             dataIndex: 'comment',
             key: 'comment',
-            width: '20%',
-            render: (_, record) => record.comment
+            width: '3%',
+            render: (_, record) => record.totalComment
+        },
+        {
+            title: 'Hành động',
+            dataIndex: '',
+            key: 'x',
+            width: '1%',
+            fixed: 'right',
+            render: (_, record) => (
+                <Space size='middle'>
+                    <div className=''>
+                        <Button>
+                            {' '}
+                            <Link to={`/admin/comment/${record?._id}`}>Chi tiết</Link>
+                        </Button>
+                    </div>
+                </Space>
+            )
         }
     ]
     const cancel = () => {

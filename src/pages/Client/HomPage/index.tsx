@@ -77,16 +77,16 @@ const HomePage = () => {
                             <div className='container'>
                                 <div className='row align-items-center'>
                                     <div className='col-lg-6'>
-                                        <h5 className='primary-color'>Mọi thứ thú cưng bạn cần</h5>
-                                        <h1 className='title'>Sức khỏe tinh thần và thể chất</h1>
-                                        <div className='banner-links d-flex align-items-center'>
+                                        <h5 className='primary-color'></h5>
+                                        <h1 className='title'>Chào mừng bạn đến với Meows DeLights</h1>
+                                        {/* <div className='banner-links d-flex align-items-center'>
                                             <a href='contact-us.html' className='sigma_btn'>
                                                 Nhận báo cáo
                                             </a>
                                             <a href='about-us.html' className='sigma_btn light ml-4'>
                                                 Đọc thêm
                                             </a>
-                                        </div>
+                                        </div> */}
                                     </div>
                                     <div className='col-lg-6 d-none d-lg-block'>
                                         <div className='sigma_banner-image mt-5 mt-lg-0'>
@@ -98,7 +98,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <div
+                {/* <div
                     className='section section-padding bg-cover bg-center bg-secondary-1'
                     style={{ backgroundImage: 'url(src/assets/img/pattern-3.png)' }}
                 >
@@ -206,8 +206,8 @@ const HomePage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className='section section-padding'>
+                </div> */}
+                {/* <div className='section section-padding'>
                     <div className='container'>
                         <div className='row align-items-center'>
                             <div className='col-lg-6'>
@@ -262,11 +262,70 @@ const HomePage = () => {
                             </div>
                         </div>
                     </div>
+                </div> */}
+                <div className='section section-padding pt-3'>
+                    <div className='container'>
+                        <div className='section-title centered'>
+                            <span className='subtitle'>Xu huớng</span>
+                            <h3 className='title mb-0'>Sản phẩm hàng đầu của chúng tôi</h3>
+                        </div>
+                        <div className='row'>
+                            {productFour &&
+                                productFour.map((pro: any) => (
+                                    <div className='col-lg-3 col-md-6'>
+                                        <div className='sigma_product style-8'>
+                                            <div className='sigma_product-thumb'>
+                                                <a href={'products/' + pro?._id}>
+                                                    <img src={pro?.image} alt='product' />
+                                                </a>
+                                                <div className='sigma_product-controls'>
+                                                    <p data-toggle='tooltip' title='Wishlist'>
+                                                        <i className='far fa-heart' />
+                                                    </p>
+                                                    <a
+                                                        href='product-details.html'
+                                                        data-toggle='tooltip'
+                                                        title='Add To Cart'
+                                                    >
+                                                        <i className='far fa-shopping-basket' />
+                                                    </a>
+                                                    <p data-toggle='tooltip' title='Quick View'>
+                                                        <i
+                                                            data-toggle='modal'
+                                                            data-target='#quickViewModal'
+                                                            className='far fa-eye'
+                                                        />
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className='sigma_product-body'>
+                                                <h5 className='sigma_product-title'>
+                                                    <a href='product-details.html'>{pro?.name}</a>
+                                                </h5>
+                                                <div className='sigma_rating'>
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fas fa-star' />
+                                                    <i className='fal fa-star' />
+                                                </div>
+                                                <div className='sigma_product-price'>
+                                                    <span>{pro?.minPrice}</span>
+                                                    <span>{pro?.maxPrice}</span>
+                                                    <i>VNĐ</i>
+                                                </div>
+                                                <p className='sigma_btn btn-sm'>Thêm vào giỏ hàng</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
                 </div>
                 <div className='section section-padding pt-0'>
                     <div className='container'>
-                        <div className='section-title centered'>
-                            <span className='subtitle'>Xu hướng</span>
+                        <div className='section-title centered pt-5'>
+                            {/* <span className='subtitle'>Xu hướng</span> */}
                             <h3 className='title mb-0'>Đồ dùng cho thú cưng</h3>
                         </div>
                         <div className='row'>
@@ -922,7 +981,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className='section section-padding bg-gray'>
+                {/* <div className='section section-padding bg-gray'>
                     <div className='container'>
                         <div className='section-title centered'>
                             <span className='subtitle'>Đội của chúng tôi</span>
@@ -1061,7 +1120,7 @@ const HomePage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className='section section-padding'>
                     <div className='container'>
                         <div className='section-title centered'>
@@ -1109,66 +1168,8 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className='section section-padding pt-0'>
-                    <div className='container'>
-                        <div className='section-title centered'>
-                            <span className='subtitle'>Xu huớng</span>
-                            <h3 className='title mb-0'>Sản phẩm hàng đầu của chúng tôi</h3>
-                        </div>
-                        <div className='row'>
-                            {productFour &&
-                                productFour.map((pro: any) => (
-                                    <div className='col-lg-3 col-md-6'>
-                                        <div className='sigma_product style-8'>
-                                            <div className='sigma_product-thumb'>
-                                                <a href={'products/' + pro?._id}>
-                                                    <img src={pro?.image} alt='product' />
-                                                </a>
-                                                <div className='sigma_product-controls'>
-                                                    <p data-toggle='tooltip' title='Wishlist'>
-                                                        <i className='far fa-heart' />
-                                                    </p>
-                                                    <a
-                                                        href='product-details.html'
-                                                        data-toggle='tooltip'
-                                                        title='Add To Cart'
-                                                    >
-                                                        <i className='far fa-shopping-basket' />
-                                                    </a>
-                                                    <p data-toggle='tooltip' title='Quick View'>
-                                                        <i
-                                                            data-toggle='modal'
-                                                            data-target='#quickViewModal'
-                                                            className='far fa-eye'
-                                                        />
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className='sigma_product-body'>
-                                                <h5 className='sigma_product-title'>
-                                                    <a href='product-details.html'>{pro?.name}</a>
-                                                </h5>
-                                                <div className='sigma_rating'>
-                                                    <i className='fas fa-star' />
-                                                    <i className='fas fa-star' />
-                                                    <i className='fas fa-star' />
-                                                    <i className='fas fa-star' />
-                                                    <i className='fal fa-star' />
-                                                </div>
-                                                <div className='sigma_product-price'>
-                                                    <span>{pro?.minPrice}</span>
-                                                    <span>{pro?.maxPrice}</span>
-                                                    <i>VNĐ</i>
-                                                </div>
-                                                <p className='sigma_btn btn-sm'>Thêm vào giỏ hàng</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                        </div>
-                    </div>
-                </div>
-                <div
+
+                {/* <div
                     className='section section-padding bg-cover bg-center bg-secondary-1'
                     style={{ backgroundImage: 'url(src/assets/img/pattern-4.png)' }}
                 >
@@ -1192,9 +1193,9 @@ const HomePage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className='section section-padding bg-gray'></div>
-                <div className='section section-padding bg-gray'>
+                </div> */}
+
+                {/* <div className='section section-padding bg-gray'>
                     <div className='container'>
                         <div className='section-title centered'>
                             <span className='subtitle'>Đánh giá</span>
@@ -1275,8 +1276,8 @@ const HomePage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className='section section-padding'></div>
+                </div> */}
+
                 <div className='section'>
                     <div className='container'>
                         <div className='row justify-content-end position-relative'>
@@ -1326,7 +1327,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className='section section-padding pt-0'>
+                {/* <div className='section section-padding pt-0'>
                     <div className='container'>
                         <div className='section-title centered'>
                             <span className='subtitle'>Sản phẩm mới nhất</span>
@@ -1449,7 +1450,7 @@ const HomePage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className='modal fade sigma_quick-view-modal' id='quickViewModal' role='dialog' aria-hidden='true'>
                     <div className='modal-dialog modal-lg modal-dialog-centered' role='document'>
                         <div className='modal-content'>

@@ -21,6 +21,7 @@ import { formatPrice } from '@/lib/utils'
 import { useWhyCancelOrder } from '@/hooks/Bill/useWhyCancelOrder'
 import { FcNext } from 'react-icons/fc'
 import ThanhToanSau from '../PaymentSuccessPage/ThanhToanSau'
+import CommentProductPage from './CommentProduct'
 interface DataType {
     key: string
     _id: string
@@ -328,21 +329,7 @@ const OrderPage: React.FC = () => {
     const handleWhyCancelButtonClick = (idbill: string) => {
         setSelectedIdBill(idbill)
     }
-    const handleAddComment = () => {
-        const dataComment = {
-            userId: userID || '', // Thêm ID của người dùng vào dữ liệu đánh giá
-            productId: selectedProductId,
-            productTypeId: selectedProductTypeId,
-            img: newImg,
-            title: newTitle,
-            star: newStar,
-            comment: newComment
-        }
-        onSubmit(dataComment)
-    }
-    const { onSubmit } = useCommentMutation({
-        action: 'ADD'
-    })
+
     const handleAddWhy = () => {
         const dataWhy = {
             idbill: selectedIdBill,
@@ -397,6 +384,15 @@ const OrderPage: React.FC = () => {
     const handleThanhToanNgay = (id: string) => {
         setIdBill(id)
         setShowThanhToanSau(true)
+    }
+    const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isReviewVisible, setIsReviewVisible] = useState(true)
+    const [hasCommented, setHasCommented] = useState(false) // Thêm state cho hasCommented
+
+    const handleCommentSubmit = () => {
+        setIsSubmitted(true)
+        setIsReviewVisible(false) // Ẩn nút "Đánh giá"
+        setHasCommented(true) // Cập nhật state của hasCommented
     }
 
     const columns: TableProps<DataType>['columns'] = [
@@ -554,73 +550,21 @@ const OrderPage: React.FC = () => {
                         {record.orderstatus === 'Đã giao hàng thành công' && (
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button
-                                    // onClick={() =>
-                                    //     handleReviewButtonClick(
-                                    //         record?.products[0]?.product?._id,
-                                    //         record?.products[0]?.productType?._id
-                                    //     )
-                                    // }
-                                    >
-                                        Đánh giá
-                                    </Button>
+                                    {hasCommented ? <Button>Xem đánh giá</Button> : <Button>Đánh giá</Button>}
                                 </DialogTrigger>
-                                <DialogContent className='sm:max-w-[425px]'>
-                                    <DialogHeader>
-                                        <DialogTitle>Đánh giá</DialogTitle>
-                                        <DialogDescription>
-                                            Mời bạn đánh giá và góp ý cho sản phẩm này
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <form action=''>
-                                        <div className='grid gap-4 py-5'>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <Label htmlFor='img' className='text-right'>
-                                                    Hình ảnh
-                                                </Label>
-                                                <Input
-                                                    onChange={(e) => setNewImg(e.target.value)}
-                                                    id='img'
-                                                    className='col-span-3'
-                                                    type='text'
-                                                />
-                                            </div>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <Label htmlFor='title' className='text-right'>
-                                                    Tiêu đề
-                                                </Label>
-                                                <Input
-                                                    onChange={(e) => setNewTitle(e.target.value)}
-                                                    id='title'
-                                                    className='col-span-3'
-                                                />
-                                            </div>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <Label htmlFor='star' className='text-right'>
-                                                    Chọn sao
-                                                </Label>
-                                                <Rate
-                                                    onChange={(value) => setNewStar(value)}
-                                                    allowHalf
-                                                    // value={rating}
-                                                    className='col-span-3'
-                                                />
-                                            </div>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <Label htmlFor='comment' className='text-right'>
-                                                    Nhận xét
-                                                </Label>
-                                                <Input
-                                                    onChange={(e) => setNewComment(e.target.value)}
-                                                    id='comment'
-                                                    className='col-span-3'
-                                                />
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <Button onClick={handleAddComment}>Lưu</Button>
-                                        </DialogFooter>
-                                    </form>
+
+                                <DialogContent
+                                    className='sm:max-w-[425px]  overflow-x-auto overflow-y-auto'
+                                    style={{ minWidth: '500px' }}
+                                >
+                                    <CommentProductPage
+                                        id={record._id}
+                                        setIsSubmitted={setIsSubmitted}
+                                        isReviewVisible={isReviewVisible}
+                                        setIsReviewVisible={setIsReviewVisible}
+                                        handleCommentSubmit={handleCommentSubmit}
+                                        hasCommented={hasCommented} // Truyền props cho hasCommented
+                                    />
                                 </DialogContent>
                             </Dialog>
                         )}
